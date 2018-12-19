@@ -1,0 +1,45 @@
+.navbar-steem-engine {
+  background: url(../images/bg_header.jpg) black repeat-x top right;  
+  height: 60px;
+  padding: 0 100px 0 100px;  
+}
+
+.navbar-steem-engine .navbar-brand img{
+  width: 238px;
+  height: 32px;  
+}
+
+.navbar-steem-engine .navbar-nav  .nav-link{
+  font-family: 'Nunito', sans-serif;
+  font-size: 20px;
+  padding-left: 50px;
+  padding-right: 50px;
+  color: white;  
+}
+
+.navbar-steem-engine button{
+  font-family: 'Nunito', sans-serif;
+  font-size: 20px;
+  border-radius: 18px;
+  color: #27475E;
+  background-color: #93A3AF;
+  border: 0;
+  width: 147px;
+  height: 36px;  
+}
+
+footer {
+  background: url(../images/bg_footer.jpg) black repeat-x top right;  
+  height: 200px;
+  padding: 140px 140px 40px 140px;  
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  color: white;
+  
+}
+
+.home-1 {
+  height: 600px;
+  background: url(../images/bg_hero_machinery.jpg) #21374c no-repeat top right;  
+  background-size: cover;
+}
