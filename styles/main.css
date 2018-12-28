@@ -1,3 +1,16 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: #FFF;
+  font-size: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Nunito', sans-serif;
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
 .navbar-steem-engine {
   background: url(../images/bg_header.jpg) black repeat-x top right;  
   height: 60px;
@@ -28,6 +41,28 @@
   height: 36px;  
 }
 
+#navbarSupportedContent {
+  background-color: rgba(0, 0, 0, .84);
+}
+
+.btn {
+  font-family: 'Nunito', sans-serif;
+  border-radius: 18px;
+  border: 0;  
+}
+
+.btn-primary {
+  color: #FFF;
+  background-color: #8E4A2C;
+}
+
+.btn-lg {
+  width: 305px;
+  height: 62px;
+  font-size: 32px;
+  border-radius: 31px;
+}
+
 footer {
   background: url(../images/bg_footer.jpg) black repeat-x top right;  
   height: 200px;
@@ -35,11 +70,84 @@ footer {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   color: white;
-  
+  text-align: left;
 }
 
 .home-1 {
   height: 600px;
   background: url(../images/bg_hero_machinery.jpg) #21374c no-repeat top right;  
   background-size: cover;
+  padding: 80px;  
+}
+
+.home-1 p {
+  width: 306px; 
+  margin: 52px auto 70px auto;
+}
+
+.home-2 {  
+  padding: 77px;  
+  background-color: #FFF;
+  font-size: 26px;
+  font-style: italic;
+  color: #27475E;  
+}
+
+.home-3 {  
+  background: url(../images/bg_engine.jpg) #962e17 no-repeat top right;  
+  background-size: cover;  
+  padding-top: 65px;
+  padding-bottom: 65px;
+}
+
+.home-3 .container {
+  width: 100%;
+  margin: auto;
+  display: flex;  
+  justify-content: flex-end;
+}
+
+.home-3-square {
+  width: 544px;
+  background-color: rgba(0, 0, 0, .84);
+  border-radius: 83px;
+  padding: 55px;  
+}
+
+.home-3 h1 {
+  color: #FDCC49; margin-bottom: 35px;
+}
+
+.home-3-container p {
+  text-align: left;
+}
+
+.home-4 {  
+  background: url(../images/bg_gears.jpg) #21374c no-repeat top right;  
+  background-size: cover;  
+  padding-top: 60px;
+  padding-bottom: 65px;
+}
+
+.home-4 h1 {
+  color: #93A3AF;
+}
+
+.home-5 {  
+  padding: 70px;  
+  background-color: #FFF;    
+  color: #27475E;  
+}
+
+.home-5 h1 {
+  color: #93A3AF;
+}
+
+.home-6 {    
+  padding: 77px;  
+  background-image: linear-gradient(261deg, #8E4A2C, #472516);
+}
+
+.home-6 h1 {    
+  margin-bottom: 0px;
 }
