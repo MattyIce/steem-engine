@@ -23,32 +23,28 @@
 
 <body>
   <nav class="navbar navbar-dark navbar-expand-lg navbar-steem-engine">
-    <a class="navbar-brand" href="#"><img src="images/steem-engine_logo-horizontal.svg" ></a>
+    <a class="navbar-brand" href="#" onclick="SE.ShowHome()"><img src="images/steem-engine_logo-horizontal.svg" ></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="navbar-nav w-100 justify-content-end align-items-center">        
-        <a class="nav-item nav-link" href="#">TOKENS</a>
-        <a class="nav-item nav-link" href="#">ABOUT</a>
-        <a class="nav-item nav-link" href="#">FAQ</a>
-        <button >SIGN IN</button>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowTokens()">TOKENS</a>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowAbout()">ABOUT</a>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowFAQ()">FAQ</a>
+        <button onclick="SE.ShowSignIn()">SIGN IN</button>
       </div>      
     </div>
   </nav>
 
   <div>
-    <div id="page_container">
-
-
-
-    </div>
+    <div id="page_container"></div>
 	</div>
 	
 	<footer>
 		<div>			
-			<p class="copyright">2018 Steem Engine, all rights reserved.</p>
+			<p class="copyright">2019 Steem Engine, all rights reserved.</p>
 		</div>
 	</footer>
 

@@ -20,4 +20,24 @@ SE = {
   ShowHome: function() {    
     SE.ShowHomeView('home');
   },
+
+  ShowTokens: function() {    
+    SE.ShowHomeView('tokens');
+  },
+
+  ShowAbout: function() {    
+    SE.ShowHomeView('about');
+  },
+  
+  ShowFAQ: function() {    
+    SE.ShowHomeView('faq');
+  },
+
+  ShowRegister: function() {    
+    SE.ShowHomeView('register');
+  },
+
+  ShowSignIn: function() {    
+    SE.ShowHomeView('sign_in');
+  },
 }
