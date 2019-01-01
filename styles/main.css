@@ -203,3 +203,46 @@ footer {
 .about-4 p {  
   text-align: left;
 }
+
+table.tokensTable {
+  top: -45px;  
+}
+
+.tokensTable thead {
+  color: #FFF;
+  font-size: 20px;
+}
+
+.tokensTable thead th {
+  font-weight: normal;
+  padding-bottom: 42px;
+}
+
+.tokensTable tbody {
+  color: #27475E;
+  font-size: 16px;
+}
+
+.tokensTable tbody td{
+  padding-bottom: 20px;
+}
+
+table.tokensTable td.footable-sortable>span.fooicon, table.tokensTable th.footable-sortable>span.fooicon {
+  right: unset;
+  top: unset;
+  margin-top: 0px;
+  margin-left: 10px;
+
+}
+
+table.tokensTable .fooicon-sort:before {
+  font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dc";
+}
+
+table.tokensTable .fooicon-sort-asc:before {
+  font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0de";
+}
+
+table.tokensTable .fooicon-sort-desc:before {
+  font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dd";
+}

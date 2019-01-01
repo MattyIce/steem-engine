@@ -22,7 +22,9 @@ SE = {
   },
 
   ShowTokens: function() {    
-    SE.ShowHomeView('tokens');
+    ssc.find('tokens', 'tokens', { }, 1000, 0, '', false, (err, result) => {
+      SE.ShowHomeView('tokens', result);      
+    });    
   },
 
   ShowAbout: function() {    

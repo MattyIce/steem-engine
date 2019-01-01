@@ -1,3 +1,37 @@
 <header>
   <h1>TOKENS</h1>    
 </header>
+
+
+
+<div class="container">
+  <table class="tokensTable" data-sorting="true"></table>
+</div>
+
+
+</table>
+
+<script>
+
+function URLFormatter(value, options, rowdata)
+{
+  if(value != null)
+    return '<a href="' + value + '" target="_blank" >' + value + '</a>';
+  else
+    return '';
+}
+
+
+$('.tokensTable').footable({
+  "columns": [
+    { "name": "symbol", "title": "Symbol" },
+    { "name": "name", "title": "Token Name" },
+    { "name": "supply", "title": "Supply" },    
+    { "name": "issuer", "title": "Created By",  },
+    { "name": "url", "title": "URL", "formatter": URLFormatter }
+  ],
+  "rows": <%= JSON.stringify(data) %>
+});
+
+
+</script>
