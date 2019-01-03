@@ -246,3 +246,97 @@ table.tokensTable .fooicon-sort-asc:before {
 table.tokensTable .fooicon-sort-desc:before {
   font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dd";
 }
+
+
+.sign_in {
+  color: #27475E;  
+}
+
+.sign_in .col {
+  padding: 45px;
+}
+
+.sign_in .keychain_desc {
+  margin-top: 25px;
+  margin-bottom: 75px;
+}
+
+.sign_in .input-group-text {
+  color: #004A54;
+  background: transparent;
+  border-radius: 0;
+  border-width: 0;  
+  position: relative;
+  z-index: 5;
+}
+
+.sign_in .input-group-prepend {
+  position: absolute;
+  top: -9px;
+  left: -10px;    
+}
+
+.sign_in .at {  
+  font-size: 28px;    
+}
+
+.sign_in input {  
+  border-width: 0 0 1px 0;
+  border-color: #27475E;
+  width: 300px;  
+  font-size: 20px;
+  color: #27475E;
+  padding: 7px 7px 7px 35px;
+  height: 40px;
+}
+
+.sign_in .input-group-append {
+  border-width: 0 0 1px 0;
+  border-color: #27475E;
+  border-style: solid;
+  height: 40px;
+}
+
+.sign_in .input-group-append img {
+  height: 35px;
+  top: -9px;
+  left: -38px;    
+}
+
+.sign_in .divider::after {
+  background: #27475E;
+  width: 1px;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10%;  
+  right: 0;
+  height: 80%;
+}
+
+.sign_in .keychain-logo {
+  max-width: 350px;
+}
+
+.sign_in .steemconnect-logo {
+  width: 292px;
+  margin-bottom: 50px;
+}
+
+.sign_in .btn-steemconnect {
+  font-family: 'Open Sans', sans-serif;
+  border-radius: 8px;
+  width: 287px;
+  height: 41px;
+  background-color: white;
+  border: 1px solid #707070;
+  font-size: 20px;
+}
+
+.sign_in-2 {
+  color: #27475E;
+  background-color: #BCD0DE;
+  border-radius: 31px;
+  padding: 21px;
+  margin: 60px auto 80px auto;
+}
