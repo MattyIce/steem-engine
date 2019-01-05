@@ -42,4 +42,13 @@ SE = {
   ShowSignIn: function() {    
     SE.ShowHomeView('sign_in');
   },
+
+  LogIn: function() {    
+    window.location.reload();
+  },
+
+  LogOut: function() {    
+    localStorage.clear();
+    window.location.reload();
+  },
 }

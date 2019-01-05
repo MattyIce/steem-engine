@@ -25,7 +25,13 @@
 
     $(function () {      
 
-			SE.ShowHome();
+      SE.ShowHome();
+      var username = localStorage.getItem('username')
+      if(username) {
+        $("#btnSignIn").hide();
+        $("#lnkUsername").text('@' + username);
+        $("#ddlLoggedIn").show();					
+      }
     });
   </script>
 
@@ -47,7 +53,15 @@
         <a class="nav-item nav-link" href="#" onclick="SE.ShowTokens()">TOKENS</a>
         <a class="nav-item nav-link" href="#" onclick="SE.ShowAbout()">ABOUT</a>
         <a class="nav-item nav-link" href="#" onclick="SE.ShowFAQ()">FAQ</a>
-        <button onclick="SE.ShowSignIn()">SIGN IN</button>
+        
+        <button id="btnSignIn" class="btn" onclick="SE.ShowSignIn()">SIGN IN</button>
+        
+        <div id="ddlLoggedIn" class="nav-item dropdown" style="display: none;">
+          <a class="nav-link dropdown-toggle p-0" href="#" id="lnkUsername" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <div class="dropdown-menu" aria-labelledby="lnkUsername">
+            <a class="dropdown-item" onclick="SE.LogOut();">Log Out</a>
+          </div>
+        </div>
       </div>      
     </div>
   </nav>

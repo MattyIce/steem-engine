@@ -11,7 +11,7 @@
         <img class="keychain-logo" src="../images/img_keychain-logo.svg">
 
         <p class="keychain_desc">
-          KEYCHAIN is the easiest and safest way to access your Steem credentials. Find it on the Chrome Web Store.
+          KEYCHAIN is the easiest and safest way to access your Steem credentials. Find it on the <a href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm?hl=en" target="_blank">Chrome Web Store</a>.
         </p>
 
         <div class="input-group">
@@ -19,8 +19,8 @@
             <span class="input-group-text at">@</span>
           </div>
           <input type="text" id="txtUsernameKeyChain" class="form-control">
-          <div class="input-group-append">
-            <img src="../images/icon_sign-in.svg" />
+          <div class="input-group-append">            
+              <img src="../images/icon_sign-in.svg" onclick="KeychainSignIn();" class="cursor: pointer;" />            
           </div>
         </div>
         
@@ -36,5 +36,20 @@
 </div>
 
 <div class="sign_in-2 container">
-  Don’t have a STEEM account? Let’s fix that. Go HERE to get a free account.
+  Don’t have a STEEM account? Let’s fix that. Go <a href="#">HERE</a> to get a free account.
 </div>
+
+<script>
+
+function KeychainSignIn() {
+  username = $("#txtUsernameKeyChain").val();
+  localStorage.setItem('username', username);
+
+  console.log(localStorage.getItem('username'));
+
+  SE.LogIn();
+}
+
+
+
+</script>
