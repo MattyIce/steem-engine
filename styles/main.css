@@ -11,6 +11,18 @@ h1 {
   margin-bottom: 20px;
 }
 
+input {
+  border-width: 0 0 1px 0;
+  border-color: #27475E;  
+  flex: 1 1 auto;  
+  transition: border-width 0.1s ease-in;
+}
+
+input:focus {
+  outline-width: 0;
+  border-width: 0 0 3px 0;
+}
+
 .navbar-steem-engine {
   background: url(../images/bg_header.jpg) black repeat-x top right;  
   height: 60px;
@@ -44,6 +56,10 @@ h1 {
 
 #navbarSupportedContent {
   background-color: rgba(0, 0, 0, .84);
+}
+
+.dropdown-menu a {
+  cursor: pointer;
 }
 
 .btn {
@@ -281,9 +297,7 @@ table.tokensTable .fooicon-sort-desc:before {
   font-size: 28px;    
 }
 
-.sign_in input {  
-  border-width: 0 0 1px 0;
-  border-color: #27475E;
+.sign_in input {    
   width: 300px;  
   font-size: 20px;
   color: #27475E;
@@ -291,17 +305,11 @@ table.tokensTable .fooicon-sort-desc:before {
   height: 40px;
 }
 
-.sign_in .input-group-append {
-  border-width: 0 0 1px 0;
-  border-color: #27475E;
-  border-style: solid;
-  height: 40px;
-}
-
 .sign_in .input-group-append img {
   height: 35px;
   top: -9px;
   left: -38px;    
+  cursor: pointer;
 }
 
 .sign_in .divider::after {
@@ -340,4 +348,26 @@ table.tokensTable .fooicon-sort-desc:before {
   border-radius: 31px;
   padding: 21px;
   margin: 60px auto 80px auto;
+}
+
+.register {
+  color: #27475E;  
+  margin-top: 40px;
+  margin-bottom: 60px;
+  font-size: 16px;
+}
+
+.register label {
+  font-size: 20px;
+  text-align: left;
+}
+
+.register input {
+  margin-bottom: 60px;
+  font-size: 20px;
+  color:#8E4A2C;
+}
+
+.register .col {
+  margin: 0 60px;
 }
