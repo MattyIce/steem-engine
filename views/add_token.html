@@ -1,0 +1,47 @@
+<header>
+  <h1>HUB</h1>
+  <p>This process will create a new Token on the Steem blockchain.</p>
+</header>
+
+<div class="register container text-left">
+  Are you ready to make history? Let’s make a new Steem token!
+  <br/><br/>
+  <p class="font-weight-bold">
+    NOTE: Token Creation costs 50 STEEM.
+  </p>  
+</div>
+
+
+<div class="register container">
+  <div class="row">
+    <div class="col d-flex flex-column justify-content-center align-items-left">                        
+      <label>Token Name</label>
+      <input type="text" id="txtTokenName">        
+
+      <label>Decimal Precision</label>
+      <input type="text" id="txtDecimalPrecision">              
+    </div>
+
+    <div class="col d-flex flex-column justify-content-center align-items-left">
+      <label>Symbol (3-5 characters)</label>
+      <input type="text" id="txtSymbol">        
+
+      <label>Max Supply</label>
+      <input type="text" id="txtMaxSupply">
+    </div>
+  </div>      
+</div>  
+
+<div class="register container text-right" style="padding-right: 60px;">
+  <button class="btn btn-primary btn-lg" onclick="btnSubmitClick();">SUBMIT</button>
+</div>
+
+<script>
+  function btnSubmitClick() {
+    var tokenName = $("#txtTokenName").val();
+    var symbol = $("#txtSymbol").val();
+    var precision = $("#txtDecimalPrecision").val();    
+    var maxSupply = $("#txtMaxSupply").val();
+    SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply);    
+  }
+</script>

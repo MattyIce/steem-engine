@@ -27,3 +27,7 @@ function render(tmpl_name, tmpl_data) {
 function renderComponent(component, data) {
   return render('/components/' + component, { data: data });
 }
+
+function renderDialog(component, data) {
+  return render('/dialogs/' + component, { data: data });
+}

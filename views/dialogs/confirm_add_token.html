@@ -1,0 +1,38 @@
+
+<div class="modal-dialog modal-lg confirm_add_token_dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title">NEW TOKEN DETAILS</h1>
+      <p>
+        Please review before proceeding.
+      </p>
+    </div>
+
+    <div class="modal-body">
+      <div class="d-flex">
+        <div class="token_info text-right" style="color: #93A3AF;">
+          <div>Token Name:</div>
+          <div>Symbol:</div>
+          <div>Decimals:</div>
+          <div>Max Supply:</div>
+        </div>
+        <div class="token_info text-left">
+          <div><%= data.name %></div>
+          <div><%= data.symbol %></div>
+          <div><%= data.precision %></div>
+          <div><%= data.maxSupply %></div>        
+        </div>
+      </div>
+
+      <p class="mt-5">
+        This Token Generation will cost 50 STEEM. Proceed?
+      </p>
+    </div>
+    
+    <div class="modal-footer" style="border: 0; justify-content: flex-end; margin-top: 20px;">
+      <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">CANCEL</button>
+      <button id="btnAdd" type="button" class="btn btn-primary btn-lg" onclick="">PAY</button>
+    </div>
+  </div>
+</div>
+

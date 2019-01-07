@@ -23,6 +23,21 @@ input:focus {
   border-width: 0 0 3px 0;
 }
 
+.modal-backdrop.show {
+  opacity: 0.94;
+}
+
+.modal-content {
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.modal-header {
+  flex-direction: column;
+  
+}
+
 .navbar-steem-engine {
   background: url(../images/bg_header.jpg) black repeat-x top right;  
   height: 60px;
@@ -370,4 +385,15 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .register .col {
   margin: 0 60px;
+}
+
+.confirm_add_token_dialog .modal-content {
+  background: url(../images/steem-engine_icon.svg) transparent no-repeat top center;
+}
+
+.confirm_add_token_dialog .token_info {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 0 25px;  
 }

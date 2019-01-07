@@ -20,6 +20,11 @@ SE = {
 		}
   },
 
+  ShowDialog: function(dialog, data) {
+    $('#dialog_container').html(renderDialog(dialog, data)); 
+    $('#dialog_container').modal('show');
+  },
+
   ShowHome: function() {    
     SE.ShowHomeView('home');
   },
@@ -44,6 +49,19 @@ SE = {
 
   ShowSignIn: function() {    
     SE.ShowHomeView('sign_in');
+  },
+
+  ShowAddToken: function() {    
+    SE.ShowHomeView('add_token');
+  },
+
+  ShowConfirmAddToken: function(name, symbol, precision, maxSupply) {    
+    SE.ShowDialog('confirm_add_token', {
+      "name" : name,
+      "symbol" : symbol,
+      "precision" : precision,
+      "maxSupply" : maxSupply,
+    });
   },
 
   LogIn: function() {    
