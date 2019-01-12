@@ -124,6 +124,19 @@ footer {
   text-align: left;
 }
 
+.loading {
+  position: fixed;
+  width: 200px;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.loading-backdrop {
+  z-index: 1100;
+}
+
 .home-1 {
   height: 600px;
   background: url(../images/bg_hero_machinery.jpg) #21374c no-repeat top right;  
@@ -381,6 +394,7 @@ table.tokensTable .fooicon-sort-desc:before {
   margin-bottom: 60px;
   font-size: 20px;
   color:#8E4A2C;
+  flex-grow: 0;
 }
 
 .register .col {

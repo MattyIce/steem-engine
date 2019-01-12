@@ -1,6 +1,6 @@
 SE = {
-  
-  chain_id: 'ssc-00000000000000000001',
+    
+  CHAIN_ID: 'ssc-00000000000000000002',
 
   ShowHomeView: function(view, data) {
 		window.scrollTo(0,0);
@@ -29,6 +29,21 @@ SE = {
     SE.ShowHomeView('home');
   },
 
+  _loading: null,
+  ShowLoading: function() {
+    SE._loading = $('<div class="modal-backdrop fade show loading-backdrop" />');
+    SE._loading.append(
+      $(
+        '<img src="https://s3.amazonaws.com/steemmonsters/website/loading.gif" class="loading" />'
+      )
+    );
+    SE._loading.appendTo('body');
+  },
+
+  HideLoading: function() {
+    SE._loading.remove();
+  },
+
   ShowTokens: function() {    
     ssc.find('tokens', 'tokens', { }, 1000, 0, '', false, (err, result) => {
       SE.ShowHomeView('tokens', result);      
@@ -43,7 +58,7 @@ SE = {
     SE.ShowHomeView('faq');
   },
 
-  ShowRegister: function() {    
+  ShowRegister: function() {        
     SE.ShowHomeView('register', localStorage.getItem('username'));
   },
 
@@ -51,16 +66,17 @@ SE = {
     SE.ShowHomeView('sign_in');
   },
 
-  ShowAddToken: function() {    
-    SE.ShowHomeView('add_token');
+  ShowAddToken: function() {        
+    SE.ShowHomeView('add_token');    
   },
 
-  ShowConfirmAddToken: function(name, symbol, precision, maxSupply) {    
+  ShowConfirmAddToken: function(name, symbol, precision, maxSupply, url) {    
     SE.ShowDialog('confirm_add_token', {
       "name" : name,
       "symbol" : symbol,
       "precision" : precision,
       "maxSupply" : maxSupply,
+      "url" : url,
     });
   },
 
@@ -73,7 +89,31 @@ SE = {
     window.location.reload();
   },
 
+  CheckRegistrationStatus: function(interval = 5, retries = 0, callback) {        
+    var username = localStorage.getItem('username');
+		console.log('Checking registration status: ' + username);
+		
+		ssc.findOne('accounts', 'accounts', { id: username }, (err, result) => {            
+      if (result) {
+        console.log(result, err);        
+
+        if (callback) callback(result);
+      } else {
+        if (retries < 5) {
+          console.log("Retrying...");        
+          setTimeout(function() {
+            SE.CheckRegistrationStatus(interval, retries + 1, callback);
+          }, interval * 1000);
+        }
+        else {
+          alert("Registration not found for @" + username + "\nPlease check again later.");
+        }
+      }      
+    });    
+  },
+
   RegisterAccount: function() {    
+    SE.ShowLoading();
     var username = localStorage.getItem('username');
 
     if(!username) {      
@@ -87,13 +127,50 @@ SE = {
       "contractPayload": {}
     };
 
-    // if(window.steem_keychain) {    
-    //   steem_keychain.requestCustomJson(username, SE.chain_id, 'Posting', JSON.stringify(registration_data), 'Steem Engine Registration', function(response) {        
-    //     if(response.success) 
-    //       alert('Yay it worked!');
-    //     else
-    //       alert('Something broke.');
-    //   });
-    // }
+    if(window.steem_keychain) {    
+      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Posting', JSON.stringify(registration_data), 'Steem Engine Account Registration', function(response) {        
+        SE.HideLoading()
+        if(response.success) {
+          alert('Your account, ' + username +', is now registered!');
+          window.location.reload();
+        }
+        else
+          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+      });
+    }
+  },
+
+  RegisterToken: function(name, symbol, precision, maxSupply, url) {    
+    SE.ShowLoading();
+    var username = localStorage.getItem('username');
+
+    if(!username) {      
+      window.location.reload();
+      return;
+    }      
+
+    var registration_data = {
+      "contractName": "tokens",
+      "contractAction": "create",
+      "contractPayload": {
+        "symbol": symbol,
+        "name": name,
+        "url": url,
+        "precision": precision,
+        "maxSupply": maxSupply
+    }
+    };
+
+    if(window.steem_keychain) {    
+      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Posting', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
+        SE.HideLoading()
+        if(response.success) {
+          alert('Your token, ' + name +', is now created!');
+          window.location.reload();
+        }
+        else
+          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+      });
+    }
   },
 }

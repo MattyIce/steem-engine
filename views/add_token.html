@@ -16,18 +16,21 @@
   <div class="row">
     <div class="col d-flex flex-column justify-content-center align-items-left">                        
       <label>Token Name</label>
-      <input type="text" id="txtTokenName">        
+      <input type="text" id="txtTokenName" maxlength="100">        
+
+      <label>URL</label>
+      <input type="text" id="txtURL" maxlength="100">              
 
       <label>Decimal Precision</label>
-      <input type="text" id="txtDecimalPrecision">              
+      <input type="text" id="txtDecimalPrecision" maxlength="100">              
     </div>
 
-    <div class="col d-flex flex-column justify-content-center align-items-left">
+    <div class="col d-flex flex-column justify-content-top align-items-left">
       <label>Symbol (3-5 characters)</label>
-      <input type="text" id="txtSymbol">        
+      <input type="text" id="txtSymbol" maxlength="5">        
 
       <label>Max Supply</label>
-      <input type="text" id="txtMaxSupply">
+      <input type="text" id="txtMaxSupply" maxlength="100">
     </div>
   </div>      
 </div>  
@@ -42,6 +45,7 @@
     var symbol = $("#txtSymbol").val();
     var precision = $("#txtDecimalPrecision").val();    
     var maxSupply = $("#txtMaxSupply").val();
-    SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply);    
+    var url = $("#txtURL").val();
+    SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);    
   }
 </script>
