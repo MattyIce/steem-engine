@@ -137,7 +137,9 @@ SE = {
         else
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
       });
-    }
+    } else {
+			SE.SteemConnect('posting', registration_data);
+		}
   },
 
   RegisterToken: function(name, symbol, precision, maxSupply, url) {    
@@ -171,6 +173,19 @@ SE = {
         else
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
       });
-    }
-  },
+    } else {
+			SE.SteemConnect('active', registration_data);
+		}
+	},
+	
+	SteemConnect: function(auth_type, data) {
+		var username = localStorage.getItem('username');
+		var url = 'https://steemconnect.com/sign/custom-json?';
+
+		url += ((auth_type == 'active') ? 'required_auths' : 'required_posting_auths') + '=' + encodeURI('["' + username + '"]');
+		url += '&id=' + SE.CHAIN_ID;
+		url += '&json=' + encodeURI(JSON.stringify(data));
+
+		popupCenter(url, 'steemconnect', 500, 560);
+	}
 }

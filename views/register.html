@@ -4,33 +4,13 @@
 </header>
 
 <div class="register container text-left">
-  You are about to register your Steem account, @<%= data %>, as an authorized user of the STEEM ENGINE platform. 
-  This will provide you with tools and resources for building projects, applications, and communities on the Steem blockchain.
-</div>
+	In order to use the Steem Engine sidechain you must first register your Steem account by publishing a transaction to the 
+	Steem blockchain to verify you are the owner of the account. You only have to register each account once and then a whole 
+	new world will be at your fingertips!
 
-
-<div class="register container">
-  <div class="row">
-    <div class="col d-flex flex-column justify-content-center align-items-left">                        
-      <label>First Name</label>
-      <input type="text" id="txtFirstName">        
-
-      <label>Last Name</label>
-      <input type="text" id="txtLastName">              
-    </div>
-
-    <div class="col d-flex flex-column justify-content-center align-items-left">
-      <label>Email</label>
-      <input type="text" id="txtEmail">        
-
-      <label>Phone</label>
-      <input type="text" id="txtPhone">
-    </div>
-  </div>      
-</div>  
-
-<div class="register container text-right" style="padding-right: 60px;">
-  <button class="btn btn-primary btn-lg" onclick="SE.RegisterAccount()">SUBMIT</button>
+	<div class="register container text-center" style="padding-right: 60px;">
+		<button class="btn btn-primary btn-lg" onclick="SE.RegisterAccount()">REGISTER NOW</button>
+	</div>
 </div>
 
 <script>
