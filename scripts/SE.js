@@ -49,6 +49,14 @@ SE = {
     });    
   },
 
+  ShowBalances: function() {    
+    var username = localStorage.getItem('username');
+    
+    ssc.find('tokens', 'tokens', { issuer : username }, 1000, 0, '', false, (err, result) => {
+      SE.ShowHomeView('Balances', result);      
+    });    
+  },
+
   ShowAbout: function() {    
     SE.ShowHomeView('about');
   },

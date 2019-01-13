@@ -1,0 +1,40 @@
+<header>
+  <h1>HUB</h1>    
+</header>
+
+
+
+<div class="container">
+  <table class="tokensTable" data-sorting="true"></table>
+</div>
+
+
+</table>
+
+<script>
+
+function SendColumn(value, options, rowdata)
+{
+  return '<i class="far fa-arrow-alt-circle-right"></i>';  
+}
+
+function HistoryColumn(value, options, rowdata)
+{
+  return '<i class="fas fa-bars"></i>';  
+}
+
+
+$('.tokensTable').footable({
+  "columns": [
+    { "name": "symbol", "title": "Symbol" },
+    { "name": "name", "title": "Token Name" },
+    { "name": "supply", "title": "Supply" },    
+    { "name": "issuer", "title": "Created By",  },
+    { "title": "Send", "formatter": SendColumn },
+    { "title": "History", "formatter": HistoryColumn }
+  ],
+  "rows": <%= JSON.stringify(data) %>
+});
+
+
+</script>
