@@ -83,7 +83,7 @@ SE = {
 		SE.ShowLoading();
 
 		if(window.steem_keychain && !key) {
-			steem_keychain.requestSignBuffer('yabapmatt', 'test', 'Posting', function(response) {
+			steem_keychain.requestSignBuffer(username, 'Log In', 'Posting', function(response) {
 				if(response.error) {
 					SE.HideLoading();
 					alert('Unable to log in with the @' + username + ' account.');
