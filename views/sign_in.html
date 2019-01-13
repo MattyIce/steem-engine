@@ -27,9 +27,21 @@
       </div>
 
       <div class="col d-flex flex-column justify-content-center align-items-center">
-        <img class="steemconnect-logo" src="../images/img_steemconnect-logo.png">
+				<p class="keychain_desc" style="margin-bottom: 20px;">
+					You may also log in by entering your Steem account name and private memo key. Instructions for finding your private memo key <a href="#" target="_blank">can be found here.</a>
+				</p>
 
-        <button class="btn btn-steemconnect">AUTHORIZE</button>
+				<div class="input-group" style="margin-bottom: 20px;">
+					<div class="input-group-prepend">
+						<span class="input-group-text at">@</span>
+					</div>
+					<input type="text" id="txtUsername" placeholder="Steem Username">
+				</div>
+
+				<div class="input-group" style="margin-bottom: 40px;">
+					<input type="password" id="txtMemoKey" placeholder="Private Memo Key">
+				</div>
+        <button class="btn btn-steemconnect" onclick="KeySignIn();">LOG IN</button>
       </div>
     </div>      
   </div>  
@@ -42,14 +54,26 @@
 <script>
 
 function KeychainSignIn() {
-  username = $("#txtUsernameKeyChain").val();
-  localStorage.setItem('username', username);
-
-  console.log(localStorage.getItem('username'));
-
-  SE.LogIn();
+	SE.LogIn($("#txtUsernameKeyChain").val());
 }
 
+function KeySignIn() {
+	SE.LogIn($("#txtUsername").val(), $("#txtMemoKey").val());
+}
 
+$('#txtUsernameKeyChain').keypress(function(e) {
+	if (e.keyCode == 13)
+		KeychainSignIn();
+});
+
+$('#txtUsername').keypress(function(e) {
+	if (e.keyCode == 13)
+		KeySignIn();
+});
+
+$('#txtMemoKey').keypress(function(e) {
+	if (e.keyCode == 13)
+		KeySignIn();
+});
 
 </script>

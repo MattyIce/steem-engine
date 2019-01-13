@@ -52,8 +52,8 @@ input:focus {
 .navbar-steem-engine .navbar-nav  .nav-link{
   font-family: 'Nunito', sans-serif;
   font-size: 20px;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 30px;
+  padding-right: 30px;
   color: white;  
 }
 
@@ -375,7 +375,7 @@ table.tokensTable .fooicon-sort-desc:before {
   background-color: #BCD0DE;
   border-radius: 31px;
   padding: 21px;
-  margin: 60px auto 80px auto;
+  margin: 0px auto 80px auto;
 }
 
 .register {

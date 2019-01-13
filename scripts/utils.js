@@ -51,3 +51,5 @@ function popupCenter(url, title, w, h) {
 
 	return newWindow;
 }
+
+function useKeychain() { return window.steem_keychain && !localStorage.getItem('key'); }

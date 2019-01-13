@@ -1,6 +1,5 @@
 SE = {
-    
-  CHAIN_ID: 'ssc-00000000000000000002',
+	CHAIN_ID: 'ssc-00000000000000000002',
 
   ShowHomeView: function(view, data) {
 		window.scrollTo(0,0);
@@ -80,44 +79,77 @@ SE = {
     });
   },
 
-  LogIn: function() {    
-    window.location.reload();
+  LogIn: function(username, key) {
+		SE.ShowLoading();
+
+		if(window.steem_keychain && !key) {
+			steem_keychain.requestSignBuffer('yabapmatt', 'test', 'Posting', function(response) {
+				if(response.error) {
+					SE.HideLoading();
+					alert('Unable to log in with the @' + username + ' account.');
+				} else {
+					localStorage.setItem('username', username);
+					window.location.reload();
+				}
+			});
+		}	else {
+			steem.api.getAccounts([username], function(e, r) {
+				if(r && r.length > 0) {
+					try {
+						if(steem.auth.wifToPublic(key) == r[0].memo_key) {
+							localStorage.setItem('username', username);
+							localStorage.setItem('key', key);
+							window.location.reload();
+						} else {
+							SE.HideLoading();
+							alert('Unable to log in with the @' + username + ' account. Invalid private memo key.');
+						}
+					} catch(err) { 
+						SE.HideLoading();
+						alert('Unable to log in with the @' + username + ' account. Invalid private memo key.'); 
+					}
+				} else {
+					alert('There was an error loading the @' + username + ' account.');
+				}
+			});
+		}
   },
 
   LogOut: function() {    
     localStorage.clear();
     window.location.reload();
-  },
+	},
+	
+	CheckRegistration: function(username, callback) {
+		ssc.findOne('accounts', 'accounts', { id: username }, (err, result) => { if (callback) callback(result); });    
+	},
 
-  CheckRegistrationStatus: function(interval = 5, retries = 0, callback) {        
+  CheckRegistrationStatus: function(interval = 5, retries = 5, callback) {        
     var username = localStorage.getItem('username');
 		console.log('Checking registration status: ' + username);
-		
-		ssc.findOne('accounts', 'accounts', { id: username }, (err, result) => {            
-      if (result) {
-        console.log(result, err);        
 
-        if (callback) callback(result);
-      } else {
-        if (retries < 5) {
+		SE.CheckRegistration(username, r => {
+			if(r) {
+				if(callback) callback(r);
+			} else {
+				if (retries > 0) {
           console.log("Retrying...");        
           setTimeout(function() {
-            SE.CheckRegistrationStatus(interval, retries + 1, callback);
+            SE.CheckRegistrationStatus(interval, retries - 1, callback);
           }, interval * 1000);
         }
         else {
-          alert("Registration not found for @" + username + "\nPlease check again later.");
+          //alert("Registration not found for @" + username + "\nPlease check again later.");
         }
-      }      
-    });    
+			}
+		});
   },
 
-  RegisterAccount: function() {    
-    SE.ShowLoading();
+  RegisterAccount: function() {
     var username = localStorage.getItem('username');
 
     if(!username) {      
-      window.location.reload();
+      SE.ShowSignIn();
       return;
     }      
 
@@ -127,18 +159,26 @@ SE = {
       "contractPayload": {}
     };
 
-    if(window.steem_keychain) {    
+    if(useKeychain()) {
+			SE.ShowLoading();
+			    
       steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Posting', JSON.stringify(registration_data), 'Steem Engine Account Registration', function(response) {        
-        SE.HideLoading()
         if(response.success) {
-          alert('Your account, ' + username +', is now registered!');
-          window.location.reload();
+					SE.CheckRegistrationStatus(5, 5, () => {
+						alert('The account @' + username + ' has been successfully registered!');
+						window.location.reload();
+					});
         }
-        else
-          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+        else {
+					SE.HideLoading();
+				}
       });
     } else {
 			SE.SteemConnect('posting', registration_data);
+			SE.CheckRegistrationStatus(5, 20, () => {
+				alert('The account @' + username + ' has been successfully registered!');
+				window.location.reload();
+			});
 		}
   },
 
@@ -163,7 +203,7 @@ SE = {
     }
     };
 
-    if(window.steem_keychain) {    
+    if(useKeychain()) {    
       steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Posting', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
         SE.HideLoading()
         if(response.success) {
