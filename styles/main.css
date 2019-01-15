@@ -382,8 +382,7 @@ table.tokensTable .fooicon-sort-desc:before {
   color: #27475E;  
   margin-top: 40px;
   margin-bottom: 60px;
-	font-size: 16px;
-	min-height: 350px;
+	font-size: 16px;	
 }
 
 .register label {

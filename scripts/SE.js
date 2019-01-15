@@ -43,9 +43,8 @@ SE = {
     SE._loading.remove();
   },
 
-  ShowTokens: function() {    
-    console.log("aefaefea");
-    ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {      
+  ShowTokens: function() {        
+    ssc.find('tokens', 'tokens', { }, 1000, 0, '', false, (err, result) => {      
       SE.ShowHomeView('tokens', result);      
     });    
   },
@@ -53,7 +52,7 @@ SE = {
   ShowBalances: function() {    
     var username = localStorage.getItem('username');
     
-    ssc.find('tokens', 'tokens', { issuer : username }, 1000, 0, [], (err, result) => {      
+    ssc.find('tokens', 'tokens', { issuer : username }, 1000, 0, '', false, (err, result) => {      
       SE.ShowHomeView('Balances', result);      
     });    
   },
@@ -225,7 +224,75 @@ SE = {
     } else {
 			SE.SteemConnect('active', registration_data);
 		}
-	},
+  },
+  
+  IssueToken: function(symbol, to, quantity) {
+    SE.ShowLoading();
+    var username = localStorage.getItem('username');
+
+    if(!username) {      
+      window.location.reload();
+      return;
+    }      
+
+    var transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "issue",
+      "contractPayload": {
+        "symbol": symbol,
+        "to": to,
+        "quantity": quantity
+      }
+    };
+
+    if(useKeychain()) {    
+      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
+        SE.HideLoading()
+        if(response.success) {
+          alert(quantity + ' Tokens issued for ' + symbol + ' to @' + to );
+          window.location.reload();
+        }
+        else
+          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+      });
+    } else {
+			SE.SteemConnect('active', transaction_data);
+		}
+  },
+
+  SendToken: function(symbol, to, quantity) {
+    SE.ShowLoading();
+    var username = localStorage.getItem('username');
+
+    if(!username) {      
+      window.location.reload();
+      return;
+    }      
+
+    var transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "transfer",
+      "contractPayload": {
+        "symbol": symbol,
+        "to": to,
+        "quantity": quantity
+      }
+    };
+
+    if(useKeychain()) {    
+      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
+        SE.HideLoading()
+        if(response.success) {
+          alert(quantity + ' ' + symbol + ' Tokens sent to @' + to );
+          window.location.reload();
+        }
+        else
+          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+      });
+    } else {
+			SE.SteemConnect('active', transaction_data);
+		}
+  },  
 	
 	SteemConnect: function(auth_type, data) {
 		var username = localStorage.getItem('username');
