@@ -26,14 +26,7 @@
       if(username) {
         $("#btnSignIn").hide();
         $("#lnkUsername").text('@' + username);
-				$("#ddlLoggedIn").show();
-				
-				SE.CheckRegistration(username, r => {
-					if(!r) {
-						$('#nav_register').show();
-						SE.ShowRegister();
-					}
-				});
+				$("#ddlLoggedIn").show();								
       }
     });
   </script>
@@ -61,8 +54,7 @@
         
         <div id="ddlLoggedIn" class="nav-item dropdown" style="display: none; margin-left: 80px;">
           <a class="nav-link dropdown-toggle p-0" href="#" id="lnkUsername" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-          <div class="dropdown-menu" aria-labelledby="lnkUsername">
-            <a class="dropdown-item" onclick="SE.ShowRegister();" id="nav_register" style="display: none;">Register Account</a>
+          <div class="dropdown-menu" aria-labelledby="lnkUsername">            
             <a class="dropdown-item" onclick="SE.ShowBalances();">Show Balances</a>
             <a class="dropdown-item" onclick="SE.ShowAddToken();">Add Token</a>
             <a class="dropdown-item" onclick="SE.LogOut();">Log Out</a>
