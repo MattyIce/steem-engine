@@ -44,7 +44,8 @@ SE = {
   },
 
   ShowTokens: function() {    
-    ssc.find('tokens', 'tokens', { }, 1000, 0, '', false, (err, result) => {
+    console.log("aefaefea");
+    ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {      
       SE.ShowHomeView('tokens', result);      
     });    
   },
@@ -52,7 +53,7 @@ SE = {
   ShowBalances: function() {    
     var username = localStorage.getItem('username');
     
-    ssc.find('tokens', 'tokens', { issuer : username }, 1000, 0, '', false, (err, result) => {
+    ssc.find('tokens', 'tokens', { issuer : username }, 1000, 0, [], (err, result) => {      
       SE.ShowHomeView('Balances', result);      
     });    
   },
