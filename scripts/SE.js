@@ -24,6 +24,12 @@ SE = {
     $('#dialog_container').modal('show');
   },
 
+  ShowDialogOpaque: function(dialog, data) {
+    $('#dialog_container').html(renderDialog(dialog, data)); 
+    $('#dialog_container').modal('show');
+    $('.modal-backdrop').addClass('modal-backdrop-opaque');
+  },
+
   ShowHome: function() {    
     SE.ShowHomeView('home');
   },
@@ -78,7 +84,7 @@ SE = {
   },
 
   ShowConfirmAddToken: function(name, symbol, precision, maxSupply, url) {    
-    SE.ShowDialog('confirm_add_token', {
+    SE.ShowDialogOpaque('confirm_add_token', {
       "name" : name,
       "symbol" : symbol,
       "precision" : precision,

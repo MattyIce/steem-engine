@@ -23,7 +23,7 @@ input:focus {
   border-width: 0 0 3px 0;
 }
 
-.modal-backdrop.show {
+.modal-backdrop-opaque.show {
   background-color: #0C171F;
   opacity: 1;
 }
