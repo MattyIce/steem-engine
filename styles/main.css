@@ -89,9 +89,16 @@ input:focus {
   font-family: 'Nunito', sans-serif;
   border-radius: 18px;
   border: 0;  
+  font-size: 20px;
+  padding: 5px 30px;
 }
 
 .btn-primary {
+  color: rgba(255, 255, 255, .54);
+  background-color: #582D1A;
+}
+
+.btn-primary:hover, .btn-primary:focus {
   color: #FFF;
   background-color: #8E4A2C;
 }
@@ -107,13 +114,14 @@ header {
   background: linear-gradient(263deg, #27475E, #080E13);  
   height: 164px;
   padding-left: 130px;
+  padding-right: 130px;
 }
 
 header::before {
   content: " ";
   background: url(../images/img_gear.svg) transparent no-repeat top left;
   height: 164px;
-  width: 100%;
+  width: 300px;
   position: absolute;
   left: 0;
 }
@@ -122,10 +130,25 @@ header h1 {
   color: #93A3AF;
   padding-top: 43px;
   text-align: left;
+  font-weight: bold;
 }
 
 header p {  
   text-align: left;
+}
+
+header .group {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  height: 140px;
+}
+
+header .group .buttons{
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+
 }
 
 footer {
