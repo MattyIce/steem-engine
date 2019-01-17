@@ -24,7 +24,8 @@ input:focus {
 }
 
 .modal-backdrop.show {
-  opacity: 0.94;
+  background-color: #0C171F;
+  opacity: 1;
 }
 
 .modal-content {
