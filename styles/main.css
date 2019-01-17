@@ -77,6 +77,14 @@ input:focus {
   cursor: pointer;
 }
 
+.dropdown-menu.show {
+  background-color: black;
+  color: #EBA88B;
+  border-radius: 0;
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
 .btn {
   font-family: 'Nunito', sans-serif;
   border-radius: 18px;
@@ -98,6 +106,7 @@ input:focus {
 header {
   background: linear-gradient(263deg, #27475E, #080E13);  
   height: 164px;
+  padding-left: 130px;
 }
 
 header::before {
@@ -112,16 +121,30 @@ header::before {
 header h1 {
   color: #93A3AF;
   padding-top: 43px;
+  text-align: left;
+}
+
+header p {  
+  text-align: left;
 }
 
 footer {
   background: url(../images/bg_footer.jpg) black repeat-x top right;  
   height: 200px;
-  padding: 140px 140px 40px 140px;  
+  padding: 7px 140px 40px 140px;  
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   color: white;
   text-align: left;
+}
+
+footer img{
+  width: 90px;
+  height: 90px;
+}
+
+footer .copyright {
+  margin-top: 50px;
 }
 
 .loading {
@@ -197,14 +220,27 @@ footer {
   color: #93A3AF;
 }
 
-.home-5 {  
-  padding: 70px;  
+.home-5 {    
   background-color: #FFF;    
   color: #27475E;  
 }
 
+.home-5::before {  
+  content: " ";
+  background: url(../images/img_train.svg) transparent no-repeat top left;
+  height: 700px;
+  width: 700px;
+  position: absolute;
+  left: 0;
+}
+
 .home-5 h1 {
-  color: #93A3AF;
+  padding-top: 70px;  
+  color: #8E4A2C;
+}
+
+.home-5 p {
+  padding-bottom: 70px;      
 }
 
 .home-6 {    
