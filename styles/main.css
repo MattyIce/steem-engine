@@ -11,6 +11,8 @@ h1 {
   margin-bottom: 20px;
 }
 
+tr:nth-child(even) {background-color: #E9EEF2;}
+
 .modal-backdrop-opaque.show {
   background-color: #0C171F;
   opacity: 1;
@@ -207,7 +209,10 @@ header .group .buttons{
   display: flex;
   width: 100%;
   justify-content: flex-end;
+}
 
+header .group .buttons > *{
+  margin-left: 20px;
 }
 
 footer {
@@ -386,8 +391,9 @@ table.tokensTable {
   font-size: 16px;
 }
 
-.tokensTable tbody td{
-  padding-bottom: 20px;
+.tokensTable tbody tr{
+  height: 40px;
+  vertical-align: middle;
 }
 
 table.tokensTable td.footable-sortable>span.fooicon, table.tokensTable th.footable-sortable>span.fooicon {
