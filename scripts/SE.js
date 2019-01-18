@@ -299,6 +299,10 @@ SE = {
 			SE.SteemConnect('active', transaction_data);
 		}
   },  
+
+  ShowBuySSC: function() {
+    SE.ShowDialog('buy_ssc', null);
+  },
 	
 	SteemConnect: function(auth_type, data) {
 		var username = localStorage.getItem('username');

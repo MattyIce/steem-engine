@@ -11,33 +11,91 @@ h1 {
   margin-bottom: 20px;
 }
 
-input {
-  border-width: 0 0 1px 0;
-  border-color: #27475E;  
-  flex: 1 1 auto;  
-  transition: border-width 0.1s ease-in;
-}
-
-input:focus {
-  outline-width: 0;
-  border-width: 0 0 3px 0;
-}
-
 .modal-backdrop-opaque.show {
   background-color: #0C171F;
   opacity: 1;
 }
 
-.modal-content {
-  background-color: transparent;
+.modal-content {    
   border: 0;
-  border-radius: 0;
+  border-radius: 86px;
+  background: url(../images/steem-engine_icon.svg) transparent no-repeat center center;
 }
 
-.modal-header {
-  flex-direction: column;
-  
+.modal-body {    
+  padding: 10px 80px;
 }
+
+.modal-content input {    
+  border-radius: 18px;
+  border: 0px;
+  padding: 2px 16px 2px 16px;
+  width: 100%;
+}
+
+.modal-content label {    
+  text-align: left;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  color: #B0B7BD;
+  width: 100%;
+}
+
+.modal-content .input-group-append {    
+  z-index: 100;  
+  color: #27475E;
+  position: absolute;
+  right: 19px;
+}
+
+.modal-content.blue {    
+  background-color: #27475E;
+}
+
+.modal-content.blue p{    
+  font-size: 24px;
+  text-align: left;
+}
+
+.modal-content.white {    
+  background-color: #FFF;
+}
+
+.modal-content.brown {    
+  background-color: #582D1A;
+}
+
+.modal-dialog {
+  max-width: 512px;
+}
+
+.modal-header {  
+  border: 0;
+  align-items: center;
+  padding: 40px 80px 10px 80px;
+}
+
+.modal-header .close{    
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: 42px;
+  font-weight: bold;      
+  text-shadow: none;
+  opacity: 1;
+}
+
+.modal-header h1 {  
+  color: #93A3AF;
+  font-weight: bold;
+}
+
+.modal-footer {
+  border: 0; 
+  justify-content: space-evenly; 
+  margin-top: 20px;
+  padding: 40px 80px;
+}
+
 
 .navbar-steem-engine {
   background: url(../images/bg_header.jpg) black repeat-x top right;  
@@ -451,10 +509,19 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .register input {
+  border-width: 0 0 1px 0;
+  border-color: #27475E;  
+  flex: 1 1 auto;  
+  transition: border-width 0.1s ease-in;
   margin-bottom: 60px;
   font-size: 20px;
   color:#8E4A2C;
   flex-grow: 0;
+}
+
+.register input:focus {
+  outline-width: 0;
+  border-width: 0 0 3px 0;
 }
 
 .register .col {
