@@ -22,18 +22,16 @@
 
     $(function () {
       SE.ShowHome();
-      var username = localStorage.getItem('username')
-      if(username) {
-        $("#btnSignIn").hide();
-        $("#lnkUsername").text('@' + username);
-				$("#ddlLoggedIn").show();								
-      }
+			var username = localStorage.getItem('username');
+			
+      if(username)
+				SE.OnLogin(username);
     });
   </script>
 
-  <script src="scripts/utils.js?v=2"></script>
-  <script src="scripts/SE.js?v=l"></script>    
-  <link rel="stylesheet" href="styles/main.css?v=3" />  
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/SE.js"></script>    
+  <link rel="stylesheet" href="styles/main.css" />  
   <title>Steem Engine - Smart Contracts on the STEEM blockchain</title>
 </head>
 

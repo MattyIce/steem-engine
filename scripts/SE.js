@@ -1,5 +1,7 @@
 SE = {
 	CHAIN_ID: 'ssc-00000000000000000002',
+	User: null,
+	Params: {},
 
   ShowHomeView: function(view, data) {
 		window.scrollTo(0,0);
@@ -55,13 +57,38 @@ SE = {
     });    
   },
 
-  ShowBalances: function() {    
-    var username = localStorage.getItem('username');
-    
-    ssc.find('tokens', 'tokens', { issuer : username }, 1000, 0, [], (err, result) => {      
-      SE.ShowHomeView('Balances', result);      
-    });    
-  },
+  ShowBalances: function() {
+		SE.LoadBalances(r => SE.ShowHomeView('Balances', r));   
+	},
+
+	LoadParams: function() {
+		ssc.findOne('sscstore', 'params', {  }, (err, result) => {
+			if(result && !err)
+				Object.assign(SE.Params, result);
+		});
+
+		ssc.findOne('tokens', 'params', {  }, (err, result) => {
+			if(result && !err)
+				Object.assign(SE.Params, result);
+		});
+	},
+	
+	LoadBalances: function(callback) {
+		ssc.find('tokens', 'balances', { account: SE.User.name }, 1000, 0, '', false).then(r => {
+			SE.User.balances = r;
+
+			if(callback)
+				callback(r);      
+    });
+	},
+
+	GetBalance: function(token) { 
+		if(SE.User && SE.User.balances) {
+			var token = SE.User.balances.find(b => b.symbol == token);
+			return token ? token.balance : 0;
+		} else
+			return 0;
+	},
 
   ShowAbout: function() {    
     SE.ShowHomeView('about');
@@ -91,7 +118,21 @@ SE = {
       "maxSupply" : maxSupply,
       "url" : url,
     });
-  },
+	},
+	
+	OnLogin: function(username) {
+		SE.User = { name: username };
+		SE.LoadBalances();
+		SE.LoadParams();
+		$("#btnSignIn").hide();
+		$("#lnkUsername").text('@' + username);
+		$("#ddlLoggedIn").show();
+
+		steem.api.getAccounts([username], (e, r) => {
+			if(r && !e && r.length > 0)
+				SE.User.account = r[0];
+		});
+	},
 
   LogIn: function(username, key) {
 		SE.ShowLoading();
@@ -130,7 +171,8 @@ SE = {
   },
 
   LogOut: function() {    
-    localStorage.clear();
+		localStorage.clear();
+		SE.User = null;
     window.location.reload();
 	},
 	
@@ -188,7 +230,7 @@ SE = {
 				}
       });
     } else {
-			SE.SteemConnect('posting', registration_data);
+			SE.SteemConnectJson('posting', registration_data);
 			SE.CheckRegistrationStatus(5, 20, () => {
 				alert('The account @' + username + ' has been successfully registered!');
 				window.location.reload();
@@ -228,7 +270,7 @@ SE = {
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
       });
     } else {
-			SE.SteemConnect('active', registration_data);
+			SE.SteemConnectJson('active', registration_data);
 		}
   },
   
@@ -262,7 +304,7 @@ SE = {
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
       });
     } else {
-			SE.SteemConnect('active', transaction_data);
+			SE.SteemConnectJson('active', transaction_data);
 		}
   },
 
@@ -296,21 +338,68 @@ SE = {
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
       });
     } else {
-			SE.SteemConnect('active', transaction_data);
+			SE.SteemConnectJson('active', transaction_data);
 		}
   },  
 
   ShowBuySSC: function() {
     SE.ShowDialog('buy_ssc', null);
-  },
+	},
 	
-	SteemConnect: function(auth_type, data) {
+	BuySSC: function(amount) {
+		SE.ShowLoading();
+
+    if(!SE.User) {      
+      window.location.reload();
+      return;
+    }      
+
+    var transaction_data = {
+			id: SE.CHAIN_ID,
+			json: {
+				"contractName": "sscstore",
+				"contractAction": "buy",
+				"contractPayload": { }
+			}
+    };
+
+    if(useKeychain()) {    
+      steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {        
+        if(response.success) {
+					alert('Purchase transaction sent successfully.');
+					setTimeout(() => {
+						SE.HideLoading();
+						SE.ShowBalances();
+					}, 5000);
+        }
+        else {
+					SE.HideLoading();
+					alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+				}
+      });
+    } else {
+			SE.HideLoading();
+			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data));
+		}
+	},
+	
+	SteemConnectJson: function(auth_type, data) {
 		var username = localStorage.getItem('username');
 		var url = 'https://steemconnect.com/sign/custom-json?';
 
 		url += ((auth_type == 'active') ? 'required_auths' : 'required_posting_auths') + '=' + encodeURI('["' + username + '"]');
 		url += '&id=' + SE.CHAIN_ID;
 		url += '&json=' + encodeURI(JSON.stringify(data));
+
+		popupCenter(url, 'steemconnect', 500, 560);
+	},
+
+	SteemConnectTransfer: function(from, to, amount, memo) {
+		var url = 'https://steemconnect.com/sign/transfer?';
+		url += '&from=' + encodeURI(from);
+		url += '&to=' + encodeURI(to);
+		url += '&amount=' + encodeURI(amount);
+		url += '&memo=' + encodeURI(memo);
 
 		popupCenter(url, 'steemconnect', 500, 560);
 	}

@@ -95,7 +95,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   border: 0; 
   justify-content: space-evenly; 
   margin-top: 20px;
-  padding: 40px 80px;
+  padding: 0px 80px 40px;
 }
 
 
@@ -543,4 +543,11 @@ table.tokensTable .fooicon-sort-desc:before {
   flex-direction: column;
   width: 50%;
   padding: 0 25px;  
+}
+
+.ssc-cost {
+	font-family: 'Nunito', sans-serif;
+	font-size: 15px;
+	color: #B0B7BD;
+	text-align: right;
 }

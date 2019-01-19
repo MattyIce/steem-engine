@@ -9,18 +9,24 @@
     </div>
 
     <div class="modal-body">
-      <label class="mb-0">Current SSC Balance</label>
-      <p class="mb-5">
-        1234.123 SSC
+      <label class="mb-0">Current STEEM Balance</label>
+      <p class="mb-4">
+        <%= addCommas(SE.User.account.balance) %>
+			</p>
+			
+			<label class="mb-0">Current SSC Balance</label>
+      <p class="mb-4">
+        <%= addCommas(SE.GetBalance('SSC')) %> SSC
       </p>
       
       <label>PURCHASE AMOUNT</label>
       <div class="input-group justify-content-center align-items-center">
-        <input type="text" placeholder="0.00000000">
+        <input type="text" placeholder="0.00000000" id="ssc_amount">
         <div class="input-group-append">          
           SSC
         </div>
-      </div>
+			</div>
+			<div class="ssc-cost">1 SSC = <%= SE.Params.priceSteem %> STEEM</div>
       
     </div>
     
@@ -32,7 +38,7 @@
 
 <script>
 function onBuyClick() {  
-  
+  SE.BuySSC(parseFloat($('#ssc_amount').val()) * <%= SE.Params.priceSteem %>);
 }
 
 </script>
