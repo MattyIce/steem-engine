@@ -43,14 +43,6 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   width: 100%;
 }
 
-.modal-content .input-group-prepend {    
-  z-index: 100;  
-  color: #27475E;
-  position: absolute;
-  left: 10px;
-}
-
-
 .modal-content .input-group-append {    
   z-index: 100;  
   color: #27475E;
@@ -563,9 +555,4 @@ table.tokensTable .fooicon-sort-desc:before {
 .balance-cell {
 	text-align: right;
 	width: 100px;
-}
-
-.btn-send {
-  width: 20px;
-  cursor: pointer;
 }

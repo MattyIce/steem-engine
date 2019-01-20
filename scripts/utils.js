@@ -1,4 +1,3 @@
-_.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
 function render(tmpl_name, tmpl_data) {
   if (!render.tmpl_cache) {
       render.tmpl_cache = {};
