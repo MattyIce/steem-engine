@@ -324,6 +324,10 @@ SE = {
 		}
   },
 
+  ShowSendTokenDialog: function(symbol, balance) {
+    SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
+  },
+
   SendToken: function(symbol, to, quantity) {
     SE.ShowLoading();
     var username = localStorage.getItem('username');
