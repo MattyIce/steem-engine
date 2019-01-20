@@ -1,6 +1,13 @@
 <header>
   <div class="group">
-    <h1 class="m-0 p-0"><%= data.name + '(' + data.symbol + ')' %></h1>    
+    <div>
+      <button class="btn btn-back" onclick="SE.ShowBalances();">
+        <i class="material-icons">chevron_left</i>
+      </button>
+    </div>
+
+    <h2 class="m-0"><%= data.name + ' (' + data.symbol + ')' %><button class="btn btn-primary" onclick="issueTokens()">ISSUE</button></h2>    
+    
     <div class="buttons">
       <button class="btn btn-primary" onclick="sendTokens()">SEND</button>
     </div>
@@ -12,13 +19,31 @@
 </div>
 
 <script>
+  var data = <%= JSON.stringify(data) %>;
+  var symbol = data.symbol;
+  var tokenInfo = SE.User.balances.filter( r => r.symbol == symbol)[0];
+  var balance = tokenInfo.balance;
+
+  //if(tokenInfo )
+
+
 	$('.tokensTable').footable({
 		"columns": [
 			{ "name": "timestamp", "title": "Date" },
-			{ "name": "to", "title": "To/From" },
-			{ "name": "type", "title": "Type" },    
-			{ "name": "amount", "title": "Amount",  }
+      { "name": "from", "title": "From" },
+      { "name": "to", "title": "To" },			
+			{ "name": "quantity", "title": "Amount",  }
 		],
-		"rows": []
-	});
+		"rows": data.rows
+  });
+  
+  function sendTokens() {    
+    SE.ShowSendTokenDialog(symbol, balance);
+  }
+
+  function issueTokens() {    
+    SE.ShowIssueTokenDialog(symbol, balance);
+  }
+
+
 </script>

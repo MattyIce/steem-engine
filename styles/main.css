@@ -62,7 +62,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   background-color: #27475E;
 }
 
-.modal-content.blue p{    
+.modal-content.blue p, .modal-content.brown p{    
   font-size: 24px;
   text-align: left;
 }
@@ -73,6 +73,15 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 .modal-content.brown {    
   background-color: #582D1A;
+}
+
+.modal-content.brown h1, .modal-content.brown label {    
+  color: #EBA88B;
+}
+
+.modal-content.brown .btn {    
+  color: #EBA88B;
+  background-color: #0C171F;
 }
 
 .modal-dialog {
@@ -193,6 +202,7 @@ header::before {
   width: 300px;
   position: absolute;
   left: 0;
+  pointer-events: none;
 }
 
 header h1 {
@@ -200,6 +210,21 @@ header h1 {
   padding-top: 43px;
   text-align: left;
   font-weight: bold;
+}
+
+header h2 {
+  color: #FFF;
+  font-size: 18px;  
+  width: 500px;
+  text-align: left;
+  padding-left: 30px;
+}
+
+header h2 .btn {
+  height: 24px;
+  font-size: 14px;
+  padding: 2px 22px;
+  margin-left: 10px;
 }
 
 header p {  
@@ -407,21 +432,21 @@ table.tokensTable {
 table.tokensTable td.footable-sortable>span.fooicon, table.tokensTable th.footable-sortable>span.fooicon {
   right: unset;
   top: unset;
-  margin-top: 0px;
+  margin-top: 5px;
   margin-left: 10px;
 
 }
 
 table.tokensTable .fooicon-sort:before {
-  font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dc";
+  font-family: "Material Icons"; font-weight: 900; content: "\e164";
 }
 
 table.tokensTable .fooicon-sort-asc:before {
-  font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0de";
+  font-family: "Material Icons"; font-weight: 900; content: "\e5c5";
 }
 
 table.tokensTable .fooicon-sort-desc:before {
-  font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dd";
+  font-family: "Material Icons"; font-weight: 900; content: "\e5c7";
 }
 
 
@@ -568,4 +593,21 @@ table.tokensTable .fooicon-sort-desc:before {
 .btn-send {
   width: 20px;
   cursor: pointer;
+}
+
+.btn-history {  
+  cursor: pointer;
+}
+
+.btn-back {
+  width: 36px;
+  padding: 0;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #93A3AF;
+  color: #27475E;  
+}
+
+.btn-back i {  
+  font-size: 32px;
 }

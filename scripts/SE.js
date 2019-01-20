@@ -1,8 +1,24 @@
 SE = {
-	CHAIN_ID: 'ssc-00000000000000000002',
+  CHAIN_ID: 'ssc-00000000000000000002',
+  ACCOUNTS_API_URL: 'https://testaccounts.steem-engine.com',
 	User: null,
 	Params: {},
-	Tokens: [],
+  Tokens: [],
+  
+  Api: function(url, data, callback, always) {
+    if (data == null || data == undefined) data = {};
+
+    // Add a dummy timestamp parameter to prevent IE from caching the requests.
+    data.v = new Date().getTime();    
+
+    jQuery
+      .getJSON(SE.ACCOUNTS_API_URL + url, data, function(response) {
+        if (callback != null && callback != undefined) callback(response);
+      })
+      .always(function() {
+        if (always) always();
+      });
+  },  
 
   ShowHomeView: function(view, data) {
 		window.scrollTo(0,0);
@@ -101,6 +117,14 @@ SE = {
 			return token ? token.balance : 0;
 		} else
 			return 0;
+  },
+  
+  ShowHistory: function(symbol, name) { 
+    SE.Api("/history", {account : SE.User.name}, r => {
+
+      console.log(r)
+      SE.ShowHomeView('history', { symbol: symbol, name : name, rows : r });
+    });
 	},
 
   ShowAbout: function() {    
@@ -288,6 +312,10 @@ SE = {
     } else {
 			SE.SteemConnectJson('active', registration_data);
 		}
+  },
+
+  ShowIssueTokenDialog: function(symbol, balance) {
+    SE.ShowDialog('issue_token', { symbol : symbol, balance : balance });
   },
   
   IssueToken: function(symbol, to, quantity) {
