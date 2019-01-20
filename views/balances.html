@@ -2,8 +2,6 @@
   <h1>HUB</h1>    
 </header>
 
-
-
 <div class="container">
   <table class="tokensTable" data-sorting="true"></table>
 </div>
@@ -15,7 +13,9 @@
 
 function SendColumn(value, options, rowdata)
 {
-  return '<i class="far fa-arrow-alt-circle-right"></i>';  
+  console.log(value, options, rowdata)
+  console.log(rowdata.symbol)
+  return `<img class="btn-send" src="/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;  
 }
 
 function HistoryColumn(value, options, rowdata)
