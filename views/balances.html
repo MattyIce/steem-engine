@@ -12,9 +12,7 @@
 <script>
 
 function SendColumn(value, options, rowdata)
-{
-  console.log(value, options, rowdata)
-  console.log(rowdata.symbol)
+{  
   return `<img class="btn-send" src="/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;  
 }
 
