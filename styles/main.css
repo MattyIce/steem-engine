@@ -551,3 +551,8 @@ table.tokensTable .fooicon-sort-desc:before {
 	color: #B0B7BD;
 	text-align: right;
 }
+
+.balance-cell {
+	text-align: right;
+	width: 100px;
+}

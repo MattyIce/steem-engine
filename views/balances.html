@@ -23,16 +23,23 @@ function HistoryColumn(value, options, rowdata)
   return '<i class="fas fa-bars"></i>';  
 }
 
+function BalanceColumn(value, options, rowdata)
+{
+  return '<div class="balance-cell">' + addCommas(value) + '</div>';
+}
+
+var data = <%= JSON.stringify(data) %>;
+data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
 
 $('.tokensTable').footable({
   "columns": [
     { "name": "symbol", "title": "Symbol" },
     { "name": "name", "title": "Token Name" },
-    { "name": "balance", "title": "Amount" },
+    { "name": "balance", "title": "Balance", "formatter": BalanceColumn },
     { "title": "Send", "formatter": SendColumn },
     { "title": "History", "formatter": HistoryColumn }
   ],
-  "rows": <%= JSON.stringify(data) %>
+  "rows": data
 });
 
 

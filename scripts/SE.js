@@ -2,6 +2,7 @@ SE = {
 	CHAIN_ID: 'ssc-00000000000000000002',
 	User: null,
 	Params: {},
+	Tokens: [],
 
   ShowHomeView: function(view, data) {
 		window.scrollTo(0,0);
@@ -51,14 +52,26 @@ SE = {
     SE._loading.remove();
   },
 
-  ShowTokens: function() {        
-    ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {      
-      SE.ShowHomeView('tokens', result);      
-    });    
-  },
+  ShowTokens: function() { 
+		SE.LoadTokens(r => SE.ShowHomeView('tokens', r));
+	},
+	
+	LoadTokens: function(callback) {
+		ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {
+			SE.Tokens = result;      
+			
+			if(callback)
+				callback(result);
+    });  
+	},
 
-  ShowBalances: function() {
-		SE.LoadBalances(r => SE.ShowHomeView('Balances', r));   
+  ShowBalances: function(callback) {
+		SE.LoadBalances(r => {
+			SE.ShowHomeView('Balances', r);
+
+			if(callback)
+				callback(r);
+		});   
 	},
 
 	LoadParams: function() {
@@ -121,17 +134,20 @@ SE = {
 	},
 	
 	OnLogin: function(username) {
+		SE.ShowLoading();
 		SE.User = { name: username };
-		SE.LoadBalances();
 		SE.LoadParams();
 		$("#btnSignIn").hide();
 		$("#lnkUsername").text('@' + username);
 		$("#ddlLoggedIn").show();
 
+		// Load the steem account info
 		steem.api.getAccounts([username], (e, r) => {
 			if(r && !e && r.length > 0)
 				SE.User.account = r[0];
 		});
+
+		SE.LoadTokens(() => SE.ShowBalances(() => SE.HideLoading()));
 	},
 
   LogIn: function(username, key) {

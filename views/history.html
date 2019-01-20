@@ -1,0 +1,24 @@
+<header>
+  <div class="group">
+    <h1 class="m-0 p-0"><%= data.name + '(' + data.symbol + ')' %></h1>    
+    <div class="buttons">
+      <button class="btn btn-primary" onclick="sendTokens()">SEND</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <table class="tokensTable" data-sorting="true"></table>
+</div>
+
+<script>
+	$('.tokensTable').footable({
+		"columns": [
+			{ "name": "timestamp", "title": "Date" },
+			{ "name": "to", "title": "To/From" },
+			{ "name": "type", "title": "Type" },    
+			{ "name": "amount", "title": "Amount",  }
+		],
+		"rows": []
+	});
+</script>
