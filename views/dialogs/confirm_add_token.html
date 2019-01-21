@@ -19,10 +19,10 @@
         </div>
         <div class="token_info text-left">
           <div><%= data.name %></div>
-          <div><%= data.symbol %></div>
-          <div><%= data.url %></div>
+          <div><%= data.symbol.toUpperCase() %></div>
+          <div><%= (data.url.trim().length == 0) ? '&nbsp;' : data.url %> </div>
           <div><%= data.precision %></div>
-          <div><%= data.maxSupply %></div>        
+          <div><%= data.maxSupply %></div>
         </div>
       </div>
 
@@ -42,7 +42,7 @@
 function onPayClick() {  
   SE.RegisterToken(
     '<%= data.name %>', 
-    '<%= data.symbol %>', 
+    '<%= data.symbol.toUpperCase() %>', 
     <%= data.precision %>, 
     <%= data.maxSupply %>, 
     '<%= data.url %>'
