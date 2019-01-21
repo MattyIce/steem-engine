@@ -43,6 +43,13 @@ SE = {
     $('#dialog_container').modal('show');
   },
 
+  HideDialog: function(viewToShowAfter, data) {    
+    $('#dialog_container').modal('hide');
+    if(viewToShowAfter)
+      SE.ShowHomeView(viewToShowAfter, data);
+  },
+
+
   ShowDialogOpaque: function(dialog, data) {
     $('#dialog_container').html(renderDialog(dialog, data)); 
     $('#dialog_container').modal('show');
@@ -304,7 +311,7 @@ SE = {
         SE.HideLoading()
         if(response.success) {
           alert('Your token, ' + name +', is now created!');
-          window.location.reload();
+          SE.HideDialog(SE.CurrentView.view, SE.CurrentView.data);
         }
         else
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
@@ -342,7 +349,7 @@ SE = {
         SE.HideLoading()
         if(response.success) {
           alert(quantity + ' Tokens issued for ' + symbol + ' to @' + to );
-          window.location.reload();
+          SE.HideDialog(SE.CurrentView.view, SE.CurrentView.data);
         }
         else
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
@@ -380,7 +387,7 @@ SE = {
         SE.HideLoading()
         if(response.success) {
           alert(quantity + ' ' + symbol + ' Tokens sent to @' + to );
-          window.location.reload();
+          SE.HideDialog(SE.CurrentView.view, SE.CurrentView.data);
         }
         else
           alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
