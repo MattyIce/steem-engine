@@ -8,6 +8,7 @@
 
     <h2 class="m-0">
 			<%= data.name + ' (' + data.symbol + ')' %>
+			<div class="subtitle">Supply (total/max): <%= addCommas(SE.GetToken(data.symbol).supply) + ' / ' + addCommas(SE.GetToken(data.symbol).maxSupply) %></div>
 		</h2>    
     
     <div class="buttons">
@@ -27,19 +28,22 @@
 <script>
   var data = <%= JSON.stringify(data) %>;
   var symbol = data.symbol;
-  var tokenInfo = SE.User.balances.filter( r => r.symbol == symbol)[0];
-  var balance = tokenInfo.balance;
+  var balance = SE.GetBalance(symbol);
 
 	function DateColumn(value, options, rowdata) { return new Date(value).toLocaleString(); }
 	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
-	function BalanceColumn(value, options, rowdata) { 
+	function BalanceColumn(value, options, rowdata) { return '<div class="balance-cell">' + addCommas(value) + ' ' + symbol + '</div>'; }
+	function AmountColumn(value, options, rowdata) { 
 		var operator = (rowdata.type == 'Received') ? '+' : '-';
 		return '<div class="balance-cell ' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(value) + ' ' + symbol + '</div>'; 
 	}
 
+	var running_balance = balance;
 	data.rows.forEach(r => {
 		r.type = (r.to == SE.User.name) ? 'Received' : 'Sent';
 		r.to_from = (r.to == SE.User.name) ? r.from : r.to;
+		r.balance = running_balance;
+		running_balance = (r.to == SE.User.name) ? running_balance - parseFloat(r.quantity) : running_balance + parseFloat(r.quantity);
 	});
 
 	$('.tokensTable').footable({
@@ -47,7 +51,8 @@
 			{ "name": "timestamp", "title": "Date", "formatter": DateColumn },
       { "name": "to_from", "title": "To/From", "formatter": SteemAccountColumn },
       { "name": "type", "title": "Type" },			
-			{ "name": "quantity", "title": "Amount", "formatter": BalanceColumn  }
+			{ "name": "quantity", "title": "Amount", "formatter": AmountColumn },
+			{ "name": "balance", "title": "Balance", "formatter": BalanceColumn }
 		],
 		"rows": data.rows
   });

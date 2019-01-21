@@ -180,13 +180,13 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 }
 
 .btn-primary {
-  color: rgba(255, 255, 255, .54);
-  background-color: #582D1A;
+	color: #FFF;
+  background-color: #8E4A2C;
 }
 
 .btn-primary:hover, .btn-primary:focus {
-  color: #FFF;
-  background-color: #8E4A2C;
+  color: rgba(255, 255, 255, .54);
+	background-color: #582D1A;
 }
 
 .btn-lg {
@@ -222,10 +222,15 @@ header h1 {
 
 header h2 {
   color: #FFF;
-  font-size: 18px;  
-  width: 500px;
+  font-size: 27px;  
+  width: 100%;
   text-align: left;
   padding-left: 30px;
+}
+
+header h2 .subtitle {
+	font-size: 14px;
+  color: #93A3AF;
 }
 
 header h2 .btn {
@@ -243,7 +248,10 @@ header .group {
   display: flex;
   align-items: center;
   align-content: center;
-  height: 140px;
+	height: 140px;
+	width: 1140px;
+	margin: auto;
+	padding-right: 50px;
 }
 
 header .group .buttons{
