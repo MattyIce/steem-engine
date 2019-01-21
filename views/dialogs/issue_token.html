@@ -19,7 +19,10 @@
           <div class="input-group-prepend">          
             @
           </div>
-          <input style="padding-left: 32px;" type="text" placeholder="username" id="txtTo">        
+          <input style="padding-left: 32px;" type="text" placeholder="username" id="txtTo" required>        
+          <div class="invalid-tooltip">
+            Please enter a valid account
+          </div>
         </div>
         
         <label>AMOUNT</label>
@@ -27,6 +30,9 @@
           <input type="text" placeholder="0.00000000" id="txtAmount">
           <div class="input-group-append">          
             <%= data.symbol %>
+          </div>
+          <div class="invalid-tooltip">
+            Please enter an amount greater than 0
           </div>
         </div>						
         
@@ -41,16 +47,31 @@
   <script>
     var symbol = "<%= data.symbol %>";
     function onIssueClick() {
-			var to = $('#txtTo').val();
-			
-			SE.CheckAccount(to, r => {
-				if(r) {
-					var amount = parseFloat($('#txtAmount').val());
-					SE.IssueToken(symbol, to, amount);
-				} else {
-					// TODO: Show something indicating that the "to" account is not an existing Steem account.
-				}
-			});
+      var to = $('#txtTo').val();
+      var amount = parseFloat($('#txtAmount').val());
+      var isValid = true;
+      
+      if(isNaN(amount) || amount == 0) {
+        $('#txtAmount').addClass("is-invalid");
+        isValid = false;
+      }
+
+      if(to.trim() == '') {
+        $('#txtTo').addClass("is-invalid");
+        isValid = false;
+      }
+      
+      if(isValid)
+			{
+        $('.modal-body input').removeClass("is-invalid");
+        SE.CheckAccount(to, r => {
+          if(r) {					
+            SE.IssueToken(symbol, to, amount);
+          } else {
+            $('#txtTo').addClass("is-invalid");					
+          }
+        });
+      }
 		}
   </script>
   

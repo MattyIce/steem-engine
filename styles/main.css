@@ -84,6 +84,14 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   background-color: #0C171F;
 }
 
+.modal-content input.is-invalid~.invalid-tooltip {
+  display: block;
+}
+
+.modal-content .invalid-tooltip {
+  right: 0;
+}
+
 .modal-dialog {
   max-width: 512px;
 }
