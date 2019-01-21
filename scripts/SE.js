@@ -457,5 +457,14 @@ SE = {
 		url += '&memo=' + encodeURI(memo);
 
 		popupCenter(url, 'steemconnect', 500, 560);
+	},
+
+	CheckAccount: function(name, callback) {
+		steem.api.getAccounts([name], (e, r) => {
+			if(r && r.length > 0)
+				callback(r[0]);
+			else
+				callback(null);
+		});
 	}
 }

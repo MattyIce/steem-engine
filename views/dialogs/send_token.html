@@ -41,9 +41,16 @@
 <script>
   var symbol = "<%= data.symbol %>";
   function onSendClick() {  
-    var to = $('#txtTo').val();
-    var amount = parseFloat($('#txtAmount').val());
-    SE.SendToken(symbol, to, amount);
+		var to = $('#txtTo').val();
+		
+		SE.CheckAccount(to, r => {
+			if(r) {
+				var amount = parseFloat($('#txtAmount').val());
+				SE.SendToken(symbol, to, amount);
+			} else {
+				// TODO: Show something indicating that the "to" account is not an existing Steem account.
+			}
+		});
   }
 </script>
 
