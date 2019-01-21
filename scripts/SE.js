@@ -127,9 +127,7 @@ SE = {
   },
   
   ShowHistory: function(symbol, name) { 
-    SE.Api("/history", {account : SE.User.name}, r => {
-
-      console.log(r)
+    SE.Api("/history", { account: SE.User.name, limit: 100, offset: 0, type: 'user', symbol: symbol }, r => {
       SE.ShowHomeView('history', { symbol: symbol, name : name, rows : r });
     });
 	},
@@ -419,14 +417,17 @@ SE = {
     };
 
     if(useKeychain()) {    
-      steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {        
-        if(response.success) {
-					alert('Purchase transaction sent successfully.');
-					setTimeout(() => {
-						SE.HideLoading();
-						SE.HideDialog();
-						SE.ShowBalances();
-					}, 10000);
+      steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if(tx.success) {
+							alert('Purchase transaction sent successfully.');
+							SE.HideLoading();
+							SE.HideDialog();
+							SE.ShowHistory('SSC', 'Steem Engine Tokens');
+						} else 
+							alert('An error occurred purchasing SSC: ' + tx.error);
+					});
         }
         else {
 					SE.HideLoading();
@@ -467,6 +468,27 @@ SE = {
 				callback(r[0]);
 			else
 				callback(null);
+		});
+	},
+
+	CheckTransaction(trx_id, retries, callback) {
+		ssc.getTransactionInfo(trx_id, (err, result) => { 
+			if(result) {
+				var error = null;
+
+				if(result.logs) {
+					var logs = JSON.parse(result.logs);
+
+					if(logs.errors && logs.errors.length > 0)
+						error = logs.errors[0];
+				}
+
+				if(callback)
+					callback(Object.assign(result, { error: error, success: !error }));
+			} else if(retries > 0)
+				setTimeout(() => SE.CheckTransaction(trx_id, retries - 1, callback), 5000);
+			else if(callback)
+				callback({ success: false, error: 'Transaction not found.' });
 		});
 	},
 

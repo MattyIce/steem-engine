@@ -598,6 +598,14 @@ table.tokensTable .fooicon-sort-desc:before {
 	width: 100px;
 }
 
+.balance-cell.received {
+	color: green;
+}
+
+.balance-cell.sent {
+	color: red;
+}
+
 .btn-send {
   width: 20px;
   cursor: pointer;

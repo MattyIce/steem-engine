@@ -12,7 +12,7 @@
     
     <div class="buttons">
 			<button class="btn btn-primary" onclick="sendTokens()">SEND</button>
-			
+
 			<% if(SE.GetToken(data.symbol).issuer == SE.User.name) { %>
 				<button class="btn btn-primary" onclick="issueTokens()">ISSUE</button>
 			<% } %>
@@ -30,15 +30,24 @@
   var tokenInfo = SE.User.balances.filter( r => r.symbol == symbol)[0];
   var balance = tokenInfo.balance;
 
-  //if(tokenInfo )
+	function DateColumn(value, options, rowdata) { return new Date(value).toLocaleString(); }
+	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
+	function BalanceColumn(value, options, rowdata) { 
+		var operator = (rowdata.type == 'Received') ? '+' : '-';
+		return '<div class="balance-cell ' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(value) + ' ' + symbol + '</div>'; 
+	}
 
+	data.rows.forEach(r => {
+		r.type = (r.to == SE.User.name) ? 'Received' : 'Sent';
+		r.to_from = (r.to == SE.User.name) ? r.from : r.to;
+	});
 
 	$('.tokensTable').footable({
 		"columns": [
-			{ "name": "timestamp", "title": "Date" },
-      { "name": "from", "title": "From" },
-      { "name": "to", "title": "To" },			
-			{ "name": "quantity", "title": "Amount",  }
+			{ "name": "timestamp", "title": "Date", "formatter": DateColumn },
+      { "name": "to_from", "title": "To/From", "formatter": SteemAccountColumn },
+      { "name": "type", "title": "Type" },			
+			{ "name": "quantity", "title": "Amount", "formatter": BalanceColumn  }
 		],
 		"rows": data.rows
   });
