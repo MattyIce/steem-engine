@@ -42,7 +42,7 @@
   var symbol = "<%= data.symbol %>";
   function onSendClick() {  
     var to = $('#txtTo').val();
-    var amount = $('#txtAmount').val();
+    var amount = parseFloat($('#txtAmount').val());
     SE.SendToken(symbol, to, amount);
   }
 </script>

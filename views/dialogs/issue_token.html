@@ -42,7 +42,7 @@
     var symbol = "<%= data.symbol %>";
     function onIssueClick() {
       var to = $('#txtTo').val();
-      var amount = $('#txtAmount').val();
+      var amount = parseFloat($('#txtAmount').val());
       SE.IssueToken(symbol, to, amount);
     }
   </script>
