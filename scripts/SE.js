@@ -424,11 +424,13 @@ SE = {
 					alert('Purchase transaction sent successfully.');
 					setTimeout(() => {
 						SE.HideLoading();
+						SE.HideDialog();
 						SE.ShowBalances();
-					}, 5000);
+					}, 10000);
         }
         else {
 					SE.HideLoading();
+					SE.HideDialog();
 					alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
 				}
       });
@@ -466,5 +468,7 @@ SE = {
 			else
 				callback(null);
 		});
-	}
+	},
+
+	GetToken: function(symbol) { return SE.Tokens.find(t => t.symbol == symbol); }
 }

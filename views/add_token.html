@@ -7,7 +7,8 @@
   Are you ready to make history? Let’s make a new Steem token!
   <br/><br/>
   <p class="font-weight-bold">
-    NOTE: Token Creation costs 50 STEEM.
+		Token Creation Cost: <%= addCommas(SE.Params.tokenCreationFee) %> SSC<br/>
+		Your SSC Balance: <%= addCommas(SE.GetBalance('SSC')) %> SSC
   </p>  
 </div>
 

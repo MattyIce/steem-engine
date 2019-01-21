@@ -6,10 +6,16 @@
       </button>
     </div>
 
-    <h2 class="m-0"><%= data.name + ' (' + data.symbol + ')' %><button class="btn btn-primary" onclick="issueTokens()">ISSUE</button></h2>    
+    <h2 class="m-0">
+			<%= data.name + ' (' + data.symbol + ')' %>
+		</h2>    
     
     <div class="buttons">
-      <button class="btn btn-primary" onclick="sendTokens()">SEND</button>
+			<button class="btn btn-primary" onclick="sendTokens()">SEND</button>
+			
+			<% if(SE.GetToken(data.symbol).issuer == SE.User.name) { %>
+				<button class="btn btn-primary" onclick="issueTokens()">ISSUE</button>
+			<% } %>
     </div>
   </div>
 </header>
