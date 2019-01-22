@@ -24,6 +24,10 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   background: url(../images/steem-engine_icon.svg) transparent no-repeat center center;
 }
 
+.modal-content.white {      
+  background: url(../images/steem-engine_icon_edf0f2.svg) transparent no-repeat center center;
+}
+
 .modal-body {    
   padding: 10px 80px;
 }
@@ -69,6 +73,12 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 .modal-content.white {    
   background-color: #FFF;
+}
+
+.modal-content.white p{    
+  color: #27475E;
+  text-align: left;
+  font-size: 18px;
 }
 
 .modal-content.brown {    

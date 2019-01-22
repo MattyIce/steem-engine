@@ -1,0 +1,38 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-content white">
+    <div class="modal-header">
+      <h1 class="modal-title">TRANSACTION</h1>      
+    </div>
+
+    <div class="modal-body">      
+      <p class="mb-4">
+        <%= new Date(data.timestamp).toLocaleString() %> 
+			</p>						            
+      
+      <p class="mb-4">
+        Transaction ID:
+        </br>
+        <%= data.txid %>
+      </p>
+      
+      <p class="mb-4">
+        Block: <%= data.block %>
+      </p>
+      
+      <p class="mb-4">
+        From: @<%= data.from %>
+        </br>
+        To: @<%= data.to %>
+			</p>
+      
+      <p class="mb-4">
+        Amount: <%= (data.type == 'Received') ? '+' : '-' %> <%= data.quantity %> <%= data.symbol %>
+			</p>            
+    </div>
+    
+    <div class="modal-footer">
+      <button id="btnDone" type="button" data-dismiss="modal" class="btn btn-primary btn-lg w-100">DONE</button>
+    </div>
+  </div>
+</div>

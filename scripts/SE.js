@@ -439,6 +439,10 @@ SE = {
 			SE.HideLoading();
 			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data));
 		}
+  },
+  
+  ShowTransactionDialog: function(data) { 
+		SE.ShowDialog('transaction', data);
 	},
 	
 	SteemConnectJson: function(auth_type, data) {

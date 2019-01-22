@@ -47,6 +47,15 @@
 	});
 
 	$('.tokensTable').footable({
+    "on": {
+			"ready.ft.table": function(e, ft){        
+        $('.tokensTable tbody tr').bind('click', function() {          
+          var index = $(this).index();        
+          console.log(data.rows[index]);
+          SE.ShowTransactionDialog(data.rows[index])
+        });
+			}
+		},
 		"columns": [
 			{ "name": "timestamp", "title": "Date", "formatter": DateColumn },
       { "name": "to_from", "title": "To/From", "formatter": SteemAccountColumn },
