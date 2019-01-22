@@ -30,6 +30,14 @@ var data = <%= JSON.stringify(data) %>;
 data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
 
 $('.tokensTable').footable({
+  "on": {
+			"ready.ft.table": function(e, ft){        
+        $('.tokensTable tbody tr').bind('click', function() {          
+          var index = $(this).index();          
+          SE.ShowHistory(data[index].symbol, data[index].name)
+        });
+			}
+		},
   "columns": [
     { "name": "symbol", "title": "Symbol" },
     { "name": "name", "title": "Token Name" },
@@ -39,6 +47,9 @@ $('.tokensTable').footable({
   ],
   "rows": data
 });
+
+
+
 
 
 </script>

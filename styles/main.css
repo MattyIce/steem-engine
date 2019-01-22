@@ -445,6 +445,12 @@ table.tokensTable {
   vertical-align: middle;
 }
 
+.tokensTable tbody tr:hover {
+  color: #FFF;
+  background-color: #8E4A2C;
+  cursor: pointer;
+}
+
 table.tokensTable td.footable-sortable>span.fooicon, table.tokensTable th.footable-sortable>span.fooicon {
   right: unset;
   top: unset;
@@ -464,7 +470,6 @@ table.tokensTable .fooicon-sort-asc:before {
 table.tokensTable .fooicon-sort-desc:before {
   font-family: "Material Icons"; font-weight: 900; content: "\e5c7";
 }
-
 
 .sign_in {
   color: #27475E;  
