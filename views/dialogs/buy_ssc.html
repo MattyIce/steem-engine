@@ -25,6 +25,9 @@
         <div class="input-group-append">          
           SSC
         </div>
+        <div class="invalid-tooltip">
+          Please enter an amount greater than 0
+        </div>
 			</div>
 			<div class="ssc-cost">1 SSC = <%= SE.Params.priceSteem %> STEEM</div>
       
@@ -38,7 +41,15 @@
 
 <script>
 function onBuyClick() {  
-  SE.BuySSC(parseFloat($('#ssc_amount').val()) * <%= SE.Params.priceSteem %>);
+  var amount = parseFloat($('#ssc_amount').val());
+
+  if(isNaN(amount) || amount == 0) {
+    $('#ssc_amount').addClass("is-invalid");    
+  }  
+  else {
+    SE.BuySSC(amount * <%= SE.Params.priceSteem %>);
+  }
+  
 }
 
 </script>

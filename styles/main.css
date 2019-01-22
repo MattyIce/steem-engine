@@ -455,7 +455,7 @@ table.tokensTable {
   vertical-align: middle;
 }
 
-.tokensTable tbody tr:hover {
+.tokensTable.interactiveTable tbody tr:hover {
   color: #FFF;
   background-color: #8E4A2C;
   cursor: pointer;
