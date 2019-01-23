@@ -27,7 +27,7 @@
 
       <div class="group">
         <label>URL</label>
-        <input type="text" id="txtURL" maxlength="100">
+        <input type="text" id="txtURL" maxlength="255">
       </div>
 
       <div class="group">
@@ -41,8 +41,8 @@
 
     <div class="col d-flex flex-column justify-content-top align-items-left">
       <div class="group">
-        <label>Symbol (3-5 characters)</label>
-        <input type="text" id="txtSymbol" style="text-transform: uppercase;" maxlength="5">        
+        <label>Symbol</label>
+        <input type="text" id="txtSymbol" style="text-transform: uppercase;" maxlength="7">        
         <div class="invalid-feedback">
           Required
         </div>
@@ -50,7 +50,7 @@
 
       <div class="group">
         <label>Max Supply</label>
-        <input type="number" id="txtMaxSupply" maxlength="30">
+        <input type="number" id="txtMaxSupply" min="0" max="1000000000000" maxlength="30">
         <div class="invalid-feedback">
           Please enter a number greater than 0
         </div>
@@ -88,7 +88,7 @@
       isValid = false;
     }
 
-    if(isNaN(maxSupply) || maxSupply < 0) {
+    if(isNaN(maxSupply) || maxSupply < 0 || maxSupply > 1000000000000) {
       $('#txtMaxSupply').addClass("is-invalid");
       isValid = false;
     }
