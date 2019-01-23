@@ -611,6 +611,11 @@ table.tokensTable .fooicon-sort-desc:before {
   text-align: left;
 }
 
+.confirm_add_token_dialog .modal-header {
+  flex-direction: column;
+  padding: 0;
+}
+
 .confirm_add_token_dialog .modal-content {
   background: url(../images/steem-engine_icon.svg) transparent no-repeat top center;
 }
