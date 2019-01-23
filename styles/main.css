@@ -582,11 +582,11 @@ table.tokensTable .fooicon-sort-desc:before {
   border-width: 0 0 1px 0;
   border-color: #27475E;  
   flex: 1 1 auto;  
-  transition: border-width 0.1s ease-in;
-  margin-bottom: 60px;
+  transition: border-width 0.1s ease-in;  
   font-size: 20px;
   color:#8E4A2C;
   flex-grow: 0;
+  width: 100%;
 }
 
 .register input:focus {
@@ -596,6 +596,19 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .register .col {
   margin: 0 60px;
+}
+
+.register .col .group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 60px;
+}
+
+.register input.is-invalid~.invalid-feedback {
+  display: block;
+  text-align: left;
 }
 
 .confirm_add_token_dialog .modal-content {

@@ -15,23 +15,46 @@
 
 <div class="register container">
   <div class="row">
-    <div class="col d-flex flex-column justify-content-center align-items-left">                        
-      <label>Token Name</label>
-      <input type="text" id="txtTokenName" maxlength="100">        
+    <div class="col">
+      
+      <div class="group">
+        <label>Token Name</label>
+        <input type="text" id="txtTokenName" maxlength="100">        
+        <div class="invalid-feedback">
+          Required
+        </div>
+      </div>
 
-      <label>URL</label>
-      <input type="text" id="txtURL" maxlength="100">              
+      <div class="group">
+        <label>URL</label>
+        <input type="text" id="txtURL" maxlength="100">
+      </div>
 
-      <label>Decimal Precision</label>
-      <input type="text" id="txtDecimalPrecision" maxlength="100">              
+      <div class="group">
+        <label>Decimal Precision</label>
+        <input type="number" id="txtDecimalPrecision" placeholder="0-8" min="0" max="8" step="1" maxlength="1"> 
+        <div class="invalid-feedback">
+          Please enter a number from 0 to 8
+        </div>
+      </div>
     </div>
 
     <div class="col d-flex flex-column justify-content-top align-items-left">
-      <label>Symbol (3-5 characters)</label>
-      <input type="text" id="txtSymbol" style="text-transform: uppercase;" maxlength="5">        
+      <div class="group">
+        <label>Symbol (3-5 characters)</label>
+        <input type="text" id="txtSymbol" style="text-transform: uppercase;" maxlength="5">        
+        <div class="invalid-feedback">
+          Required
+        </div>
+      </div>
 
-      <label>Max Supply</label>
-      <input type="text" id="txtMaxSupply" maxlength="100">
+      <div class="group">
+        <label>Max Supply</label>
+        <input type="number" id="txtMaxSupply" maxlength="30">
+        <div class="invalid-feedback">
+          Please enter a number greater than 0
+        </div>
+      </div>
     </div>
   </div>      
 </div>  
@@ -44,9 +67,36 @@
   function btnSubmitClick() {
     var tokenName = $("#txtTokenName").val();
     var symbol = $("#txtSymbol").val();
-    var precision = $("#txtDecimalPrecision").val();    
-    var maxSupply = $("#txtMaxSupply").val();
+    var precision = parseInt($("#txtDecimalPrecision").val());    
+    var maxSupply = parseInt($("#txtMaxSupply").val());
     var url = $("#txtURL").val();
-    SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);    
+    var isValid = true;
+
+
+    if(tokenName.trim() == '') {
+      $('#txtTokenName').addClass("is-invalid");
+      isValid = false;
+    }
+
+    if(symbol.trim() == '') {
+      $('#txtSymbol').addClass("is-invalid");
+      isValid = false;
+    }
+
+    if(isNaN(precision) || precision < 0 || precision > 8) {
+      $('#txtDecimalPrecision').addClass("is-invalid");
+      isValid = false;
+    }
+
+    if(isNaN(maxSupply) || maxSupply < 0) {
+      $('#txtMaxSupply').addClass("is-invalid");
+      isValid = false;
+    }
+
+    if(isValid) {
+      $('.register input').removeClass("is-invalid");
+      SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);    
+    }
+      
   }
 </script>
