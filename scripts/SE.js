@@ -198,20 +198,29 @@ SE = {
 				}
 			});
 		}	else {
+			try {
+				if (key && !steem.auth.isWif(key)) {
+					key = steem.auth.getPrivateKeys(username, key, ['posting']).posting;
+				}
+			} catch(err) {
+				alert('Invalid private key or master password.');
+				return;
+			}
+
 			steem.api.getAccounts([username], function(e, r) {
 				if(r && r.length > 0) {
 					try {
-						if(steem.auth.wifToPublic(key) == r[0].memo_key) {
+						if(steem.auth.wifToPublic(key) == r[0].memo_key || steem.auth.wifToPublic(key) == r[0].posting.key_auths[0][0]) {
 							localStorage.setItem('username', username);
 							localStorage.setItem('key', key);
 							window.location.reload();
 						} else {
 							SE.HideLoading();
-							alert('Unable to log in with the @' + username + ' account. Invalid private memo key.');
+							alert('Unable to log in with the @' + username + ' account. Invalid private key or password.');
 						}
 					} catch(err) { 
 						SE.HideLoading();
-						alert('Unable to log in with the @' + username + ' account. Invalid private memo key.'); 
+						alert('Unable to log in with the @' + username + ' account. Invalid private key or password.'); 
 					}
 				} else {
 					alert('There was an error loading the @' + username + ' account.');
