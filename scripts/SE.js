@@ -91,7 +91,7 @@ SE = {
 
   ShowBalances: function(callback) {
 		SE.LoadBalances(r => {
-			SE.ShowHomeView('Balances', r);
+			SE.ShowHomeView('balances', r);
 
 			if(callback)
 				callback(r);
