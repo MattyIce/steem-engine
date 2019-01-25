@@ -45,11 +45,24 @@
 </div>
 
 <script>
-  var symbol = "<%= data.symbol %>";
+	var isValid = true;
+	var symbol = "<%= data.symbol %>";
+	
+	$('#txtTo').focusout(() => {
+		SE.CheckAccount($('#txtTo').val(), r => {
+			if(r) {				
+				isValid = true;
+				$('#txtTo').removeClass("is-invalid");
+			} else {
+				isValid = false;
+				$('#txtTo').addClass("is-invalid");
+			}
+		})
+	});
+
   function onSendClick() {  
     var to = $('#txtTo').val();
     var amount = parseFloat($('#txtAmount').val());
-    var isValid = true;
 
     if(isNaN(amount) || amount == 0) {
       $('#txtAmount').addClass("is-invalid");
@@ -63,14 +76,8 @@
     
     if(isValid)
     {
-      $('.modal-body input').removeClass("is-invalid");		
-      SE.CheckAccount(to, r => {
-        if(r) {				
-          SE.SendToken(symbol, to, amount);
-        } else {
-          $('#txtTo').addClass("is-invalid");					
-        }
-      });
+			$('.modal-body input').removeClass("is-invalid");
+			SE.SendToken(symbol, to, amount);
     }
   }
 </script>

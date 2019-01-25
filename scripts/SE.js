@@ -480,6 +480,8 @@ SE = {
 	},
 	
 	SteemConnectJson: function(auth_type, data) {
+		SE.HideLoading();
+
 		var username = localStorage.getItem('username');
 		var url = 'https://steemconnect.com/sign/custom-json?';
 
@@ -491,6 +493,8 @@ SE = {
 	},
 
 	SteemConnectTransfer: function(from, to, amount, memo) {
+		SE.HideLoading();
+		
 		var url = 'https://steemconnect.com/sign/transfer?';
 		url += '&from=' + encodeURI(from);
 		url += '&to=' + encodeURI(to);
