@@ -2,7 +2,7 @@
 <div class="modal-dialog modal-dialog-centered modal-lg">
   <div class="modal-content blue">
     <div class="modal-header">
-      <h1 class="modal-title">BUY SSC</h1>    
+      <h1 class="modal-title">BUY <%= SE.NATIVE_TOKEN %></h1>    
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">X</span>
       </button>  
@@ -14,27 +14,27 @@
         <%= addCommas(SE.User.account.balance) %>
 			</p>
 			
-			<label class="mb-0">Current SSC Balance</label>
+			<label class="mb-0">Current <%= SE.NATIVE_TOKEN %> Balance</label>
       <p class="mb-4">
-        <%= addCommas(SE.GetBalance('SSC')) %> SSC
+        <%= addCommas(SE.GetBalance(SE.NATIVE_TOKEN)) + ' ' + SE.NATIVE_TOKEN %>
       </p>
       
       <label>PURCHASE AMOUNT</label>
       <div class="input-group justify-content-center align-items-center">
         <input type="text" placeholder="0.00000000" id="ssc_amount">
         <div class="input-group-append">          
-          SSC
+          <%= SE.NATIVE_TOKEN %>
         </div>
         <div class="invalid-tooltip">
           Please enter an amount greater than 0
         </div>
 			</div>
-			<div class="ssc-cost">1 SSC = <%= SE.Params.priceSteem %> STEEM</div>
+			<div class="ssc-cost">1 <%= SE.NATIVE_TOKEN %> = <%= SE.Params.priceSteem %> STEEM</div>
       
     </div>
     
     <div class="modal-footer">
-      <button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="onBuyClick()">BUY SSC</button>
+      <button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="onBuyClick()">BUY <%= SE.NATIVE_TOKEN %></button>
     </div>
   </div>
 </div>

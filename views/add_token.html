@@ -1,27 +1,25 @@
 <header>
-  <h1>HUB</h1>
-  <p>This process will create a new Token on the Steem blockchain.</p>
+  <h1>CREATE A TOKEN</h1>
+  <p>Are you ready to make history? Let’s make a new token on the Steem blockchain!</p>
 </header>
 
 <div class="register container text-left">
-  Are you ready to make history? Let’s make a new Steem token!
-  <br/><br/>
-  <p class="font-weight-bold">
-		Token Creation Cost: <%= addCommas(SE.Params.tokenCreationFee) %> SSC<br/>
-		Your SSC Balance: <%= addCommas(SE.GetBalance('SSC')) %> SSC
+  <p>
+		<span class="font-weight-bold">NOTE: Token Creation costs <%= addCommas(SE.Params.tokenCreationFee) %> ENG (Steem Engine Native Tokens)</span></br>
+		Your Current ENG Balance: <%= addCommas(SE.GetBalance(SE.NATIVE_TOKEN)) %> ENG (<a href="javascript:void(0);" onclick="SE.ShowBuySSC();" style="color: #8E4A2C; font-weight: bold;">BUY ENG with STEEM</a>)
   </p>  
 </div>
 
 
-<div class="register container">
+<div class="register container" style="margin-bottom: 0px;">
   <div class="row">
     <div class="col">
       
       <div class="group">
         <label>Token Name</label>
-        <input type="text" id="txtTokenName" maxlength="100">        
+        <input type="text" id="txtTokenName" maxlength="100" >        
         <div class="invalid-feedback">
-          Required
+          Required field. Alpha-numeric characters and spaces only.
         </div>
       </div>
 
@@ -54,13 +52,13 @@
         <div class="invalid-feedback">
           Please enter a number from 1 to 1000000000000
         </div>
-      </div>
+			</div>
+			
+			<div class="group">
+				<button class="btn btn-primary btn-lg" onclick="btnSubmitClick();" style="margin: auto;">SUBMIT</button>
+			</div>
     </div>
   </div>      
-</div>  
-
-<div class="register container text-right" style="padding-right: 60px;">
-  <button class="btn btn-primary btn-lg" onclick="btnSubmitClick();">SUBMIT</button>
 </div>
 
 <script>
@@ -72,8 +70,8 @@
     var url = $("#txtURL").val();
     var isValid = true;
 
-
-    if(tokenName.trim() == '') {
+		var regex = /[^a-zA-Z0-9\s]+/
+    if(tokenName.trim() == '' || regex.test(tokenName)) {
       $('#txtTokenName').addClass("is-invalid");
       isValid = false;
     }
@@ -91,12 +89,16 @@
     if(isNaN(maxSupply) || maxSupply < 0 || maxSupply > 1000000000000) {
       $('#txtMaxSupply').addClass("is-invalid");
       isValid = false;
-    }
+		}
+		
+		if(SE.GetBalance(SE.NATIVE_TOKEN) < SE.Params.tokenCreationFee) {
+			alert('You must have at least ' + SE.Params.tokenCreationFee + ' ENG to create a token.');
+			isValid = false;
+		}
 
     if(isValid) {
       $('.register input').removeClass("is-invalid");
       SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);    
     }
-      
   }
 </script>

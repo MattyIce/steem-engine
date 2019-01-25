@@ -1,55 +1,44 @@
 <header>
-  <h1>HUB</h1>    
+  <h1>MY TOKEN WALLET</h1>    
 </header>
 
 <div class="container">
-  <table class="tokensTable interactiveTable" data-sorting="true"></table>
+  <table id="balances_table" class="tokensTable interactiveTable" data-sorting="true"></table>
 </div>
 
-
-</table>
-
 <script>
+	function SendColumn(value, options, rowdata)
+	{  
+		return `<img class="btn-send" src="/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;  
+	}
 
-function SendColumn(value, options, rowdata)
-{  
-  return `<img class="btn-send" src="/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;  
-}
+	function HistoryColumn(value, options, rowdata)
+	{
+		return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;  
+	}
 
-function HistoryColumn(value, options, rowdata)
-{
-  return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;  
-}
+	function BalanceColumn(value, options, rowdata)
+	{
+		return '<div class="balance-cell">' + addCommas(value) + ' ' + rowdata.symbol + '</div>';
+	}
 
-function BalanceColumn(value, options, rowdata)
-{
-  return '<div class="balance-cell">' + addCommas(value) + '</div>';
-}
+	var data = <%= JSON.stringify(data) %>;
+	data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
 
-var data = <%= JSON.stringify(data) %>;
-data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
-
-$('.tokensTable').footable({
-  "on": {
-			"ready.ft.table": function(e, ft){        
-        $('.tokensTable tbody tr').bind('click', function() {          
-          var index = $(this).index();          
-          SE.ShowHistory(data[index].symbol, data[index].name)
-        });
-			}
-		},
-  "columns": [
-    { "name": "symbol", "title": "Symbol" },
-    { "name": "name", "title": "Token Name" },
-    { "name": "balance", "title": "Balance", "formatter": BalanceColumn },
-    { "title": "Send", "formatter": SendColumn },
-    { "title": "History", "formatter": HistoryColumn }
-  ],
-  "rows": data
-});
-
-
-
-
-
+	$('#balances_table').footable({
+		"on": {
+				"ready.ft.table": function(e, ft){        
+					$('#balances_table tbody tr').bind('click', function() {          
+						var index = $(this).index();          
+						SE.ShowHistory(data[index].symbol, data[index].name)
+					});
+				}
+			},
+		"columns": [
+			{ "name": "symbol", "title": "Symbol" },
+			{ "name": "name", "title": "Token Name" },
+			{ "name": "balance", "title": "Balance", "formatter": BalanceColumn }
+		],
+		"rows": data
+	});
 </script>

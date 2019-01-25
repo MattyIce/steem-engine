@@ -1,6 +1,7 @@
 SE = {
   CHAIN_ID: 'ssc-00000000000000000002',
-  ACCOUNTS_API_URL: 'https://testaccounts.steem-engine.com',
+	ACCOUNTS_API_URL: 'https://testaccounts.steem-engine.com',
+	NATIVE_TOKEN: 'SSC',
 	User: null,
 	Params: {},
   Tokens: [],
@@ -127,6 +128,9 @@ SE = {
   },
   
   ShowHistory: function(symbol, name) { 
+		if(!name)
+			name = SE.GetToken(symbol).name;
+
     SE.Api("/history", { account: SE.User.name, limit: 100, offset: 0, type: 'user', symbol: symbol }, r => {
       SE.ShowHomeView('history', { symbol: symbol, name : name, rows : r });
     });
@@ -169,6 +173,7 @@ SE = {
 		$("#btnSignIn").hide();
 		$("#lnkUsername").text('@' + username);
 		$("#ddlLoggedIn").show();
+		$('#nav_wallet').show();
 
 		// Load the steem account info
 		steem.api.getAccounts([username], (e, r) => {
@@ -305,14 +310,21 @@ SE = {
     };
 
     if(useKeychain()) {    
-      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Posting', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
-        SE.HideLoading()
-        if(response.success) {
-          alert('Your token, ' + name +', is now created!');
-          SE.HideDialog(SE.CurrentView.view, SE.CurrentView.data);
+      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if(tx.success)
+							alert('Token created successfully!');
+						else 
+							alert('An error occurred creating your token: ' + tx.error);
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.LoadTokens(() => SE.ShowHistory(symbol));
+					});
         }
         else
-          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+					SE.HideLoading()
       });
     } else {
 			SE.SteemConnectJson('active', registration_data);
@@ -344,13 +356,20 @@ SE = {
 
     if(useKeychain()) {    
       steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
-        SE.HideLoading()
-        if(response.success) {
-          alert(quantity + ' Tokens issued for ' + symbol + ' to @' + to );
-          SE.HideDialog(SE.CurrentView.view, SE.CurrentView.data);
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if(tx.success)
+							alert(quantity + ' ' + symbol + ' tokens issued to @' + to);
+						else 
+							alert('An error occurred issuing tokens: ' + tx.error);
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.LoadTokens(() => SE.LoadBalances(() => SE.ShowHistory(symbol)));
+					});
         }
         else
-          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+					SE.HideLoading();
       });
     } else {
 			SE.SteemConnectJson('active', transaction_data);
@@ -380,15 +399,24 @@ SE = {
       }
     };
 
+		console.log('SENDING: ' + symbol);
+
     if(useKeychain()) {    
-      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
-        SE.HideLoading()
-        if(response.success) {
-          alert(quantity + ' ' + symbol + ' Tokens sent to @' + to );
-          SE.HideDialog(SE.CurrentView.view, SE.CurrentView.data);
+      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Transfer: ' + symbol, function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if(tx.success)
+							alert(quantity + ' ' + symbol + ' Tokens sent to @' + to );
+						else 
+							alert('An error occurred submitting the transfer: ' + tx.error);
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.LoadBalances(() => SE.ShowHistory(symbol));
+					});
         }
         else
-          alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
+					SE.HideLoading();
       });
     } else {
 			SE.SteemConnectJson('active', transaction_data);
@@ -429,11 +457,8 @@ SE = {
 							alert('An error occurred purchasing SSC: ' + tx.error);
 					});
         }
-        else {
+        else
 					SE.HideLoading();
-					SE.HideDialog();
-					alert('There was an error publishing this transaction to the Steem blockchain. Please try again in a few minutes.');
-				}
       });
     } else {
 			SE.HideLoading();

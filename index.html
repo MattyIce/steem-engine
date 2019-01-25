@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   
   <script type="text/javascript">		    
-    const ssc = new SSC('https://testapi.steem-engine.com/');
+    const ssc = new SSC('https://steemsmartcontracts.tk/');
 
     $(function () {
       SE.ShowHome();
@@ -44,17 +44,16 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="navbar-nav w-100 justify-content-end align-items-center">        
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowTokens()">TOKENS</a>
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowAbout()">ABOUT</a>
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowFAQ()">FAQ</a>
+				<a id="nav_wallet" class="nav-item nav-link" href="#" onclick="SE.ShowBalances();" style="display: none;">WALLET</a>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowTokens();">TOKENS</a>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowAbout();">ABOUT</a>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowFAQ();">FAQ</a>
         
-        <button id="btnSignIn" class="btn" onclick="SE.ShowSignIn()" style="margin-left: 50px;">SIGN IN</button>
+        <button id="btnSignIn" class="btn" onclick="SE.ShowSignIn();" style="margin-left: 50px;">SIGN IN</button>
         
         <div id="ddlLoggedIn" class="nav-item dropdown" style="display: none; margin-left: 80px;">
           <a class="nav-link dropdown-toggle p-0" href="#" id="lnkUsername" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-          <div class="dropdown-menu" aria-labelledby="lnkUsername">            
-            <a class="dropdown-item" onclick="SE.ShowBalances();">Show Balances</a>
-            <a class="dropdown-item" onclick="SE.ShowAddToken();">Add Token</a>
+          <div class="dropdown-menu" aria-labelledby="lnkUsername">
             <a class="dropdown-item" onclick="SE.LogOut();">Log Out</a>
           </div>
         </div>

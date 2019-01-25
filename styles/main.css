@@ -455,7 +455,7 @@ table.tokensTable {
   vertical-align: middle;
 }
 
-.tokensTable.interactiveTable tbody tr:hover {
+.tokensTable.interactiveTable tbody tr:not(.footable-empty):hover {
   color: #FFF;
   background-color: #8E4A2C;
   cursor: pointer;
@@ -514,11 +514,19 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .sign_in input {    
-  width: 300px;  
-  font-size: 20px;
-  color: #27475E;
-  padding: 7px 7px 7px 35px;
-  height: 40px;
+	width: 90%;
+	font-size: 20px;
+	color: #27475E;
+	padding: 7px 7px 7px 35px;
+	height: 40px;
+	border-width: 0 0 1px 0;
+	border-color: #27475E;
+	transition: border-width 0.1s ease-in;  
+}
+
+.sign_in input:focus {
+  outline-width: 0;
+  border-width: 0 0 3px 0;
 }
 
 .sign_in .input-group-append img {
@@ -568,8 +576,8 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .register {
   color: #27475E;  
-  margin-top: 40px;
-  margin-bottom: 60px;
+  margin-top: 20px;
+  margin-bottom: 30px;
 	font-size: 16px;	
 }
 
@@ -636,7 +644,7 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .balance-cell {
 	text-align: right;
-	width: 100px;
+	width: 180px;
 }
 
 .balance-cell.received {

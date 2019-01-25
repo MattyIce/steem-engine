@@ -8,10 +8,11 @@
 
     <h2 class="m-0">
 			<%= data.name + ' (' + data.symbol + ')' %>
-			<div class="subtitle">Supply (total/max): <%= addCommas(SE.GetToken(data.symbol).supply) + ' / ' + addCommas(SE.GetToken(data.symbol).maxSupply) %></div>
+			<div class="subtitle">Current Supply: <%= addCommas(SE.GetToken(data.symbol).supply) %></div>
 		</h2>    
     
     <div class="buttons">
+			<div class="balance" style="font-size: 25px;"><%= addCommas(SE.GetBalance(data.symbol).toFixed(SE.GetToken(data.symbol).precision)) + ' ' + data.symbol %></div>
 			<button class="btn btn-primary" onclick="sendTokens()">SEND</button>
 
 			<% if(SE.GetToken(data.symbol).issuer == SE.User.name) { %>
@@ -22,34 +23,35 @@
 </header>
 
 <div class="container">
-  <table class="tokensTable interactiveTable" data-sorting="true"></table>
+  <table id="history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
 </div>
 
 <script>
   var data = <%= JSON.stringify(data) %>;
   var symbol = data.symbol;
-  var balance = SE.GetBalance(symbol);
+	var balance = SE.GetBalance(symbol);
+	var token = SE.GetToken(symbol);
 
 	function DateColumn(value, options, rowdata) { return new Date(value).toLocaleString(); }
 	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
 	function BalanceColumn(value, options, rowdata) { return '<div class="balance-cell">' + addCommas(value) + ' ' + symbol + '</div>'; }
 	function AmountColumn(value, options, rowdata) { 
 		var operator = (rowdata.type == 'Received') ? '+' : '-';
-		return '<div class="balance-cell ' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(value) + ' ' + symbol + '</div>'; 
+		return '<div class="balance-cell ' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(parseFloat(value).toFixed(token.precision)) + ' ' + symbol + '</div>'; 
 	}
 
 	var running_balance = balance;
 	data.rows.forEach(r => {
 		r.type = (r.to == SE.User.name) ? 'Received' : 'Sent';
 		r.to_from = (r.to == SE.User.name) ? r.from : r.to;
-		r.balance = running_balance;
+		r.balance = running_balance.toFixed(token.precision);
 		running_balance = (r.to == SE.User.name) ? running_balance - parseFloat(r.quantity) : running_balance + parseFloat(r.quantity);
 	});
 
-	$('.tokensTable').footable({
+	$('#history_table').footable({
     "on": {
 			"ready.ft.table": function(e, ft){        
-        $('.tokensTable tbody tr').bind('click', function() {          
+        $("#history_table tbody tr:not(.footable-empty)").bind('click', function() {          
           var index = $(this).index();        
           console.log(data.rows[index]);
           SE.ShowTransactionDialog(data.rows[index])

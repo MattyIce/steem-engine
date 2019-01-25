@@ -2,17 +2,20 @@
   <div class="group">
     <h1 class="m-0 p-0">TOKENS</h1>    
     <div class="buttons">
-      <button class="btn btn-primary" onclick="SE.ShowBuySSC();">BUY SSC</button>
+      <button class="btn btn-primary" onclick="SE.ShowBuySSC();">BUY <%= SE.NATIVE_TOKEN %></button>
       <button class="btn btn-secondary" onclick="SE.ShowAddToken();">CREATE</button>
     </div>
   </div>  
 </header>
 
 <div class="container">
-  <table class="tokensTable" data-sorting="true"></table>
+  <table id="tokens_table" class="tokensTable interactiveTable" data-sorting="true"></table>
 </div>
 
 <script>
+	var token_data = <%= JSON.stringify(data) %>;
+	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
+	function SupplyColumn(value, options, rowdata) { return '<div class="balance-cell">' + addCommas(value) + '</div>'; }
 	function URLFormatter(value, options, rowdata)
 	{
 		if(value != null)
@@ -22,14 +25,22 @@
 	}
 
 
-	$('.tokensTable').footable({
+	$('#tokens_table').footable({
+		"on": {
+			"ready.ft.table": function(e, ft){        
+        $('#tokens_table tbody tr').bind('click', function() {          
+          var index = $(this).index();        
+          SE.ShowHistory(token_data[index].symbol, token_data[index].name);
+        });
+			}
+		},
 		"columns": [
 			{ "name": "symbol", "title": "Symbol" },
 			{ "name": "name", "title": "Token Name" },
-			{ "name": "supply", "title": "Supply" },    
-			{ "name": "issuer", "title": "Created By",  },
+			{ "name": "supply", "title": "Supply (Circulating)", "formatter": SupplyColumn },    
+			{ "name": "issuer", "title": "Issuer", "formatter": SteemAccountColumn },
 			{ "name": "url", "title": "URL", "formatter": URLFormatter }
 		],
-		"rows": <%= JSON.stringify(data) %>
+		"rows": token_data
 	});
 </script>

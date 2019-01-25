@@ -9,9 +9,9 @@
       </div>
   
       <div class="modal-body">
-        <label class="mb-0">BALANCE</label>
+        <label class="mb-0">SUPPLY (Current / Max)</label>
         <p class="mb-4">
-          <%= data.balance %> <%= data.symbol %>
+          <%= addCommas(SE.GetToken(data.symbol).supply) %> / <%= addCommas(SE.GetToken(data.symbol).maxSupply) %>
         </p>						
         
         <label>TO</label>

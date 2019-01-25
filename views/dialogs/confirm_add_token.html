@@ -1,5 +1,5 @@
 
-<div class="modal-dialog modal-dialog-centered modal-lg confirm_add_token_dialog">
+<div class="modal-dialog modal-dialog-centered modal-lg confirm_add_token_dialog" style="max-width: 800px;">
   <div class="modal-content">
     <div class="modal-header">
       <h1 class="modal-title">NEW TOKEN DETAILS</h1>
@@ -8,7 +8,7 @@
       </p>
     </div>
 
-    <div class="modal-body">
+    <div class="modal-body" style="padding: 10px 0;">
       <div class="d-flex">
         <div class="token_info text-right" style="color: #93A3AF;">
           <div>Token Name:</div>
@@ -27,13 +27,13 @@
       </div>
 
       <p class="mt-5">
-        This Token Generation will cost <%= SE.Params.tokenCreationFee %> SSC. Proceed?
+        This token generation will cost <%= SE.Params.tokenCreationFee + ' ' + SE.NATIVE_TOKEN %>. Proceed?
       </p>
     </div>
     
     <div class="modal-footer" style="border: 0; justify-content: space-evenly; margin-top: 20px;">
       <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">CANCEL</button>
-      <button id="btnAdd" type="button" class="btn btn-primary btn-lg" onclick="onPayClick()">PAY SSC</button>
+      <button id="btnAdd" type="button" class="btn btn-primary btn-lg" onclick="onPayClick()">CREATE</button>
     </div>
   </div>
 </div>
