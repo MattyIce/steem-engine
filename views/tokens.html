@@ -2,8 +2,10 @@
   <div class="group">
     <h1 class="m-0 p-0">TOKENS</h1>    
     <div class="buttons">
-      <button class="btn btn-primary" onclick="SE.ShowBuySSC();">BUY <%= SE.NATIVE_TOKEN %></button>
-      <button class="btn btn-secondary" onclick="SE.ShowAddToken();">CREATE</button>
+			<% if(SE.User) { %>
+				<button class="btn btn-primary" onclick="SE.ShowBuySSC();">BUY <%= SE.NATIVE_TOKEN %></button>
+				<button class="btn btn-secondary" onclick="SE.ShowAddToken();">CREATE</button>
+			<% } %>
     </div>
   </div>  
 </header>
@@ -27,11 +29,13 @@
 
 	$('#tokens_table').footable({
 		"on": {
-			"ready.ft.table": function(e, ft){        
-        $('#tokens_table tbody tr').bind('click', function() {          
-          var index = $(this).index();        
-          SE.ShowHistory(token_data[index].symbol, token_data[index].name);
-        });
+			"ready.ft.table": function(e, ft) {
+				if(SE.User) {
+					$('#tokens_table tbody tr').bind('click', function() {          
+						var index = $(this).index();        
+						SE.ShowHistory(token_data[index].symbol, token_data[index].name);
+					});
+				}
 			}
 		},
 		"columns": [

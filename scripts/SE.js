@@ -260,43 +260,6 @@ SE = {
 		});
   },
 
-  RegisterAccount: function() {
-    var username = localStorage.getItem('username');
-
-    if(!username) {      
-      SE.ShowSignIn();
-      return;
-    }      
-
-    var registration_data = {
-      "contractName": "accounts",
-      "contractAction": "register",
-      "contractPayload": {}
-    };
-
-    if(useKeychain()) {
-			SE.ShowLoading();
-			    
-      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Posting', JSON.stringify(registration_data), 'Steem Engine Account Registration', function(response) {        
-        if(response.success) {
-					SE.CheckRegistrationStatus(5, 5, () => {
-						alert('The account @' + username + ' has been successfully registered!');
-						window.location.reload();
-					});
-        }
-        else {
-					SE.HideLoading();
-				}
-      });
-    } else {
-			SE.SteemConnectJson('posting', registration_data);
-			SE.CheckRegistrationStatus(5, 20, () => {
-				alert('The account @' + username + ' has been successfully registered!');
-				window.location.reload();
-			});
-		}
-  },
-
   RegisterToken: function(name, symbol, precision, maxSupply, url) {    
     SE.ShowLoading();
     var username = localStorage.getItem('username');
@@ -336,7 +299,9 @@ SE = {
 					SE.HideLoading()
       });
     } else {
-			SE.SteemConnectJson('active', registration_data);
+			SE.SteemConnectJson('active', registration_data, () => {
+				SE.LoadTokens(() => SE.ShowHistory(symbol));
+			});
 		}
   },
 
@@ -381,7 +346,9 @@ SE = {
 					SE.HideLoading();
       });
     } else {
-			SE.SteemConnectJson('active', transaction_data);
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.LoadTokens(() => SE.LoadBalances(() => SE.ShowHistory(symbol)));
+			});
 		}
   },
 
@@ -428,7 +395,9 @@ SE = {
 					SE.HideLoading();
       });
     } else {
-			SE.SteemConnectJson('active', transaction_data);
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.LoadBalances(() => SE.ShowHistory(symbol));
+			});
 		}
   },  
 
@@ -461,7 +430,7 @@ SE = {
 							alert('Purchase transaction sent successfully.');
 							SE.HideLoading();
 							SE.HideDialog();
-							SE.ShowHistory('SSC', 'Steem Engine Tokens');
+							SE.LoadBalances(() => SE.ShowHistory(SE.NATIVE_TOKEN, 'Steem Engine Tokens'));
 						} else 
 							alert('An error occurred purchasing SSC: ' + tx.error);
 					});
@@ -471,7 +440,9 @@ SE = {
       });
     } else {
 			SE.HideLoading();
-			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data));
+			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
+				SE.LoadBalances(() => SE.ShowHistory(SE.NATIVE_TOKEN, 'Steem Engine Tokens'));
+			});
 		}
   },
   
@@ -479,22 +450,31 @@ SE = {
 		SE.ShowDialog('transaction', data);
 	},
 	
-	SteemConnectJson: function(auth_type, data) {
+	_sc_callback: null,
+	SteemConnectJson: function(auth_type, data, callback) {
 		SE.HideLoading();
+		SE.ShowDialog('steem_connect')
 
 		var username = localStorage.getItem('username');
 		var url = 'https://steemconnect.com/sign/custom-json?';
 
-		url += ((auth_type == 'active') ? 'required_auths' : 'required_posting_auths') + '=' + encodeURI('["' + username + '"]');
+		if(auth_type == 'active') {
+			url += 'required_posting_auths=' + encodeURI('[]');
+			url += '&required_auths=' + encodeURI('["' + username + '"]');
+		} else
+			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
+		
 		url += '&id=' + SE.CHAIN_ID;
 		url += '&json=' + encodeURI(JSON.stringify(data));
 
 		popupCenter(url, 'steemconnect', 500, 560);
+		SE._sc_callback = callback;
 	},
 
-	SteemConnectTransfer: function(from, to, amount, memo) {
+	SteemConnectTransfer: function(from, to, amount, memo, callback) {
 		SE.HideLoading();
-		
+		SE.ShowDialog('steem_connect')
+
 		var url = 'https://steemconnect.com/sign/transfer?';
 		url += '&from=' + encodeURI(from);
 		url += '&to=' + encodeURI(to);
@@ -502,6 +482,19 @@ SE = {
 		url += '&memo=' + encodeURI(memo);
 
 		popupCenter(url, 'steemconnect', 500, 560);
+		SE._sc_callback = callback;
+	},
+
+	SteemConnectCallback: function() {
+		if(SE._sc_callback) {
+			SE.ShowLoading();
+
+			setTimeout(() => {
+				SE.HideLoading();
+				SE._sc_callback();
+				SE._sc_callback = null;
+			}, 10000);
+		}
 	},
 
 	CheckAccount: function(name, callback) {
