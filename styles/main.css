@@ -21,11 +21,11 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 .modal-content {    
   border: 0;
   border-radius: 86px;
-  background: url(../images/steem-engine_icon.svg) transparent no-repeat center center;
+  background: url(https://s3.amazonaws.com/steem-engine/images/steem-engine_icon.svg) transparent no-repeat center center;
 }
 
 .modal-content.white {      
-  background: url(../images/steem-engine_icon_edf0f2.svg) transparent no-repeat center center;
+  background: url(https://s3.amazonaws.com/steem-engine/images/steem-engine_icon_edf0f2.svg) transparent no-repeat center center;
 }
 
 .modal-body {    
@@ -135,7 +135,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 
 .navbar-steem-engine {
-  background: url(../images/bg_header.jpg) black repeat-x top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_header.jpg) black repeat-x top right;  
   height: 60px;
   padding: 0 100px 0 100px;  
 }
@@ -215,7 +215,7 @@ header {
 
 header::before {
   content: " ";
-  background: url(../images/img_gear.svg) transparent no-repeat top left;
+  background: url(https://s3.amazonaws.com/steem-engine/images/img_gear.svg) transparent no-repeat top left;
   height: 164px;
   width: 300px;
   position: absolute;
@@ -275,7 +275,7 @@ header .group .buttons > *{
 }
 
 footer {
-  background: url(../images/bg_footer.jpg) black repeat-x top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_footer.jpg) black repeat-x top right;  
   height: 200px;
   padding: 7px 140px 40px 140px;  
   font-family: 'Open Sans', sans-serif;
@@ -308,7 +308,7 @@ footer .copyright {
 
 .home-1 {
   height: 600px;
-  background: url(../images/bg_hero_machinery.jpg) #21374c no-repeat top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_hero_machinery.jpg) #21374c no-repeat top right;  
   background-size: cover;
   padding: 80px;  
 }
@@ -327,7 +327,7 @@ footer .copyright {
 }
 
 .home-3 {  
-  background: url(../images/bg_engine.jpg) #962e17 no-repeat top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_engine.jpg) #962e17 no-repeat top right;  
   background-size: cover;  
   padding-top: 65px;
   padding-bottom: 65px;
@@ -356,7 +356,7 @@ footer .copyright {
 }
 
 .home-4 {  
-  background: url(../images/bg_gears.jpg) #21374c no-repeat top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_gears.jpg) #21374c no-repeat top right;  
   background-size: cover;  
   padding-top: 60px;
   padding-bottom: 65px;
@@ -373,7 +373,7 @@ footer .copyright {
 
 .home-5::before {  
   content: " ";
-  background: url(../images/img_train.svg) transparent no-repeat top left;
+  background: url(https://s3.amazonaws.com/steem-engine/images/img_train.svg) transparent no-repeat top left;
   height: 700px;
   width: 700px;
   position: absolute;
@@ -625,7 +625,7 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .confirm_add_token_dialog .modal-content {
-  background: url(../images/steem-engine_icon.svg) transparent no-repeat top center;
+  background: url(https://s3.amazonaws.com/steem-engine/images/steem-engine_icon.svg) transparent no-repeat top center;
 }
 
 .confirm_add_token_dialog .token_info {
