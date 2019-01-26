@@ -228,7 +228,7 @@ SE = {
             SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');						
 					}
 				} else {
-          SE.ShowToast('There was an error loading the @' + username + ' account.');					
+          SE.ShowToast(false, 'There was an error loading the @' + username + ' account.');					
 				}
 			});
 		}
@@ -293,7 +293,7 @@ SE = {
             if(tx.success)
               SE.ShowToast(true, 'Token created successfully!');
             else 
-              SE.ShowToast(true, 'An error occurred creating your token: ' + tx.error);							
+              SE.ShowToast(false, 'An error occurred creating your token: ' + tx.error);							
 
 						SE.HideLoading();
 						SE.HideDialog();
