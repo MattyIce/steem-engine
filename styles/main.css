@@ -306,6 +306,29 @@ footer .copyright {
   z-index: 1100;
 }
 
+.toast {
+  width: 350px;
+  color: black;
+  z-index: 5000;
+}
+
+.toast-header.success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.toast-header.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.toast-body {  
+  background-color: #FFF;  
+  text-align: left;
+}
+
 .home-1 {
   height: 600px;
   background: url(https://s3.amazonaws.com/steem-engine/images/bg_hero_machinery.jpg) #21374c no-repeat top right;  

@@ -50,7 +50,6 @@ SE = {
       SE.ShowHomeView(viewToShowAfter, data);
   },
 
-
   ShowDialogOpaque: function(dialog, data) {
     $('#dialog_container').html(renderDialog(dialog, data)); 
     $('#dialog_container').modal('show');
@@ -74,6 +73,12 @@ SE = {
 
   HideLoading: function() {
     SE._loading.remove();
+  },
+
+  ShowToast: function(isSuccess, message) {
+    var toast = $(renderComponent("toast", {isSuccess : isSuccess, message : message}));
+    $('#toast_container').append(toast); 
+    toast.toast('show');
   },
 
   ShowTokens: function() { 
@@ -190,8 +195,8 @@ SE = {
 		if(window.steem_keychain && !key) {
 			steem_keychain.requestSignBuffer(username, 'Log In', 'Posting', function(response) {
 				if(response.error) {
-					SE.HideLoading();
-					alert('Unable to log in with the @' + username + ' account.');
+          SE.HideLoading();
+          SE.ShowToast(false, 'Unable to log in with the @' + username + ' account.');					
 				} else {
 					localStorage.setItem('username', username);
 					window.location.reload();
@@ -202,8 +207,8 @@ SE = {
 				if (key && !steem.auth.isWif(key)) {
 					key = steem.auth.getPrivateKeys(username, key, ['posting']).posting;
 				}
-			} catch(err) {
-				alert('Invalid private key or master password.');
+			} catch(err) {        
+        SE.ShowToast(false, 'Invalid private key or master password.');
 				return;
 			}
 
@@ -215,15 +220,15 @@ SE = {
 							localStorage.setItem('key', key);
 							window.location.reload();
 						} else {
-							SE.HideLoading();
-							alert('Unable to log in with the @' + username + ' account. Invalid private key or password.');
+              SE.HideLoading();
+              SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');
 						}
 					} catch(err) { 
-						SE.HideLoading();
-						alert('Unable to log in with the @' + username + ' account. Invalid private key or password.'); 
+            SE.HideLoading();
+            SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');						
 					}
 				} else {
-					alert('There was an error loading the @' + username + ' account.');
+          SE.ShowToast('There was an error loading the @' + username + ' account.');					
 				}
 			});
 		}
@@ -285,10 +290,10 @@ SE = {
       steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-						if(tx.success)
-							alert('Token created successfully!');
-						else 
-							alert('An error occurred creating your token: ' + tx.error);
+            if(tx.success)
+              SE.ShowToast(true, 'Token created successfully!');
+            else 
+              SE.ShowToast(true, 'An error occurred creating your token: ' + tx.error);							
 
 						SE.HideLoading();
 						SE.HideDialog();
@@ -332,10 +337,10 @@ SE = {
       steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-						if(tx.success)
-							alert(quantity + ' ' + symbol + ' tokens issued to @' + to);
-						else 
-							alert('An error occurred issuing tokens: ' + tx.error);
+            if(tx.success)
+              SE.ShowToast(true, quantity + ' ' + symbol + ' tokens issued to @' + to);							
+            else 
+              SE.ShowToast(false, 'An error occurred issuing tokens: ' + tx.error);							
 
 						SE.HideLoading();
 						SE.HideDialog();
@@ -381,10 +386,10 @@ SE = {
       steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Transfer: ' + symbol, function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-						if(tx.success)
-							alert(quantity + ' ' + symbol + ' Tokens sent to @' + to );
-						else 
-							alert('An error occurred submitting the transfer: ' + tx.error);
+            if(tx.success)
+              SE.ShowToast(true, quantity + ' ' + symbol + ' Tokens sent to @' + to )							
+            else 
+              SE.ShowToast(false, 'An error occurred submitting the transfer: ' + tx.error)							
 
 						SE.HideLoading();
 						SE.HideDialog();
@@ -426,13 +431,13 @@ SE = {
       steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-						if(tx.success) {
-							alert('Purchase transaction sent successfully.');
+						if(tx.success) {              
+              SE.ShowToast(true, 'Purchase transaction sent successfully.');
 							SE.HideLoading();
 							SE.HideDialog();
 							SE.LoadBalances(() => SE.ShowHistory(SE.NATIVE_TOKEN, 'Steem Engine Tokens'));
-						} else 
-							alert('An error occurred purchasing SSC: ' + tx.error);
+            } else 
+              SE.ShowToast(false, 'An error occurred purchasing SSC: ' + tx.error);							
 					});
         }
         else

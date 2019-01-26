@@ -92,7 +92,7 @@
 		}
 		
 		if(SE.GetBalance(SE.NATIVE_TOKEN) < SE.Params.tokenCreationFee) {
-			alert('You must have at least ' + SE.Params.tokenCreationFee + ' ENG to create a token.');
+      SE.ShowToast(false, 'You must have at least ' + SE.Params.tokenCreationFee + ' ENG to create a token.');			
 			isValid = false;
 		}
 
