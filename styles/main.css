@@ -136,7 +136,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 .navbar-steem-engine {
   background: url(https://s3.amazonaws.com/steem-engine/images/bg_header.jpg) black repeat-x top right;  
-  height: 60px;
+  min-height: 60px;
   padding: 0 100px 0 100px;  
 }
 
