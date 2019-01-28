@@ -1,4 +1,227 @@
 <header>
   <h1>FAQ</h1>
-  <p>Building your STEEM project just got a whole lot easier.</p>
 </header>
+
+<div class="container">
+		<div class="faq-content">
+			<div class="faq-section-title">GENERAL</div>
+
+			<div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading1">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion1" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
+								What is Steem Engine?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1">
+						<div class="panel-body">
+							Steem Engine is a smart contracts side-chain platform for the Steem blockchain. This means that it can execute custom smart contracts based on data published 
+							to the Steem blockchain. This allows us to do things that are not currently supported by the Steem blockchain, such as creating custom tokens, or literally
+							anything else achievable with a smart contract.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading2">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion2" href="#collapse2" aria-expanded="false" aria-controls="collapse2">
+								How does Steem Engine work?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading2">
+						<div class="panel-body">
+							Steem Engine uses the Steem Smart Contracts software created by @harpagon. The software scans all blocks added to the Steem blockchain for transfers, 
+							custom_json, or even comment operations that contain a certain sidechain ID. It then executes the smart contract function specified in the operation
+							data and packages it into a block which is added to the sidechain. It also maintains the current state of the sidechain and all smart contracts running
+							on it which can be queried using a familiar RPC API.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading3">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapse3" aria-expanded="false" aria-controls="collapse3">
+								What are ENG tokens?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
+						<div class="panel-body">
+							ENG is the native token of the Steem Engine platform, just like how ETH is the native token of the Ethereum platform. ENG is currently required to create 
+							a new token on the Steem Engine platform, and in the future it will be required to publish and execute custom smart contracts.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion4" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading4">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion4" href="#collapse4" aria-expanded="false" aria-controls="collapse4">
+								How do I get ENG tokens?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+						<div class="panel-body">
+							1M ENG tokens have been set aside for initial sale at the cost of 1 STEEM per ENG token. They can be purchased through this website by clicking the "Buy ENG" button
+							on the Tokens page. In the future, ENG will be able to be earned by running the Steem Smart Contracts node software to create blocks and help secure the network, 
+							just as STEEM/BTC/ETH can be earned by block producers securing their networks. At that point ENG will no longer be offered for sale directly and the price will be
+							determined by the internal STEEM/ENG market.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion5" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading5">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion5" href="#collapse5" aria-expanded="false" aria-controls="collapse5">
+								How do I create my own token?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
+						<div class="panel-body">
+							You can create your own token through this website by clicking the "CREATE" button at the top of the Tokens page. You will then be prompted to fill in 
+							all of the required information about your token and pay the specified fee in ENG. Please keep in mind that, other than the token URL, none of the information 
+							can be changed once your token has been created, so please make sure you have thoroughly thought through everything before submitting.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion6" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading6">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion6" href="#collapse6" aria-expanded="false" aria-controls="collapse6">
+								Why is there a fee to create a token?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+						<div class="panel-body">
+							The fee is primarily to prevent people from creating "spam" tokens that have no real planned use. If you would like to test creating a token, you can 
+							do so for free on the <a href="https://qa.steem-engine.com" target="_blank">testnet website here.</a> The fee is meant to be large enough to prevent 
+							people from creating tokens they don't plan to actually use, but small enough to not be a barrier for any serious projects. If you have a good project
+							and you truly cannot afford the fee, please <a href="https://discord.gg/xWRYB9s" target="_blank">contact us on Discord</a> and we may be able to cover 
+							the fee for you.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion7" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading7">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion7" href="#collapse7" aria-expanded="false" aria-controls="collapse7">
+								How do I issue new tokens and what does that mean?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading7">
+						<div class="panel-body">
+							After a new token is created they must be "issued" in order for them to be used and traded. The total amount of a token that can be issued is limited by the 
+							max supply set during token creation. Tokens may be issued all at once or in small amounts over time, it is up to the token creator. To issue a token, you can 
+							click on the token in the list on the Tokens page and then click on the "Issue" button on the top right of the screen. Only the creator of the token may issue 
+							them, so you must be logged in with the Steem account that created the token in order for the option to appear.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion8" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading8">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion8" href="#collapse8" aria-expanded="false" aria-controls="collapse8">
+								How do I view my balance/history and transfer tokens?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse8" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading8">
+						<div class="panel-body">
+							You can view your balances of any tokens built on the Steem Engine platform from the "Wallet" page of this site. If you click on a particular token 
+							you can see your recent transaction history. If you click on a particular transaction in the history list you can see mpre details of that transaction.
+							There is also a "Send" button at the top right of the page after you have clicked on a specific token which will allow you to transfer them to another 
+							Steem account. Additionally, you can view your token balances and transfer tokens directly from the
+							<a href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm" target="_blank">Steem Keychain browser extension</a>.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="faq-section-title">DEVELOPERS</div>
+
+			<div class="panel-group" id="accordion9" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading9">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion9" href="#collapse9" aria-expanded="false" aria-controls="collapse9">
+								Can I integrate my website or project with Steem Engine?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading9">
+						<div class="panel-body">
+							Yes! The simplest way to integrate with the Steem Engine platform is to use our <a href="https://github.com/harpagon210/sscjs" target="_blank">JavaScript library</a>,
+							however you can also interact with the RPC endpoints directly from any programming language or tool of your choice. If you have any questions or need any help please 
+							reach out in the developers channel in <a href="https://discord.gg/xWRYB9s" target="_blank">our Discord server</a>.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group" id="accordion10" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading10">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion10" href="#collapse10" aria-expanded="false" aria-controls="collapse10">
+								Can I run my own Steem Smart Contracts node?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading10">
+						<div class="panel-body">
+							Yes again! You can download the <a href="https://github.com/harpagon210/steemsmartcontracts" target="_blank">Steem Smart Contracts software from GitHub</a> 
+							and view the documentation for how to set it up in the readme. If you have any questions or need any help please 
+							reach out in the developers channel in <a href="https://discord.gg/xWRYB9s" target="_blank">our Discord server</a>.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-group mb-4" id="accordion11" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="heading11">
+						<h4 class="panel-title">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion11" href="#collapse11" aria-expanded="false" aria-controls="collapse11">
+								Can I publish my own smart contract to the Steem Engine sidechain?
+							</a>
+						</h4>
+					</div>
+					<div id="collapse11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading11">
+						<div class="panel-body">
+							We are currently not allowing arbitrary smart contracts to be published to the sidechain, as you can do on platforms like Ethereum or EOS. Our goal is to 
+							be able to allow this at some point in the future, but for now if you are interested in deploying a custom smart contract please 
+							<a href="https://discord.gg/xWRYB9s" target="_blank">contact us on Discord</a> and we can work with you on that.
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+</div>

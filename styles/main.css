@@ -699,3 +699,28 @@ table.tokensTable .fooicon-sort-desc:before {
 .btn-back i {  
   font-size: 32px;
 }
+
+.faq-content {
+	color: #27475E;
+	font-family: 'Nunito', sans-serif;
+	text-align: left;
+}
+
+.faq-section-title {
+	font-size: 42px;
+	margin-top: 20px;
+	margin-left: -40px;
+}
+
+.faq-content .panel-title a {
+	font-size: 30px;
+	color: #532B19;
+}
+
+.faq-content .panel-body {
+	margin-bottom: 20px;
+}
+
+.faq-content .panel-body a {
+	color: #532B19;
+}

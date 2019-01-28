@@ -16,11 +16,16 @@
   <script src="scripts/footable.min.js"></script>  
   <link rel="stylesheet" href="styles/footable.bootstrap.min.css" />  
   <script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
-
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  
-  <script type="text/javascript">		    
-    const ssc = new SSC('https://steemsmartcontracts.tk/');
+
+	<script src="scripts/Config.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/SE.js"></script>    
+  <link rel="stylesheet" href="styles/main.css" />  
+	<title>Steem Engine - Smart Contracts on the STEEM blockchain</title>
+	
+	<script type="text/javascript">		    
+    const ssc = new SSC(Config.RPC_URL);
 
     $(function () {
       SE.ShowHome();
@@ -30,12 +35,6 @@
 				SE.OnLogin(username);
     });
   </script>
-
-	<script src="scripts/Config.js"></script>
-  <script src="scripts/utils.js"></script>
-  <script src="scripts/SE.js"></script>    
-  <link rel="stylesheet" href="styles/main.css" />  
-  <title>Steem Engine - Smart Contracts on the STEEM blockchain</title>
 </head>
 
 <body>
@@ -49,7 +48,7 @@
       <div class="navbar-nav w-100 justify-content-end align-items-center">        
 				<a id="nav_wallet" class="nav-item nav-link" href="#" onclick="SE.ShowBalances();" style="display: none;">WALLET</a>
         <a class="nav-item nav-link" href="#" onclick="SE.ShowTokens();">TOKENS</a>
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowAbout();">ABOUT</a>
+        <a class="nav-item nav-link" href="#" onclick="SE.ShowHomeView('market');">MARKET</a>
         <a class="nav-item nav-link" href="#" onclick="SE.ShowFAQ();">FAQ</a>
         
         <button id="btnSignIn" class="btn" onclick="SE.ShowSignIn();" style="margin-left: 50px;">SIGN IN</button>
