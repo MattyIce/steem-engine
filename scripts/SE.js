@@ -1,7 +1,4 @@
 SE = {
-  CHAIN_ID: 'ssc-00000000000000000002',
-	ACCOUNTS_API_URL: 'https://testaccounts.steem-engine.com',
-	NATIVE_TOKEN: 'SSC',
 	User: null,
 	Params: {},
   Tokens: [],
@@ -13,7 +10,7 @@ SE = {
     data.v = new Date().getTime();    
 
     jQuery
-      .getJSON(SE.ACCOUNTS_API_URL + url, data, function(response) {
+      .getJSON(Config.ACCOUNTS_API_URL + url, data, function(response) {
         if (callback != null && callback != undefined) callback(response);
       })
       .always(function() {
@@ -287,7 +284,7 @@ SE = {
     };
 
     if(useKeychain()) {    
-      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {        
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success)
@@ -334,7 +331,7 @@ SE = {
     };
 
     if(useKeychain()) {    
-      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {        
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success)
@@ -361,7 +358,7 @@ SE = {
     SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
   },
 
-  SendToken: function(symbol, to, quantity) {
+  SendToken: function(symbol, to, quantity, memo) {
     SE.ShowLoading();
     var username = localStorage.getItem('username');
 
@@ -376,14 +373,15 @@ SE = {
       "contractPayload": {
         "symbol": symbol,
         "to": to,
-        "quantity": quantity
+				"quantity": quantity,
+				"memo": memo
       }
     };
 
 		console.log('SENDING: ' + symbol);
 
     if(useKeychain()) {    
-      steem_keychain.requestCustomJson(username, SE.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Transfer: ' + symbol, function(response) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Transfer: ' + symbol, function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success)
@@ -419,7 +417,7 @@ SE = {
     }      
 
     var transaction_data = {
-			id: SE.CHAIN_ID,
+			id: Config.CHAIN_ID,
 			json: {
 				"contractName": "sscstore",
 				"contractAction": "buy",
@@ -435,7 +433,7 @@ SE = {
               SE.ShowToast(true, 'Purchase transaction sent successfully.');
 							SE.HideLoading();
 							SE.HideDialog();
-							SE.LoadBalances(() => SE.ShowHistory(SE.NATIVE_TOKEN, 'Steem Engine Tokens'));
+							SE.LoadBalances(() => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
             } else 
               SE.ShowToast(false, 'An error occurred purchasing SSC: ' + tx.error);							
 					});
@@ -446,7 +444,7 @@ SE = {
     } else {
 			SE.HideLoading();
 			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
-				SE.LoadBalances(() => SE.ShowHistory(SE.NATIVE_TOKEN, 'Steem Engine Tokens'));
+				SE.LoadBalances(() => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
 			});
 		}
   },
@@ -469,7 +467,7 @@ SE = {
 		} else
 			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
 		
-		url += '&id=' + SE.CHAIN_ID;
+		url += '&id=' + Config.CHAIN_ID;
 		url += '&json=' + encodeURI(JSON.stringify(data));
 
 		popupCenter(url, 'steemconnect', 500, 560);

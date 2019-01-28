@@ -6,7 +6,7 @@
 <div class="register container text-left">
   <p>
 		<span class="font-weight-bold">NOTE: Token Creation costs <%= addCommas(SE.Params.tokenCreationFee) %> ENG (Steem Engine Native Tokens)</span></br>
-		Your Current ENG Balance: <%= addCommas(SE.GetBalance(SE.NATIVE_TOKEN)) %> ENG (<a href="javascript:void(0);" onclick="SE.ShowBuySSC();" style="color: #8E4A2C; font-weight: bold;">BUY ENG with STEEM</a>)
+		Your Current ENG Balance: <%= addCommas(SE.GetBalance(Config.NATIVE_TOKEN)) %> ENG (<a href="javascript:void(0);" onclick="SE.ShowBuySSC();" style="color: #8E4A2C; font-weight: bold;">BUY ENG with STEEM</a>)
   </p>  
 </div>
 
@@ -91,7 +91,7 @@
       isValid = false;
 		}
 		
-		if(SE.GetBalance(SE.NATIVE_TOKEN) < SE.Params.tokenCreationFee) {
+		if(SE.GetBalance(Config.NATIVE_TOKEN) < SE.Params.tokenCreationFee) {
       SE.ShowToast(false, 'You must have at least ' + SE.Params.tokenCreationFee + ' ENG to create a token.');			
 			isValid = false;
 		}

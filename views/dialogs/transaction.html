@@ -17,7 +17,7 @@
       </p>
       
       <p class="mb-4">
-        Block: <%= data.block %>
+        Sidechain Block: <%= data.block %>
       </p>
       
       <p class="mb-4">
@@ -28,7 +28,13 @@
       
       <p class="mb-4">
         Amount: <%= (data.type == 'Received') ? '+' : '-' %> <%= data.quantity %> <%= data.symbol %>
-			</p>            
+			</p>   
+			
+			<% if(data.memo) { %>
+				<p class="mb-4">
+					Memo: <%= data.memo %>
+				</p>
+			<% } %>
     </div>
     
     <div class="modal-footer">

@@ -34,8 +34,12 @@
         <div class="invalid-tooltip">
           Please enter an amount greater than 0
         </div>        
-			</div>						
-      
+			</div>
+			
+			<label>MEMO</label>
+      <div class="input-group justify-content-center align-items-center mb-4">
+        <input type="text" id="txtMemo">      
+			</div>
     </div>
     
     <div class="modal-footer">
@@ -62,7 +66,8 @@
 
   function onSendClick() {  
     var to = $('#txtTo').val();
-    var amount = parseFloat($('#txtAmount').val());
+		var amount = parseFloat($('#txtAmount').val());
+		var memo = $('#txtMemo').val();
 
     if(isNaN(amount) || amount == 0) {
       $('#txtAmount').addClass("is-invalid");
@@ -77,7 +82,7 @@
     if(isValid)
     {
 			$('.modal-body input').removeClass("is-invalid");
-			SE.SendToken(symbol, to, amount);
+			SE.SendToken(symbol, to, amount, memo);
     }
   }
 </script>
