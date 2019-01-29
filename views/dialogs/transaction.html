@@ -27,7 +27,7 @@
 			</p>
       
       <p class="mb-4">
-        Amount: <%= (data.type == 'Received') ? '+' : '-' %> <%= data.quantity %> <%= data.symbol %>
+        Amount: <%= (data.type == 'Received') ? '+' : '-' %> <%= addCommas(data.quantity) %> <%= data.symbol %>
 			</p>   
 			
 			<% if(data.memo) { %>

@@ -22,7 +22,7 @@
           <div><%= data.symbol.toUpperCase() %></div>
           <div><%= (data.url.trim().length == 0) ? '&nbsp;' : data.url %> </div>
           <div><%= data.precision %></div>
-          <div><%= data.maxSupply %></div>
+          <div><%= addCommas(data.maxSupply) %></div>
         </div>
       </div>
 
