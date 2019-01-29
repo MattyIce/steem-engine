@@ -29,7 +29,7 @@
           Please enter an amount greater than 0
         </div>
 			</div>
-			<div class="ssc-cost">1 <%= Config.NATIVE_TOKEN %> = <%= SE.Params.priceSteem %> STEEM</div>
+			<div class="ssc-cost">1 <%= Config.NATIVE_TOKEN %> = <%= SE.Params.priceSteem * 1000 %> STEEM</div>
       
     </div>
     
@@ -47,7 +47,7 @@ function onBuyClick() {
     $('#ssc_amount').addClass("is-invalid");    
   }  
   else {
-    SE.BuySSC(amount * <%= SE.Params.priceSteem %>);
+    SE.BuySSC(amount * <%= SE.Params.priceSteem * 1000 %>);
   }
   
 }
