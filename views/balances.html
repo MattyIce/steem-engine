@@ -1,9 +1,9 @@
 <header>
-  <h1>MY TOKEN WALLET</h1>    
+  <h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>    
 </header>
 
 <div class="container">
-  <table id="balances_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+  <table id="balances_table" class="tokensTable <%= data.account == SE.User.name ? 'interactiveTable' : '' %>" data-sorting="true"></table>
 </div>
 
 <script>
@@ -22,16 +22,18 @@
 		return '<div class="balance-cell">' + addCommas(value) + ' ' + rowdata.symbol + '</div>';
 	}
 
-	var data = <%= JSON.stringify(data) %>;
+	var data = <%= JSON.stringify(data.balances) %>;
 	data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
 
 	$('#balances_table').footable({
 		"on": {
-				"ready.ft.table": function(e, ft){        
-					$('#balances_table tbody tr').bind('click', function() {          
-						var index = $(this).index();          
-						SE.ShowHistory(data[index].symbol, data[index].name)
-					});
+				"ready.ft.table": function(e, ft) {
+					if('<%= data.account %>' == SE.User.name) {
+						$('#balances_table tbody tr').bind('click', function() {          
+							var index = $(this).index();          
+							SE.ShowHistory(data[index].symbol, data[index].name)
+						});
+					}
 				}
 			},
 		"columns": [

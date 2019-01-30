@@ -27,12 +27,29 @@
 	<script type="text/javascript">		    
     const ssc = new SSC(Config.RPC_URL);
 
-    $(function () {
-      SE.ShowHome();
+    $(function () {				
 			var username = localStorage.getItem('username');
 			
-      if(username)
-				SE.OnLogin(username);
+			SE.LoadTokens(() => {
+				if(username) {
+					SE.OnLogin(username, () => {	
+						if(window.location.search)
+							SE.ShowUrlPage(window.location.search.substr(1));
+						else
+							SE.ShowBalances(username);
+
+						SE.HideLoading();
+					});
+				} else if(window.location.search)
+					SE.ShowUrlPage(window.location.search.substr(1));
+				else
+					SE.ShowHome();
+			});
+
+			window.onpopstate = function(e) {
+				if(e && e.state)
+					SE.ShowHomeView(e.state.view, e.state.data, e.state.params, true);
+			};
     });
   </script>
 </head>
@@ -46,10 +63,10 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="navbar-nav w-100 justify-content-end align-items-center">        
-				<a id="nav_wallet" class="nav-item nav-link" href="#" onclick="SE.ShowBalances();" style="display: none;">WALLET</a>
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowTokens();">TOKENS</a>
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowHomeView('market');">MARKET</a>
-        <a class="nav-item nav-link" href="#" onclick="SE.ShowFAQ();">FAQ</a>
+				<a id="nav_wallet" class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowBalances();" style="display: none;">WALLET</a>
+        <a class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowTokens();">TOKENS</a>
+        <a class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowHomeView('market');">MARKET</a>
+        <a class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowFAQ();">FAQ</a>
         
         <button id="btnSignIn" class="btn" onclick="SE.ShowSignIn();" style="margin-left: 50px;">SIGN IN</button>
         
@@ -64,7 +81,7 @@
   </nav>
 
   <div>
-    <div id="page_container"></div>
+    <div id="page_container" style="min-height: 600px;"></div>
 	</div>
 	
 	<footer>

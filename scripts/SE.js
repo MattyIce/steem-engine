@@ -18,7 +18,7 @@ SE = {
       });
   },  
 
-  ShowHomeView: function(view, data) {
+  ShowHomeView: function(view, data, url_params) {
 		window.scrollTo(0,0);
 		$('body').css('overflow', 'auto');
 		$('body').css('padding-right', '0');    
@@ -34,12 +34,62 @@ SE = {
 			if(!burger.hasClass('collapsed'))
 				burger.click();
 		}
+
+		if(view != 'home') {
+			var url = '?p=' + view + (url_params ? '&' + $.param(url_params) : '');
+
+			if(window.location.search == url)
+				window.history.replaceState({ data: data, view: view, params: url_params }, 'Steem Engine - Smart Contracts on the STEEM blockchain', url);
+			else
+				window.history.pushState({ data: data, view: view, params: url_params }, 'Steem Engine - Smart Contracts on the STEEM blockchain', url);
+		}
   },
 
   ShowDialog: function(dialog, data) {
     $('#dialog_container').html(renderDialog(dialog, data)); 
     $('#dialog_container').modal('show');
-  },
+	},
+	
+	ShowUrlPage(url) {
+		var parts = JSON.parse('{"' + decodeURI(url).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+
+		if(!parts.p) {
+			SE.ShowHome();
+			return;
+		}
+
+		switch(parts.p) {
+			case 'balances':
+				SE.ShowBalances(parts.a ? parts.a : SE.User.name);
+				break;
+			case 'tokens':
+				SE.ShowTokens();
+				break;
+			case 'history':
+				if(SE.User || parts.a) {
+					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {
+						if(parts.t && SE.Tokens.find(t => t.symbol == parts.t))
+							SE.ShowHistory(parts.t);
+						else
+							SE.ShowTokens();
+					});
+				} else
+					SE.ShowTokens();
+				break;
+			case 'add_token':
+				SE.ShowAddToken();
+				break;
+			case 'faq':
+				SE.ShowFAQ();
+				break;
+			case 'market':
+				SE.ShowHomeView('market');
+				break;
+			default:
+				SE.ShowHome();
+				break;
+		}
+	},
 
   HideDialog: function(viewToShowAfter, data) {    
     $('#dialog_container').modal('hide');
@@ -91,12 +141,12 @@ SE = {
     });  
 	},
 
-  ShowBalances: function(callback) {
-		SE.LoadBalances(r => {
-			SE.ShowHomeView('balances', r);
+  ShowBalances: function(account) {
+		if(!account && SE.User)
+			account = SE.User.name;
 
-			if(callback)
-				callback(r);
+		SE.LoadBalances(account, r => {
+			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
 		});   
 	},
 
@@ -112,9 +162,10 @@ SE = {
 		});
 	},
 	
-	LoadBalances: function(callback) {
-		ssc.find('tokens', 'balances', { account: SE.User.name }, 1000, 0, '', false).then(r => {
-			SE.User.balances = r;
+	LoadBalances: function(account, callback) {
+		ssc.find('tokens', 'balances', { account: account }, 1000, 0, '', false).then(r => {
+			if(SE.User && account == SE.User.name)
+				SE.User.balances = r;
 
 			if(callback)
 				callback(r);      
@@ -134,7 +185,7 @@ SE = {
 			name = SE.GetToken(symbol).name;
 
     SE.Api("/history", { account: SE.User.name, limit: 100, offset: 0, type: 'user', symbol: symbol }, r => {
-      SE.ShowHomeView('history', { symbol: symbol, name : name, rows : r });
+      SE.ShowHomeView('history', { symbol: symbol, name : name, rows : r }, { t: symbol });
     });
 	},
 
@@ -168,7 +219,7 @@ SE = {
     });
 	},
 	
-	OnLogin: function(username) {
+	OnLogin: function(username, callback) {
 		SE.ShowLoading();
 		SE.User = { name: username };
 		SE.LoadParams();
@@ -183,7 +234,8 @@ SE = {
 				SE.User.account = r[0];
 		});
 
-		SE.LoadTokens(() => SE.ShowBalances(() => SE.HideLoading()));
+		if(callback)
+			callback(SE.User);
 	},
 
   LogIn: function(username, key) {
@@ -341,7 +393,7 @@ SE = {
 
 						SE.HideLoading();
 						SE.HideDialog();
-						SE.LoadTokens(() => SE.LoadBalances(() => SE.ShowHistory(symbol)));
+						SE.LoadTokens(() => SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol)));
 					});
         }
         else
@@ -349,7 +401,7 @@ SE = {
       });
     } else {
 			SE.SteemConnectJson('active', transaction_data, () => {
-				SE.LoadTokens(() => SE.LoadBalances(() => SE.ShowHistory(symbol)));
+				SE.LoadTokens(() => SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol)));
 			});
 		}
   },
@@ -391,7 +443,7 @@ SE = {
 
 						SE.HideLoading();
 						SE.HideDialog();
-						SE.LoadBalances(() => SE.ShowHistory(symbol));
+						SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol));
 					});
         }
         else
@@ -399,7 +451,7 @@ SE = {
       });
     } else {
 			SE.SteemConnectJson('active', transaction_data, () => {
-				SE.LoadBalances(() => SE.ShowHistory(symbol));
+				SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol));
 			});
 		}
   },  
@@ -433,7 +485,7 @@ SE = {
               SE.ShowToast(true, 'Purchase transaction sent successfully.');
 							SE.HideLoading();
 							SE.HideDialog();
-							SE.LoadBalances(() => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
+							SE.LoadBalances(SE.User.name, () => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
             } else 
               SE.ShowToast(false, 'An error occurred purchasing SSC: ' + tx.error);							
 					});
@@ -444,7 +496,7 @@ SE = {
     } else {
 			SE.HideLoading();
 			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
-				SE.LoadBalances(() => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
+				SE.LoadBalances(SE.User.name, () => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
 			});
 		}
   },
