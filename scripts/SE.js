@@ -286,7 +286,7 @@ SE = {
   LogOut: function() {    
 		localStorage.clear();
 		SE.User = null;
-    window.location.reload();
+    window.location.href = window.location.origin;
 	},
 	
 	CheckRegistration: function(username, callback) {

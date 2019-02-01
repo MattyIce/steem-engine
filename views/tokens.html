@@ -20,9 +20,12 @@
 	function SupplyColumn(value, options, rowdata) { return '<div class="balance-cell">' + addCommas(value) + '</div>'; }
 	function URLFormatter(value, options, rowdata)
 	{
-		if(value != null)
+		if(value != null) {
+			if(!value.startsWith('http'))
+				value = 'http://' + value;
+				
 			return '<a href="' + value + '" target="_blank" >' + value + '</a>';
-		else
+		} else
 			return '';
 	}
 
