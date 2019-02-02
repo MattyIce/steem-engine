@@ -29,21 +29,22 @@
 
     $(function () {				
 			var username = localStorage.getItem('username');
-			
-			SE.LoadTokens(() => {
-				if(username) {
-					SE.OnLogin(username, () => {	
-						if(window.location.search)
-							SE.ShowUrlPage(window.location.search.substr(1));
-						else
-							SE.ShowBalances(username);
+			SE.LoadParams(() => {
+				SE.LoadTokens(() => {
+					if(username) {
+						SE.OnLogin(username, () => {	
+							if(window.location.search)
+								SE.ShowUrlPage(window.location.search.substr(1));
+							else
+								SE.ShowBalances(username);
 
-						SE.HideLoading();
-					});
-				} else if(window.location.search)
-					SE.ShowUrlPage(window.location.search.substr(1));
-				else
-					SE.ShowHome();
+							SE.HideLoading();
+						});
+					} else if(window.location.search)
+						SE.ShowUrlPage(window.location.search.substr(1));
+					else
+						SE.ShowHome();
+				});
 			});
 
 			window.onpopstate = function(e) {

@@ -150,15 +150,23 @@ SE = {
 		});   
 	},
 
-	LoadParams: function() {
+	LoadParams: function(callback) {
+		var loaded = 0;
+
 		ssc.findOne('sscstore', 'params', {  }, (err, result) => {
 			if(result && !err)
 				Object.assign(SE.Params, result);
+
+			if(++loaded >= 2 && callback)
+				callback();
 		});
 
 		ssc.findOne('tokens', 'params', {  }, (err, result) => {
 			if(result && !err)
 				Object.assign(SE.Params, result);
+			
+			if(++loaded >= 2 && callback)
+				callback();
 		});
 	},
 	
@@ -222,7 +230,6 @@ SE = {
 	OnLogin: function(username, callback) {
 		SE.ShowLoading();
 		SE.User = { name: username };
-		SE.LoadParams();
 		$("#btnSignIn").hide();
 		$("#lnkUsername").text('@' + username);
 		$("#ddlLoggedIn").show();
