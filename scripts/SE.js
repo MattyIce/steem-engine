@@ -136,11 +136,56 @@ SE = {
 		SE.LoadTokens(r => SE.ShowHomeView('market', r));
 	},
 
-	ShowMarketView: function(token) {
+	ShowMarketView: function(token, account) {
+		SE.ShowLoading();
+		if(!account && SE.User)
+			account = SE.User.name;
+
+		account = 'yabapmatt';
+
 		window.scrollTo(0,0);
 
-		$('#market_view').html(render('market_view', { data: { token: token } }));
-  },
+		let tasks = [];
+		tasks.push(ssc.find('market', 'buyBook', { symbol: token }, 200, 0, [{ index: 'price', descending: true }], false));
+		tasks.push(ssc.find('market', 'sellBook', { symbol: token }, 200, 0, [{ index: 'price', descending: true }], false));
+		if (account) {
+			tasks.push(ssc.find('market', 'buyBook', { symbol: token, account: account }, 100, 0, [{ index: 'price', descending: true }], false));
+			tasks.push(ssc.find('market', 'sellBook', { symbol: token, account: account }, 100, 0, [{ index: 'price', descending: true }], false));
+		}
+		Promise.all(tasks).then(results => {
+			let buy_orders = results[0];
+			let sell_orders = results[1];
+			let user_buy_orders = results[2].map(o => {
+				o.type = 'buy';
+				o.total = o.price * o.quantity;
+				o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+				return o;
+			});
+			let user_sell_orders = results[3].map(o => {
+				o.type = 'sell';
+				o.total = o.price * o.quantity;
+				o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+				return o;
+			});
+			let user_orders = user_buy_orders.concat(user_sell_orders);
+			user_orders.sort((a, b) => b.timestamp - a.timestamp)
+
+			$('#market_view').html(render('market_view', {
+				data: {
+					token: token,
+					buy_orders: buy_orders,
+					sell_orders: sell_orders,
+					user_orders: user_orders
+			 	}
+			}));
+
+			SE.HideLoading();
+    }, error => {
+			SE.HideLoading();
+      SE.ShowToast(false, 'Error retrieving market data.');
+		});
+
+	},
 
 	LoadTokens: function(callback) {
 		ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {

@@ -93,17 +93,18 @@
 
 <script>
 	var data = <%= JSON.stringify(data) %>;
+	// console.log(data);
 
 	$('#user_order_table').footable({
 		"columns": [
-			{ "name": "created", "title": "Date Created" },
+			{ "name": "timestamp_string", "title": "Date Created" },
 			{ "name": "type", "title": "Type" },
 			{ "name": "price", "title": "Price" },
-			{ "name": "token", "title": "Token" },
-			{ "name": "steem", "title": "Steem" },
+			{ "name": "symbol", "title": "Token" },
+			{ "name": "total", "title": "Steem" },
 			{ "name": "action", "title": "Action" }
 		],
-		"rows": []
+		"rows": data.user_orders
 	});
 
 	$('#buy_order_table').footable({
@@ -113,41 +114,42 @@
 			{ "name": "token", "title": data.token },
 			{ "name": "price", "title": "Price" }
 		],
-		"rows": []
+		"rows": data.buy_orders.slice(0, 15)
 	});
 
 	$('#sell_order_table').footable({
 		"columns": [
 			{ "name": "price", "title": "Price" },
-			{ "name": "token", "title": data.token },
+			{ "name": "quantity", "title": data.token },
 			{ "name": "steem", "title": "STEEM" },
 			{ "name": "total_steem", "title": "Total STEEM" }
 		],
-		"rows": []
+		"rows": data.sell_orders.slice(0, 15)
 	});
 
+	// chart
 	var chart_ctx = $("#market_depth_chart");
 	var market_chart = new Chart(chart_ctx, {
 		type: 'line',
 		legend: {
 			display: false
 		},
-    data: {
-      labels: ["Buy", "Sell"],
-      datasets: [
+		data: {
+			labels: ["Buy", "Sell"],
+			datasets: [
 				{
-					label: 'Bid',
-					data: [12, 19, 3, 5, 2, 3]
+					label: 'Buy',
+					data: data.buy_orders.map(o => o.price)
 				},
 				{
-					label: 'Ask',
-					data: [1, 9, 23, 25, 2, 3]
+					label: 'Sell',
+					data: data.buy_orders.map(o => o.price)
 				}
 			]
-    },
-    options: {
-      steppedLine: true
-    }
+		},
+		options: {
+			steppedLine: true
+		}
 	});
 
 	function btnSubmitBuy() {
