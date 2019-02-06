@@ -3,6 +3,59 @@
 	<p>Trade any Steem Engine token against STEEM on the internal DEX!</p>
 </header>
 
-<div class="container">
-	<h1 style="color: #212529; margin-top: 50px;">Coming Soon!</h1>
+<div class="market container">
+	<div class="row">
+		<!-- token selection table -->
+		<div class="col-md-2">
+			<table id="tokens_table" class="tokensTable interactiveTable text-center mt-3" data-sorting="true"></table>
+		</div>
+		<!-- main page -->
+		<div class="col-md-10">
+			<div id="market_view"></div>
+		</div>
+	</div>
 </div>
+
+<script>
+	var token_data = <%= JSON.stringify(data) %>;
+
+	SE.ShowMarketView(Config.NATIVE_TOKEN);
+
+	$('#tokens_table').footable({
+		"on": {
+			"ready.ft.table": function(e, ft) {
+				if(SE.User) {
+					$('#tokens_table tbody tr').bind('click', function() {
+						var index = $(this).index();
+						SE.ShowMarketView(token_data[index].symbol);
+					});
+				}
+			}
+		},
+		"columns": [
+			{ "name": "symbol", "title": "Symbol" }
+		],
+		"rows": token_data
+	});
+
+	var chart_ctx = $("#market_depth_chart");
+	var market_chart = new Chart(chart_ctx, {
+    type: 'line',
+    data: {
+      labels: ["Buy", "Sell"],
+      datasets: [
+				{
+					label: 'Bid',
+					data: [12, 19, 3, 5, 2, 3]
+				},
+				{
+					label: 'Ask',
+					data: [1, 9, 23, 25, 2, 3]
+				}
+			]
+    },
+    options: {
+      steppedLine: true
+    }
+	});
+</script>

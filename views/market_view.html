@@ -1,0 +1,208 @@
+<div class="mt-3">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<h4 class="font-weight-bold">Market Depth (<%= data.token %>)</h4>
+			<div class="chart-container">
+				<canvas id="market_depth_chart"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- buy/sell forms -->
+	<% if(SE.User) { %>
+		<div class="row">
+			<div class="col-md-6 text-left p-3 buy-form">
+				<h4 class="font-weight-bold">Buy <%= data.token %></h4>
+				<div class="group">
+					<label style="min-width: 80px;">Price</label>
+					<input type="number" id="buyPrice">
+					<div class="invalid-feedback">
+							Required field. Price must be a valid number.
+					</div>
+				</div>
+				<div class="group">
+					<label style="min-width: 80px;">Amount</label>
+					<input type="number" id="buyAmount">
+					<div class="invalid-feedback">
+							Required field. Price must be a valid number.
+					</div>
+				</div>
+				<div class="group">
+					<label style="min-width: 80px;">Total</label>
+					<input type="number" id="buyTotal">
+					<div class="invalid-feedback">
+							Required field. Price must be a valid number.
+					</div>
+				</div>
+				<div class="group text-center mt-1">
+					<button class="btn btn-primary btn-sm" onclick="btnSubmitBuy();" style="margin: auto;">Buy <%= data.token %></button>
+				</div>
+			</div>
+			<div class="col-md-6 text-left p-3 sell-form">
+				<h4 class="font-weight-bold">Sell <%= data.token %></h4>
+				<div class="group">
+					<label style="min-width: 80px;">Price</label>
+					<input type="number" id="sellPrice">
+					<div class="invalid-feedback">
+						Required field. Price must be a valid number.
+					</div>
+				</div>
+				<div class="group">
+					<label style="min-width: 80px;">Amount</label>
+					<input type="number" id="sellAmount">
+					<div class="invalid-feedback">
+						Required field. Amount must be a valid number.
+					</div>
+				</div>
+				<div class="group">
+					<label style="min-width: 80px;">Total</label>
+					<input type="number" id="sellTotal">
+					<div class="invalid-feedback">
+						Required field. Total must be a valid number.
+					</div>
+				</div>
+				<div class="group text-center mt-1">
+					<button class="btn btn-primary btn-sm" onclick="btnSubmitSell();" style="margin: auto;">Sell <%= data.token %></button>
+				</div>
+			</div>
+		</div>
+	<% } %>
+
+	<!-- active buy/sell orders -->
+	<div class="row">
+		<div class="col-md-6 text-left p-3">
+			<h4 class="font-weight-bold">Buy Orders</h4>
+			<table id="buy_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+		<div class="col-md-6 text-left p-3">
+			<h4 class="font-weight-bold">Sell Orders</h4>
+			<table id="sell_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+	</div>
+
+	<!-- your orders -->
+	<% if(SE.User) { %>
+	<div class="row">
+		<div class="col-md-12 text-left p-3">
+			<h4 class="font-weight-bold">Open Orders</h4>
+			<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+	</div>
+	<% } %>
+</div>
+
+<script>
+	var data = <%= JSON.stringify(data) %>;
+
+	$('#user_order_table').footable({
+		"columns": [
+			{ "name": "created", "title": "Date Created" },
+			{ "name": "type", "title": "Type" },
+			{ "name": "price", "title": "Price" },
+			{ "name": "token", "title": "Token" },
+			{ "name": "steem", "title": "Steem" },
+			{ "name": "action", "title": "Action" }
+		],
+		"rows": []
+	});
+
+	$('#buy_order_table').footable({
+		"columns": [
+			{ "name": "total_steem", "title": "Total STEEM" },
+			{ "name": "steem", "title": "STEEM" },
+			{ "name": "token", "title": data.token },
+			{ "name": "price", "title": "Price" }
+		],
+		"rows": []
+	});
+
+	$('#sell_order_table').footable({
+		"columns": [
+			{ "name": "price", "title": "Price" },
+			{ "name": "token", "title": data.token },
+			{ "name": "steem", "title": "STEEM" },
+			{ "name": "total_steem", "title": "Total STEEM" }
+		],
+		"rows": []
+	});
+
+	var chart_ctx = $("#market_depth_chart");
+	var market_chart = new Chart(chart_ctx, {
+		type: 'line',
+		legend: {
+			display: false
+		},
+    data: {
+      labels: ["Buy", "Sell"],
+      datasets: [
+				{
+					label: 'Bid',
+					data: [12, 19, 3, 5, 2, 3]
+				},
+				{
+					label: 'Ask',
+					data: [1, 9, 23, 25, 2, 3]
+				}
+			]
+    },
+    options: {
+      steppedLine: true
+    }
+	});
+
+	function btnSubmitBuy() {
+    var price = parseFloat($("#buyPrice").val());
+    var amount = parseFloat($("#buyAmount").val());
+    var total = parseFloat($("#buyTotal").val());
+
+    if(isNaN(price) || price < 0) {
+      $('#buyPrice').addClass("is-invalid");
+      isValid = false;
+		}
+
+		if(isNaN(amount) || amount < 0) {
+      $('#buyAmount').addClass("is-invalid");
+      isValid = false;
+		}
+
+		if(isNaN(total) || total < 0) {
+      $('#buyTotal').addClass("is-invalid");
+      isValid = false;
+		}
+
+    if(isValid) {
+      $('.buy-form input').removeClass("is-invalid");
+
+			// TODO: show confim dialog
+			// SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);
+    }
+	}
+
+	function btnSubmitSell() {
+    var price = parseFloat($("#sellPrice").val());
+    var amount = parseFloat($("#sellAmount").val());
+    var total = parseFloat($("#sellTotal").val());
+
+    if(isNaN(price) || price < 0) {
+      $('#sellPrice').addClass("is-invalid");
+      isValid = false;
+		}
+
+		if(isNaN(amount) || amount < 0) {
+      $('#sellAmount').addClass("is-invalid");
+      isValid = false;
+		}
+
+		if(isNaN(total) || total < 0) {
+      $('#sellTotal').addClass("is-invalid");
+      isValid = false;
+		}
+
+    if(isValid) {
+      $('.sell-form input').removeClass("is-invalid");
+
+			// TODO: show confim dialog
+			// SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);
+    }
+  }
+</script>

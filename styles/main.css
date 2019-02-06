@@ -18,28 +18,28 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   opacity: 1;
 }
 
-.modal-content {    
+.modal-content {
   border: 0;
   border-radius: 86px;
   background: url(https://s3.amazonaws.com/steem-engine/images/steem-engine_icon.svg) transparent no-repeat center center;
 }
 
-.modal-content.white {      
+.modal-content.white {
   background: url(https://s3.amazonaws.com/steem-engine/images/steem-engine_icon_edf0f2.svg) transparent no-repeat center center;
 }
 
-.modal-body {    
+.modal-body {
   padding: 10px 80px;
 }
 
-.modal-content input {    
+.modal-content input {
   border-radius: 18px;
   border: 0px;
   padding: 2px 16px 2px 16px;
   width: 100%;
 }
 
-.modal-content label {    
+.modal-content label {
   text-align: left;
   font-family: 'Nunito', sans-serif;
   font-size: 18px;
@@ -47,49 +47,49 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   width: 100%;
 }
 
-.modal-content .input-group-prepend {    
-  z-index: 100;  
+.modal-content .input-group-prepend {
+  z-index: 100;
   color: #27475E;
   position: absolute;
   left: 10px;
 }
 
 
-.modal-content .input-group-append {    
-  z-index: 100;  
+.modal-content .input-group-append {
+  z-index: 100;
   color: #27475E;
   position: absolute;
   right: 19px;
 }
 
-.modal-content.blue {    
+.modal-content.blue {
   background-color: #27475E;
 }
 
-.modal-content.blue p, .modal-content.brown p{    
+.modal-content.blue p, .modal-content.brown p{
   font-size: 24px;
   text-align: left;
 }
 
-.modal-content.white {    
+.modal-content.white {
   background-color: #FFF;
 }
 
-.modal-content.white p{    
+.modal-content.white p{
   color: #27475E;
   text-align: left;
   font-size: 18px;
 }
 
-.modal-content.brown {    
+.modal-content.brown {
   background-color: #582D1A;
 }
 
-.modal-content.brown h1, .modal-content.brown label {    
+.modal-content.brown h1, .modal-content.brown label {
   color: #EBA88B;
 }
 
-.modal-content.brown .btn {    
+.modal-content.brown .btn {
   color: #EBA88B;
   background-color: #0C171F;
 }
@@ -106,43 +106,43 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   max-width: 512px;
 }
 
-.modal-header {  
+.modal-header {
   border: 0;
   align-items: center;
   padding: 40px 80px 10px 80px;
 }
 
-.modal-header .close{    
+.modal-header .close{
   color: #FFF;
   font-family: 'Nunito', sans-serif;
   font-size: 42px;
-  font-weight: bold;      
+  font-weight: bold;
   text-shadow: none;
   opacity: 1;
 }
 
-.modal-header h1 {  
+.modal-header h1 {
   color: #93A3AF;
   font-weight: bold;
 }
 
 .modal-footer {
-  border: 0; 
-  justify-content: space-evenly; 
+  border: 0;
+  justify-content: space-evenly;
   margin-top: 20px;
   padding: 0px 80px 40px;
 }
 
 
 .navbar-steem-engine {
-  background: url(https://s3.amazonaws.com/steem-engine/images/bg_header.jpg) black repeat-x top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_header.jpg) black repeat-x top right;
   min-height: 60px;
-  padding: 0 100px 0 100px;  
+  padding: 0 100px 0 100px;
 }
 
 .navbar-steem-engine .navbar-brand img{
   width: 238px;
-  height: 32px;  
+  height: 32px;
 }
 
 .navbar-steem-engine .navbar-nav  .nav-link{
@@ -150,7 +150,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   font-size: 20px;
   padding-left: 30px;
   padding-right: 30px;
-  color: white;  
+  color: white;
 }
 
 .navbar-steem-engine button{
@@ -161,7 +161,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   background-color: #93A3AF;
   border: 0;
   width: 147px;
-  height: 36px;  
+  height: 36px;
   padding: 0;
 }
 
@@ -184,7 +184,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 .btn {
   font-family: 'Nunito', sans-serif;
   border-radius: 18px;
-  border: 0;  
+  border: 0;
   font-size: 20px;
   padding: 5px 30px;
 }
@@ -207,7 +207,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 }
 
 header {
-  background: linear-gradient(263deg, #27475E, #080E13);  
+  background: linear-gradient(263deg, #27475E, #080E13);
   height: 164px;
   padding-left: 130px;
   padding-right: 130px;
@@ -232,7 +232,7 @@ header h1 {
 
 header h2 {
   color: #FFF;
-  font-size: 27px;  
+  font-size: 27px;
   width: 100%;
   text-align: left;
   padding-left: 30px;
@@ -250,7 +250,7 @@ header h2 .btn {
   margin-left: 10px;
 }
 
-header p {  
+header p {
   text-align: left;
 }
 
@@ -275,9 +275,9 @@ header .group .buttons > *{
 }
 
 footer {
-  background: url(https://s3.amazonaws.com/steem-engine/images/bg_footer.jpg) black repeat-x top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_footer.jpg) black repeat-x top right;
   height: 200px;
-  padding: 7px 140px 40px 140px;  
+  padding: 7px 140px 40px 140px;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   color: white;
@@ -324,34 +324,34 @@ footer .copyright {
   border-color: #f5c6cb;
 }
 
-.toast-body {  
-  background-color: #FFF;  
+.toast-body {
+  background-color: #FFF;
   text-align: left;
 }
 
 .home-1 {
   height: 600px;
-  background: url(https://s3.amazonaws.com/steem-engine/images/bg_hero_machinery.jpg) #21374c no-repeat top right;  
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_hero_machinery.jpg) #21374c no-repeat top right;
   background-size: cover;
-  padding: 80px;  
+  padding: 80px;
 }
 
 .home-1 p {
-  width: 306px; 
+  width: 306px;
   margin: 52px auto 70px auto;
 }
 
-.home-2 {  
-  padding: 77px;  
+.home-2 {
+  padding: 77px;
   background-color: #FFF;
   font-size: 26px;
   font-style: italic;
-  color: #27475E;  
+  color: #27475E;
 }
 
-.home-3 {  
-  background: url(https://s3.amazonaws.com/steem-engine/images/bg_engine.jpg) #962e17 no-repeat top right;  
-  background-size: cover;  
+.home-3 {
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_engine.jpg) #962e17 no-repeat top right;
+  background-size: cover;
   padding-top: 65px;
   padding-bottom: 65px;
 }
@@ -359,7 +359,7 @@ footer .copyright {
 .home-3 .container {
   width: 100%;
   margin: auto;
-  display: flex;  
+  display: flex;
   justify-content: flex-end;
 }
 
@@ -367,7 +367,7 @@ footer .copyright {
   width: 544px;
   background-color: rgba(0, 0, 0, .84);
   border-radius: 83px;
-  padding: 55px;  
+  padding: 55px;
 }
 
 .home-3 h1 {
@@ -378,9 +378,9 @@ footer .copyright {
   text-align: left;
 }
 
-.home-4 {  
-  background: url(https://s3.amazonaws.com/steem-engine/images/bg_gears.jpg) #21374c no-repeat top right;  
-  background-size: cover;  
+.home-4 {
+  background: url(https://s3.amazonaws.com/steem-engine/images/bg_gears.jpg) #21374c no-repeat top right;
+  background-size: cover;
   padding-top: 60px;
   padding-bottom: 65px;
 }
@@ -389,12 +389,12 @@ footer .copyright {
   color: #93A3AF;
 }
 
-.home-5 {    
-  background-color: #FFF;    
-  color: #27475E;  
+.home-5 {
+  background-color: #FFF;
+  color: #27475E;
 }
 
-.home-5::before {  
+.home-5::before {
   content: " ";
   background: url(https://s3.amazonaws.com/steem-engine/images/img_train.svg) transparent no-repeat top left;
   height: 700px;
@@ -404,58 +404,58 @@ footer .copyright {
 }
 
 .home-5 h1 {
-  padding-top: 70px;  
+  padding-top: 70px;
   color: #8E4A2C;
 }
 
 .home-5 p {
-  padding-bottom: 70px;      
+  padding-bottom: 70px;
 }
 
-.home-6 {    
-  padding: 77px;  
+.home-6 {
+  padding: 77px;
   background-image: linear-gradient(261deg, #8E4A2C, #472516);
 }
 
-.home-6 h1 {    
+.home-6 h1 {
   margin-bottom: 0px;
 }
 
-.about-1 {  
-  color: #27475E;  
+.about-1 {
+  color: #27475E;
   text-align: left;
   padding-top: 40px;
   padding-bottom: 40px;
 }
 
-.about-2 {  
+.about-2 {
   background-color: #000000;
-  color: #ffffff;  
+  color: #ffffff;
   text-align: left;
   padding-top: 40px;
   padding-bottom: 40px;
 }
 
-.about-3 {  
-  color: #532B19;  
+.about-3 {
+  color: #532B19;
   text-align: left;
   padding-top: 40px;
   padding-bottom: 40px;
 }
 
-.about-4 {  
-  color: #FFF;  
+.about-4 {
+  color: #FFF;
   background-image: linear-gradient(77deg, #191919, #4D4D4D);
   padding-top: 40px;
   padding-bottom: 40px;
 }
 
-.about-4 p {  
+.about-4 p {
   text-align: left;
 }
 
 table.tokensTable {
-  top: -45px;  
+  top: 0px;
 }
 
 .tokensTable thead {
@@ -505,7 +505,7 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .sign_in {
-  color: #27475E;  
+  color: #27475E;
 }
 
 .sign_in .col {
@@ -521,7 +521,7 @@ table.tokensTable .fooicon-sort-desc:before {
   color: #004A54;
   background: transparent;
   border-radius: 0;
-  border-width: 0;  
+  border-width: 0;
   position: relative;
   z-index: 5;
 }
@@ -529,14 +529,14 @@ table.tokensTable .fooicon-sort-desc:before {
 .sign_in .input-group-prepend {
   position: absolute;
   top: -9px;
-  left: -10px;    
+  left: -10px;
 }
 
-.sign_in .at {  
-  font-size: 28px;    
+.sign_in .at {
+  font-size: 28px;
 }
 
-.sign_in input {    
+.sign_in input {
 	width: 90%;
 	font-size: 20px;
 	color: #27475E;
@@ -544,7 +544,7 @@ table.tokensTable .fooicon-sort-desc:before {
 	height: 40px;
 	border-width: 0 0 1px 0;
 	border-color: #27475E;
-	transition: border-width 0.1s ease-in;  
+	transition: border-width 0.1s ease-in;
 }
 
 .sign_in input:focus {
@@ -555,7 +555,7 @@ table.tokensTable .fooicon-sort-desc:before {
 .sign_in .input-group-append img {
   height: 35px;
   top: -9px;
-  left: -38px;    
+  left: -38px;
   cursor: pointer;
 }
 
@@ -565,7 +565,7 @@ table.tokensTable .fooicon-sort-desc:before {
   content: "";
   display: block;
   position: absolute;
-  top: 10%;  
+  top: 10%;
   right: 0;
   height: 80%;
 }
@@ -598,10 +598,10 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .register {
-  color: #27475E;  
+  color: #27475E;
   margin-top: 20px;
   margin-bottom: 30px;
-	font-size: 16px;	
+	font-size: 16px;
 }
 
 .register label {
@@ -611,9 +611,9 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .register input {
   border-width: 0 0 1px 0;
-  border-color: #27475E;  
-  flex: 1 1 auto;  
-  transition: border-width 0.1s ease-in;  
+  border-color: #27475E;
+  flex: 1 1 auto;
+  transition: border-width 0.1s ease-in;
   font-size: 20px;
   color:#8E4A2C;
   flex-grow: 0;
@@ -655,7 +655,7 @@ table.tokensTable .fooicon-sort-desc:before {
   display: flex;
   flex-direction: column;
   width: 50%;
-  padding: 0 25px;  
+  padding: 0 25px;
 }
 
 .ssc-cost {
@@ -683,7 +683,7 @@ table.tokensTable .fooicon-sort-desc:before {
   cursor: pointer;
 }
 
-.btn-history {  
+.btn-history {
   cursor: pointer;
 }
 
@@ -693,10 +693,10 @@ table.tokensTable .fooicon-sort-desc:before {
   height: 36px;
   border-radius: 50%;
   background-color: #93A3AF;
-  color: #27475E;  
+  color: #27475E;
 }
 
-.btn-back i {  
+.btn-back i {
   font-size: 32px;
 }
 
@@ -723,4 +723,27 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .faq-content .panel-body a {
 	color: #532B19;
+}
+
+.market {
+  color: #27475E;
+}
+.market .footable-header {
+  background-color: #182b3a;
+}
+.market .tokensTable {
+  top: 0;
+}
+.market .tokensTable thead th {
+  padding: 15px 30px 15px 5px;
+}
+.market .tokensTable thead th {
+  padding: 5px 30px 5px 5px;
+  color: #FFF;
+  font-size: 16px;
+}
+
+.buy-form input.is-invalid~.invalid-feedback, .sell-form input.is-invalid~.invalid-feedback {
+  display: block;
+  text-align: left;
 }
