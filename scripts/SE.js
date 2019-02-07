@@ -133,7 +133,7 @@ SE = {
 	},
 
 	ShowMarket: function() {
-		SE.LoadTokens(r => SE.ShowHomeView('market', r));
+		SE.LoadTokens(r => SE.ShowHomeView('market', r.filter(t => t.symbol !== 'STEEMP')));
 	},
 
 	ShowMarketView: function(symbol, account) {
