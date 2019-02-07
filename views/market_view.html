@@ -14,24 +14,39 @@
 			<div class="col-md-6 text-left p-3 buy-form">
 				<h4 class="font-weight-bold">Buy <%= data.token %></h4>
 				<div class="group">
-					<label style="min-width: 80px;">Price</label>
-					<input type="number" id="buyPrice">
-					<div class="invalid-feedback">
-							Required field. Price must be a valid number.
+					<div class="input-group mb-1">
+						<label style="min-width: 80px;">Price</label>
+						<input type="number" id="buyPrice">
+						<div class="input-group-append">
+							<span class="input-group-text">Steem/<%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
 					</div>
 				</div>
 				<div class="group">
-					<label style="min-width: 80px;">Amount</label>
-					<input type="number" id="buyAmount">
-					<div class="invalid-feedback">
-							Required field. Price must be a valid number.
+					<div class="input-group mb-1">
+						<label style="min-width: 80px;">Amount</label>
+						<input type="number" id="buyAmount">
+						<div class="input-group-append">
+							<span class="input-group-text"><%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
 					</div>
 				</div>
 				<div class="group">
-					<label style="min-width: 80px;">Total</label>
-					<input type="number" id="buyTotal">
-					<div class="invalid-feedback">
-							Required field. Price must be a valid number.
+					<div class="input-group mb-1">
+						<label style="min-width: 80px;">Total</label>
+						<input type="number" id="buyTotal">
+						<div class="input-group-append">
+							<span class="input-group-text">Steem</span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
 					</div>
 				</div>
 				<div class="group text-center mt-1">
@@ -41,24 +56,39 @@
 			<div class="col-md-6 text-left p-3 sell-form">
 				<h4 class="font-weight-bold">Sell <%= data.token %></h4>
 				<div class="group">
-					<label style="min-width: 80px;">Price</label>
-					<input type="number" id="sellPrice">
-					<div class="invalid-feedback">
-						Required field. Price must be a valid number.
+					<div class="input-group mb-1">
+						<label style="min-width: 80px;">Price</label>
+						<input type="number" id="sellPrice">
+						<div class="input-group-append">
+							<span class="input-group-text">Steem/<%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
 					</div>
 				</div>
 				<div class="group">
-					<label style="min-width: 80px;">Amount</label>
-					<input type="number" id="sellAmount">
-					<div class="invalid-feedback">
-						Required field. Amount must be a valid number.
+					<div class="input-group mb-1">
+						<label style="min-width: 80px;">Amount</label>
+						<input type="number" id="sellAmount">
+						<div class="input-group-append">
+							<span class="input-group-text"><%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
 					</div>
 				</div>
 				<div class="group">
-					<label style="min-width: 80px;">Total</label>
-					<input type="number" id="sellTotal">
-					<div class="invalid-feedback">
-						Required field. Total must be a valid number.
+					<div class="input-group mb-1">
+						<label style="min-width: 80px;">Total</label>
+						<input type="number" id="sellTotal">
+						<div class="input-group-append">
+							<span class="input-group-text">Steem</span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
 					</div>
 				</div>
 				<div class="group text-center mt-1">
@@ -93,15 +123,17 @@
 
 <script>
 	var data = <%= JSON.stringify(data) %>;
-	// console.log(data);
+	function OrderTypeColumn(value, options, rowdata) { return value.toUpperCase(); }
+	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
+	console.log(data);
 
 	$('#user_order_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date Created" },
-			{ "name": "type", "title": "Type" },
-			{ "name": "price", "title": "Price" },
-			{ "name": "symbol", "title": "Token" },
-			{ "name": "total", "title": "Steem" },
+			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
+			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
+			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 			{ "name": "action", "title": "Action" }
 		],
 		"rows": data.user_orders
@@ -109,25 +141,46 @@
 
 	$('#buy_order_table').footable({
 		"columns": [
-			{ "name": "total_steem", "title": "Total STEEM" },
-			{ "name": "steem", "title": "STEEM" },
-			{ "name": "token", "title": data.token },
-			{ "name": "price", "title": "Price" }
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" }
 		],
 		"rows": data.buy_orders.slice(0, 15)
 	});
 
 	$('#sell_order_table').footable({
 		"columns": [
-			{ "name": "price", "title": "Price" },
-			{ "name": "quantity", "title": data.token },
-			{ "name": "steem", "title": "STEEM" },
-			{ "name": "total_steem", "title": "Total STEEM" }
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn }
 		],
 		"rows": data.sell_orders.slice(0, 15)
 	});
 
 	// chart
+	var prices = data.buy_orders.map(o => o.price).concat(data.sell_orders.map(o => o.price));
+	var labels = _.sortedUniq(prices);
+
+	var buyOrderDataset = [];
+	var sellOrderDataset = [];
+	labels.forEach(label => {
+		let matchingBuyOrders = data.buy_orders.filter(o => o.price === label);
+		if (matchingBuyOrders.length === 0) {
+			buyOrderDataset.push(null);
+		} else {
+			buyOrderDataset.push(matchingBuyOrders.reduce((acc, val) => val.price * val.quantity , 0));
+		}
+
+		let matchingSellOrders = data.sell_orders.filter(o => o.price === label);
+		if (matchingSellOrders.length === 0) {
+			sellOrderDataset.push(null);
+		} else {
+			sellOrderDataset.push(matchingSellOrders.reduce((acc, val) => val.price * val.quantity , 0));
+		}
+	});
+
 	var chart_ctx = $("#market_depth_chart");
 	var market_chart = new Chart(chart_ctx, {
 		type: 'line',
@@ -135,15 +188,21 @@
 			display: false
 		},
 		data: {
-			labels: ["Buy", "Sell"],
+			labels: labels,
 			datasets: [
 				{
 					label: 'Buy',
-					data: data.buy_orders.map(o => o.price)
+					steppedLine: 'before',
+					borderColor: '#88e86b',
+					backgroundColor: '#a9ea96',
+					data: buyOrderDataset
 				},
 				{
 					label: 'Sell',
-					data: data.buy_orders.map(o => o.price)
+					steppedLine: 'before',
+					borderColor: '#e45858',
+					backgroundColor: '#e87f7f',
+					data: sellOrderDataset
 				}
 			]
 		},
@@ -157,17 +216,17 @@
     var amount = parseFloat($("#buyAmount").val());
     var total = parseFloat($("#buyTotal").val());
 
-    if(isNaN(price) || price < 0) {
+    if(isNaN(price) || price <= 0) {
       $('#buyPrice').addClass("is-invalid");
       isValid = false;
 		}
 
-		if(isNaN(amount) || amount < 0) {
+		if(isNaN(amount) || amount <= 0) {
       $('#buyAmount').addClass("is-invalid");
       isValid = false;
 		}
 
-		if(isNaN(total) || total < 0) {
+		if(isNaN(total) || total <= 0) {
       $('#buyTotal').addClass("is-invalid");
       isValid = false;
 		}

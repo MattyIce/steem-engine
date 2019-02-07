@@ -27,7 +27,7 @@
 				if(SE.User) {
 					$('#tokens_table tbody tr').bind('click', function() {
 						var index = $(this).index();
-						SE.ShowMarketView(token_data[index].symbol);
+						SE.ShowMarketView(token_data[index].symbol, token_data[index].precision);
 					});
 				}
 			}
@@ -36,26 +36,5 @@
 			{ "name": "symbol", "title": "Symbol" }
 		],
 		"rows": token_data
-	});
-
-	var chart_ctx = $("#market_depth_chart");
-	var market_chart = new Chart(chart_ctx, {
-    type: 'line',
-    data: {
-      labels: ["Buy", "Sell"],
-      datasets: [
-				{
-					label: 'Bid',
-					data: [12, 19, 3, 5, 2, 3]
-				},
-				{
-					label: 'Ask',
-					data: [1, 9, 23, 25, 2, 3]
-				}
-			]
-    },
-    options: {
-      steppedLine: true
-    }
 	});
 </script>

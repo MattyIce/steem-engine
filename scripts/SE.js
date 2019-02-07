@@ -136,7 +136,7 @@ SE = {
 		SE.LoadTokens(r => SE.ShowHomeView('market', r));
 	},
 
-	ShowMarketView: function(token, account) {
+	ShowMarketView: function(token, precision, account) {
 		SE.ShowLoading();
 		if(!account && SE.User)
 			account = SE.User.name;
@@ -147,14 +147,22 @@ SE = {
 
 		let tasks = [];
 		tasks.push(ssc.find('market', 'buyBook', { symbol: token }, 200, 0, [{ index: 'price', descending: true }], false));
-		tasks.push(ssc.find('market', 'sellBook', { symbol: token }, 200, 0, [{ index: 'price', descending: true }], false));
+		tasks.push(ssc.find('market', 'sellBook', { symbol: token }, 200, 0, [{ index: 'price', descending: false }], false));
 		if (account) {
-			tasks.push(ssc.find('market', 'buyBook', { symbol: token, account: account }, 100, 0, [{ index: 'price', descending: true }], false));
-			tasks.push(ssc.find('market', 'sellBook', { symbol: token, account: account }, 100, 0, [{ index: 'price', descending: true }], false));
+			tasks.push(ssc.find('market', 'buyBook', { symbol: token, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
+			tasks.push(ssc.find('market', 'sellBook', { symbol: token, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
 		}
 		Promise.all(tasks).then(results => {
-			let buy_orders = results[0];
-			let sell_orders = results[1];
+			let buy_orders = results[0].map(o => {
+				o.total = o.quantity * o.price;
+				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
+				return o;
+			});
+			let sell_orders = results[1].map(o => {
+				o.total = o.quantity * o.price;
+				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
+				return o;
+			});
 			let user_buy_orders = results[2].map(o => {
 				o.type = 'buy';
 				o.total = o.price * o.quantity;
@@ -173,6 +181,7 @@ SE = {
 			$('#market_view').html(render('market_view', {
 				data: {
 					token: token,
+					precision: precision,
 					buy_orders: buy_orders,
 					sell_orders: sell_orders,
 					user_orders: user_orders
