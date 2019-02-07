@@ -201,8 +201,8 @@ SE = {
     SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
 	},
 
-	ShowMarketCancelDialog: function(type, txId) {
-    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, txId: txId });
+	ShowMarketCancelDialog: function(type, orderId) {
+    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId });
   },
 
 	SendMarketOrder: function(type, symbol, quantity, price) {
@@ -255,7 +255,7 @@ SE = {
 		}
 	},
 
-	SendCancelMarketOrder: function(type, txId) {
+	SendCancelMarketOrder: function(type, orderId) {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
@@ -274,7 +274,7 @@ SE = {
       "contractAction": "cancel",
       "contractPayload": {
         "type": type,
-				"id": txId
+				"id": orderId
       }
     };
 
@@ -285,7 +285,7 @@ SE = {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success)
-              SE.ShowToast(true, 'Cancel order ' + txId + ' completed')
+              SE.ShowToast(true, 'Cancel order ' + orderId + ' completed')
             else
               SE.ShowToast(false, 'An error occurred cancelling the order: ' + tx.error)
 

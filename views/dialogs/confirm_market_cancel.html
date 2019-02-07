@@ -16,7 +16,7 @@
         </div>
         <div class="token_info text-left">
           <div><%= data.type.toUpperCase() %></div>
-          <div><%= data.txId %> </div>
+          <div><%= data.orderId %> </div>
         </div>
       </div>
 
@@ -36,7 +36,7 @@
 function onConfirmClick() {
   SE.SendCancelMarketOrder(
     '<%= data.type %>',
-    '<%= data.txId %>'
+    '<%= data.orderId %>'
   );
 }
 

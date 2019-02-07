@@ -148,7 +148,7 @@
 	$('#user_order_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date Created" },
-			{ "name": "txId", "title": "ID" },
+			{ "name": "$loki", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
 			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
@@ -160,7 +160,7 @@
 						.append('<span>Cancel</span>')
 						.on("click", this, function () {
 							console.log(rowdata);
-							btnCancelOrder(rowdata.type, rowdata.txId);
+							btnCancelOrder(rowdata.type, rowdata.$loki);
 						}))
 						.appendTo(actions);
 
@@ -271,12 +271,12 @@
     }
 	}
 
-	function btnCancelOrder(type, txId) {
+	function btnCancelOrder(type, orderId) {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
 		}
 
-		SE.ShowMarketCancelDialog(type, txId);
+		SE.ShowMarketCancelDialog(type, orderId);
 	}
 </script>
