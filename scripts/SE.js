@@ -136,19 +136,20 @@ SE = {
 		SE.LoadTokens(r => SE.ShowHomeView('market', r));
 	},
 
-	ShowMarketView: function(token, precision, account) {
+	ShowMarketView: function(symbol, account) {
 		SE.ShowLoading();
 		if(!account && SE.User)
 			account = SE.User.name;
 
+		let precision = SE.GetToken(symbol).precision
 		window.scrollTo(0,0);
 
 		let tasks = [];
-		tasks.push(ssc.find('market', 'buyBook', { symbol: token }, 200, 0, [{ index: 'price', descending: true }], false));
-		tasks.push(ssc.find('market', 'sellBook', { symbol: token }, 200, 0, [{ index: 'price', descending: false }], false));
+		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: true }], false));
+		tasks.push(ssc.find('market', 'sellBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: false }], false));
 		if (account) {
-			tasks.push(ssc.find('market', 'buyBook', { symbol: token, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
-			tasks.push(ssc.find('market', 'sellBook', { symbol: token, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
+			tasks.push(ssc.find('market', 'buyBook', { symbol: symbol, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
+			tasks.push(ssc.find('market', 'sellBook', { symbol: symbol, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
 		}
 		Promise.all(tasks).then(results => {
 			let buy_orders = results[0].map(o => {
@@ -182,7 +183,7 @@ SE = {
 
 			$('#market_view').html(render('market_view', {
 				data: {
-					token: token,
+					token: symbol,
 					precision: precision,
 					buy_orders: buy_orders,
 					sell_orders: sell_orders,
@@ -195,8 +196,61 @@ SE = {
 			SE.HideLoading();
       SE.ShowToast(false, 'Error retrieving market data.');
 		});
-
 	},
+
+	ShowMarketOrderDialog: function(type, symbol, quantity, price) {
+    SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
+  },
+
+	SendMarketOrder: function(type, symbol, quantity, price) {
+		if (type !== 'buy' && type !== 'sell') {
+			console.error('Invalid order type: ', type)
+			return;
+		}
+
+    SE.ShowLoading();
+    var username = localStorage.getItem('username');
+
+    if(!username) {
+      window.location.reload();
+      return;
+    }
+
+    var transaction_data = {
+      "contractName": "market",
+      "contractAction": type,
+      "contractPayload": {
+        "symbol": symbol,
+				"quantity": quantity,
+				"price": price
+      }
+    };
+
+		console.log('Broadcasting ' + type + ' order: ', JSON.stringify(transaction_data));
+
+    if(useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Buy Order: ' + symbol, function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success)
+              SE.ShowToast(true, 'Buy order placed for ' + quantity + ' ' + symbol + ' at ' + price)
+            else
+              SE.ShowToast(false, 'An error occurred submitting the buy order: ' + tx.error)
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.ShowMarketView(symbol, SE.User.name);
+					});
+        }
+        else
+					SE.HideLoading();
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.ShowMarketView(symbol, SE.User.name);
+			});
+		}
+  },
 
 	LoadTokens: function(callback) {
 		ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {

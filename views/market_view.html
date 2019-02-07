@@ -15,8 +15,8 @@
 				<h4 class="font-weight-bold">Buy <%= data.token %></h4>
 				<div class="group">
 					<div class="input-group mb-1">
-						<label style="min-width: 80px;">Price</label>
-						<input type="number" id="buyPrice">
+						<label style="min-width: 90px;">Price</label>
+						<input type="number" id="buyPrice" placeholder="0.0" class="text-right" style="width: 180px;">
 						<div class="input-group-append">
 							<span class="input-group-text">Steem/<%= data.token %></span>
 						</div>
@@ -27,8 +27,8 @@
 				</div>
 				<div class="group">
 					<div class="input-group mb-1">
-						<label style="min-width: 80px;">Amount</label>
-						<input type="number" id="buyAmount">
+						<label style="min-width: 90px;">Quantity</label>
+						<input type="number" id="buyQuantity" placeholder="1" class="text-right" style="width: 180px;">
 						<div class="input-group-append">
 							<span class="input-group-text"><%= data.token %></span>
 						</div>
@@ -39,8 +39,8 @@
 				</div>
 				<div class="group">
 					<div class="input-group mb-1">
-						<label style="min-width: 80px;">Total</label>
-						<input type="number" id="buyTotal">
+						<label style="min-width: 90px;">Total</label>
+						<input type="number" id="buyTotal" placeholder="0.0" class="text-right" style="width: 180px;" readonly disabled>
 						<div class="input-group-append">
 							<span class="input-group-text">Steem</span>
 						</div>
@@ -50,15 +50,15 @@
 					</div>
 				</div>
 				<div class="group text-center mt-1">
-					<button class="btn btn-primary btn-sm" onclick="btnSubmitBuy();" style="margin: auto;">Buy <%= data.token %></button>
+					<button class="btn btn-primary btn-sm" onclick="btnSubmitOrder('buy');" style="margin: auto;">Buy <%= data.token %></button>
 				</div>
 			</div>
 			<div class="col-md-6 text-left p-3 sell-form">
 				<h4 class="font-weight-bold">Sell <%= data.token %></h4>
 				<div class="group">
 					<div class="input-group mb-1">
-						<label style="min-width: 80px;">Price</label>
-						<input type="number" id="sellPrice">
+						<label style="min-width: 90px;">Price</label>
+						<input type="number" id="sellPrice" placeholder="0.0" class="text-right" style="width: 180px;">
 						<div class="input-group-append">
 							<span class="input-group-text">Steem/<%= data.token %></span>
 						</div>
@@ -69,8 +69,8 @@
 				</div>
 				<div class="group">
 					<div class="input-group mb-1">
-						<label style="min-width: 80px;">Amount</label>
-						<input type="number" id="sellAmount">
+						<label style="min-width: 90px;">Quantity</label>
+						<input type="number" id="sellQuantity" placeholder="1" class="text-right" style="width: 180px;">
 						<div class="input-group-append">
 							<span class="input-group-text"><%= data.token %></span>
 						</div>
@@ -81,8 +81,8 @@
 				</div>
 				<div class="group">
 					<div class="input-group mb-1">
-						<label style="min-width: 80px;">Total</label>
-						<input type="number" id="sellTotal">
+						<label style="min-width: 90px;">Total</label>
+						<input type="number" id="sellTotal" placeholder="0.0" class="text-right" style="width: 180px;" readonly disabled>
 						<div class="input-group-append">
 							<span class="input-group-text">Steem</span>
 						</div>
@@ -92,7 +92,7 @@
 					</div>
 				</div>
 				<div class="group text-center mt-1">
-					<button class="btn btn-primary btn-sm" onclick="btnSubmitSell();" style="margin: auto;">Sell <%= data.token %></button>
+					<button class="btn btn-primary btn-sm" onclick="btnSubmitOrder('sell');" style="margin: auto;">Sell <%= data.token %></button>
 				</div>
 			</div>
 		</div>
@@ -125,7 +125,24 @@
 	var data = <%= JSON.stringify(data) %>;
 	function OrderTypeColumn(value, options, rowdata) { return value.toUpperCase(); }
 	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
+	function UpdateOrderTotal(type) {
+		var price = parseFloat($("#" + type + "Price").val());
+		var quantity = parseFloat($("#" + type + "Quantity").val());
+
+		if (price && price > 0 && quantity && quantity > 0) {
+			$("#" + type + "Total").val(price * quantity);
+		}
+	}
+	function UpdateBuyOrderTotal() { return UpdateOrderTotal('buy') }
+	function UpdateSellOrderTotal() { return UpdateOrderTotal('sell') }
+
 	console.log(data);
+
+	$("#buyPrice").change(UpdateBuyOrderTotal);
+	$("#buyQuantity").change(UpdateBuyOrderTotal);
+
+	$("#sellPrice").change(UpdateSellOrderTotal);
+	$("#sellQuantity").change(UpdateSellOrderTotal);
 
 	$('#user_order_table').footable({
 		"columns": [
@@ -211,59 +228,31 @@
 		}
 	});
 
-	function btnSubmitBuy() {
-    var price = parseFloat($("#buyPrice").val());
-    var amount = parseFloat($("#buyAmount").val());
-    var total = parseFloat($("#buyTotal").val());
+	function btnSubmitOrder(type) {
+		if (type !== 'buy' && type !== 'sell') {
+			console.error('Invalid order type: ', type)
+			return;
+		}
+
+		let isValid = true;
+		$('.' + type + '-form input').removeClass("is-invalid");
+
+    var price = parseFloat($("#" + type + "Price").val());
+    var quantity = parseFloat($("#" + type + "Quantity").val());
 
     if(isNaN(price) || price <= 0) {
-      $('#buyPrice').addClass("is-invalid");
+      $('#' + type + 'Price').addClass("is-invalid");
       isValid = false;
 		}
 
-		if(isNaN(amount) || amount <= 0) {
-      $('#buyAmount').addClass("is-invalid");
-      isValid = false;
-		}
-
-		if(isNaN(total) || total <= 0) {
-      $('#buyTotal').addClass("is-invalid");
+		if(isNaN(quantity) || quantity <= 0) {
+      $('#' + type + 'Quantity').addClass("is-invalid");
       isValid = false;
 		}
 
     if(isValid) {
-      $('.buy-form input').removeClass("is-invalid");
-
-			// TODO: show confim dialog
-			// SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);
+      // show confim dialog
+			SE.ShowMarketOrderDialog(type, data.token, quantity, price);
     }
 	}
-
-	function btnSubmitSell() {
-    var price = parseFloat($("#sellPrice").val());
-    var amount = parseFloat($("#sellAmount").val());
-    var total = parseFloat($("#sellTotal").val());
-
-    if(isNaN(price) || price < 0) {
-      $('#sellPrice').addClass("is-invalid");
-      isValid = false;
-		}
-
-		if(isNaN(amount) || amount < 0) {
-      $('#sellAmount').addClass("is-invalid");
-      isValid = false;
-		}
-
-		if(isNaN(total) || total < 0) {
-      $('#sellTotal').addClass("is-invalid");
-      isValid = false;
-		}
-
-    if(isValid) {
-      $('.sell-form input').removeClass("is-invalid");
-
-			// TODO: show confim dialog
-			// SE.ShowConfirmAddToken(tokenName, symbol, precision, maxSupply, url);
-    }
-  }
 </script>

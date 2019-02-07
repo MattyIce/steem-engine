@@ -26,7 +26,7 @@
 			"ready.ft.table": function(e, ft) {
 				$('#tokens_table tbody tr').bind('click', function() {
 					var index = $(this).index();
-					SE.ShowMarketView(token_data[index].symbol, token_data[index].precision);
+					SE.ShowMarketView(token_data[index].symbol);
 				});
 			}
 		},
