@@ -125,6 +125,7 @@
 	var data = <%= JSON.stringify(data) %>;
 	function OrderTypeColumn(value, options, rowdata) { return value.toUpperCase(); }
 	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
+	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value + '</strong>' }
 	function UpdateOrderTotal(type) {
 		var price = parseFloat($("#" + type + "Price").val());
 		var quantity = parseFloat($("#" + type + "Quantity").val());
@@ -175,14 +176,14 @@
 			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
-			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" }
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn }
 		],
 		"rows": data.buy_orders.slice(0, 15)
 	});
 
 	$('#sell_order_table').footable({
 		"columns": [
-			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
 			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn }

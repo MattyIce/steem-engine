@@ -142,7 +142,6 @@ SE = {
 			account = SE.User.name;
 
 		let precision = SE.GetToken(symbol).precision
-		window.scrollTo(0,0);
 
 		let tasks = [];
 		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: true }], false));
