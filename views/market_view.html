@@ -147,11 +147,25 @@
 	$('#user_order_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date Created" },
+			{ "name": "txId", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
 			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
 			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "action", "title": "Action" }
+			{ "name": "action", "title": "Action", "classes": "text-center", "formatter": function (value, options, rowdata) {
+        	var actions = $('<div/>')
+
+					var cancelButton = ($('<button/>', {'class':'btn btn-danger btn-sm'})
+						.append('<span>Cancel</span>')
+						.on("click", this, function () {
+							console.log(rowdata);
+							btnCancelOrder(rowdata.type, rowdata.txId);
+						}))
+						.appendTo(actions);
+
+				  return actions;
+				}
+			}
 		],
 		"rows": data.user_orders
 	});
@@ -254,5 +268,14 @@
       // show confim dialog
 			SE.ShowMarketOrderDialog(type, data.token, quantity, price);
     }
+	}
+
+	function btnCancelOrder(type, txId) {
+		if (type !== 'buy' && type !== 'sell') {
+			console.error('Invalid order type: ', type)
+			return;
+		}
+
+		SE.ShowMarketCancelDialog(type, txId);
 	}
 </script>

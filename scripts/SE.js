@@ -200,6 +200,10 @@ SE = {
 
 	ShowMarketOrderDialog: function(type, symbol, quantity, price) {
     SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
+	},
+
+	ShowMarketCancelDialog: function(type, txId) {
+    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, txId: txId });
   },
 
 	SendMarketOrder: function(type, symbol, quantity, price) {
@@ -229,13 +233,62 @@ SE = {
 		console.log('Broadcasting ' + type + ' order: ', JSON.stringify(transaction_data));
 
     if(useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Buy Order: ' + symbol, function(response) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), type.toUpperCase() + ' Order: ' + symbol, function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success)
-              SE.ShowToast(true, 'Buy order placed for ' + quantity + ' ' + symbol + ' at ' + price)
+              SE.ShowToast(true, type.toUpperCase() + ' order placed for ' + quantity + ' ' + symbol + ' at ' + price)
             else
-              SE.ShowToast(false, 'An error occurred submitting the buy order: ' + tx.error)
+              SE.ShowToast(false, 'An error occurred submitting the order: ' + tx.error)
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.ShowMarketView(symbol, SE.User.name);
+					});
+        }
+        else
+					SE.HideLoading();
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.ShowMarketView(symbol, SE.User.name);
+			});
+		}
+	},
+
+	SendCancelMarketOrder: function(type, txId) {
+		if (type !== 'buy' && type !== 'sell') {
+			console.error('Invalid order type: ', type)
+			return;
+		}
+
+    SE.ShowLoading();
+    var username = localStorage.getItem('username');
+
+    if(!username) {
+      window.location.reload();
+      return;
+    }
+
+    var transaction_data = {
+      "contractName": "market",
+      "contractAction": "cancel",
+      "contractPayload": {
+        "type": type,
+				"id": txId
+      }
+    };
+
+		console.log('Broadcasting cancel order: ', JSON.stringify(transaction_data));
+
+    if(useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Cancel ' + type.toUpperCase() + ' Order', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success)
+              SE.ShowToast(true, 'Cancel order ' + txId + ' completed')
+            else
+              SE.ShowToast(false, 'An error occurred cancelling the order: ' + tx.error)
 
 						SE.HideLoading();
 						SE.HideDialog();

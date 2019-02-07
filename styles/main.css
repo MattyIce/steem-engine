@@ -734,6 +734,9 @@ table.tokensTable .fooicon-sort-desc:before {
 .market .tokensTable {
   top: 0;
 }
+.market .tokensTable tbody {
+  font-size: 14px;
+}
 .market .tokensTable thead th {
   padding: 15px 30px 15px 5px;
 }
@@ -741,6 +744,11 @@ table.tokensTable .fooicon-sort-desc:before {
   padding: 5px 30px 5px 5px;
   color: #FFF;
   font-size: 16px;
+}
+.market #user_order_table .btn {
+  border-radius: 5px;
+  font-size: 15px;
+  padding: 3px 10px;
 }
 
 .buy-form input.is-invalid~.invalid-feedback, .sell-form input.is-invalid~.invalid-feedback {
