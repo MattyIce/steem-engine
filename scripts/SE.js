@@ -141,8 +141,6 @@ SE = {
 		if(!account && SE.User)
 			account = SE.User.name;
 
-		account = 'yabapmatt';
-
 		window.scrollTo(0,0);
 
 		let tasks = [];
@@ -163,20 +161,24 @@ SE = {
 				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
 				return o;
 			});
-			let user_buy_orders = results[2].map(o => {
-				o.type = 'buy';
-				o.total = o.price * o.quantity;
-				o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
-				return o;
-			});
-			let user_sell_orders = results[3].map(o => {
-				o.type = 'sell';
-				o.total = o.price * o.quantity;
-				o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
-				return o;
-			});
-			let user_orders = user_buy_orders.concat(user_sell_orders);
-			user_orders.sort((a, b) => b.timestamp - a.timestamp)
+
+			let user_orders = [];
+			if (account) {
+				let user_buy_orders = results[2].map(o => {
+					o.type = 'buy';
+					o.total = o.price * o.quantity;
+					o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+					return o;
+				});
+				let user_sell_orders = results[3].map(o => {
+					o.type = 'sell';
+					o.total = o.price * o.quantity;
+					o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+					return o;
+				});
+				user_orders = user_buy_orders.concat(user_sell_orders);
+				user_orders.sort((a, b) => b.timestamp - a.timestamp);
+			}
 
 			$('#market_view').html(render('market_view', {
 				data: {

@@ -24,12 +24,10 @@
 	$('#tokens_table').footable({
 		"on": {
 			"ready.ft.table": function(e, ft) {
-				if(SE.User) {
-					$('#tokens_table tbody tr').bind('click', function() {
-						var index = $(this).index();
-						SE.ShowMarketView(token_data[index].symbol, token_data[index].precision);
-					});
-				}
+				$('#tokens_table tbody tr').bind('click', function() {
+					var index = $(this).index();
+					SE.ShowMarketView(token_data[index].symbol, token_data[index].precision);
+				});
 			}
 		},
 		"columns": [
