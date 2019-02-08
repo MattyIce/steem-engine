@@ -1,7 +1,14 @@
 <div class="mt-3">
 	<div class="row">
+		<div class="col-md-12 text-center stats">
+			<h3 class="font-weight-bold mb-3">Market Depth (<%= data.token %>)</h3>
+			<small class="m-3 label">Last price: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? data.trade_history[0].price : '-' %></span></small>
+			<small class="m-3 label">Highest bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price : '-' %></a></small>
+			<small class="m-3 label">Lowest ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price : '-' %></a></small>
+		</div>
+	</div>
+	<div class="row mt-4">
 		<div class="col-md-12 text-center">
-			<h4 class="font-weight-bold">Market Depth (<%= data.token %>)</h4>
 			<div class="chart-container">
 				<canvas id="market_depth_chart"></canvas>
 			</div>
@@ -28,7 +35,7 @@
 				<div class="group">
 					<div class="input-group mb-1">
 						<label style="min-width: 90px;">Quantity</label>
-						<input type="number" id="buyQuantity" placeholder="1" class="text-right" style="width: 180px;">
+						<input type="number" id="buyQuantity" placeholder="0" class="text-right" style="width: 180px;">
 						<div class="input-group-append">
 							<span class="input-group-text"><%= data.token %></span>
 						</div>
@@ -49,8 +56,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="group text-center mt-1">
-					<button class="btn btn-primary btn-sm" onclick="btnSubmitOrder('buy');" style="margin: auto;">Buy <%= data.token %></button>
+				<div class="group mt-2 pl-5 pr-2">
+					<span class="small float-left">
+						<small class="text-info">Your Balance: <a id="user-token-balance" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
+						<small class="text-info">Lowest Ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price : '-' %></a></small>
+					</span>
+					<button class="btn btn-primary btn-sm float-right" onclick="btnSubmitOrder('buy');" style="margin: auto;">Buy <%= data.token %></button>
 				</div>
 			</div>
 			<div class="col-md-6 text-left p-3 sell-form">
@@ -70,7 +81,7 @@
 				<div class="group">
 					<div class="input-group mb-1">
 						<label style="min-width: 90px;">Quantity</label>
-						<input type="number" id="sellQuantity" placeholder="1" class="text-right" style="width: 180px;">
+						<input type="number" id="sellQuantity" placeholder="0" class="text-right" style="width: 180px;">
 						<div class="input-group-append">
 							<span class="input-group-text"><%= data.token %></span>
 						</div>
@@ -91,8 +102,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="group text-center mt-1">
-					<button class="btn btn-primary btn-sm" onclick="btnSubmitOrder('sell');" style="margin: auto;">Sell <%= data.token %></button>
+				<div class="group mt-2 pl-5 pr-2">
+					<span class="small float-left">
+						<small class="text-info">Your Balance: <a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a></small><br>
+						<small class="text-info">Highest Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price : '-' %></a></small>
+					</span>
+					<button class="btn btn-primary btn-sm float-right" onclick="btnSubmitOrder('sell');" style="margin: auto;">Sell <%= data.token %></button>
 				</div>
 			</div>
 		</div>
@@ -114,11 +129,19 @@
 	<% if(SE.User) { %>
 	<div class="row">
 		<div class="col-md-12 text-left p-3">
-			<h4 class="font-weight-bold">Open Orders</h4>
+			<h4 class="font-weight-bold">My Open Orders</h4>
 			<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
 		</div>
 	</div>
 	<% } %>
+
+	<!-- trade history -->
+	<div class="row">
+		<div class="col-md-12 text-left p-3">
+			<h4 class="font-weight-bold">Trade History</h4>
+			<table id="trade_history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+	</div>
 </div>
 
 <script>
@@ -144,6 +167,26 @@
 
 	$("#sellPrice").change(UpdateSellOrderTotal);
 	$("#sellQuantity").change(UpdateSellOrderTotal);
+
+	$('#buy_order_table').footable({
+		"columns": [
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn }
+		],
+		"rows": data.buy_orders.slice(0, 15)
+	});
+
+	$('#sell_order_table').footable({
+		"columns": [
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn }
+		],
+		"rows": data.sell_orders.slice(0, 15)
+	});
 
 	$('#user_order_table').footable({
 		"columns": [
@@ -171,24 +214,15 @@
 		"rows": data.user_orders
 	});
 
-	$('#buy_order_table').footable({
+	$('#trade_history_table').footable({
 		"columns": [
+			{ "name": "timestamp_string", "title": "Date" },
+			{ "name": "$loki", "title": "ID" },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
+			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right" },
 			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
-			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn }
 		],
-		"rows": data.buy_orders.slice(0, 15)
-	});
-
-	$('#sell_order_table').footable({
-		"columns": [
-			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
-			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
-			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn }
-		],
-		"rows": data.sell_orders.slice(0, 15)
+		"rows": data.trade_history
 	});
 
 	// chart

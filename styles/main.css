@@ -750,6 +750,11 @@ table.tokensTable .fooicon-sort-desc:before {
   font-size: 15px;
   padding: 3px 10px;
 }
+.market .stats .label {
+  border-radius: 4px;
+  border: 1px solid #ccc!important;
+  padding: 5px 15px;
+}
 
 .buy-form input.is-invalid~.invalid-feedback, .sell-form input.is-invalid~.invalid-feedback {
   display: block;

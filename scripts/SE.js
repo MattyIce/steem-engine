@@ -146,31 +146,44 @@ SE = {
 		let tasks = [];
 		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: true }], false));
 		tasks.push(ssc.find('market', 'sellBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: false }], false));
+		tasks.push(ssc.find('market', 'tradesHistory', { symbol: symbol }, 20, 0, [{ index: 'timestamp', descending: false }], false));
 		if (account) {
 			tasks.push(ssc.find('market', 'buyBook', { symbol: symbol, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
 			tasks.push(ssc.find('market', 'sellBook', { symbol: symbol, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
+			tasks.push(ssc.find('tokens', 'balances', { account: account, symbol : { '$in' : [symbol, 'STEEMP'] } }, 2, 0, '', false));
 		}
 		Promise.all(tasks).then(results => {
+			// prepare buy orders
 			let buy_orders = results[0].map(o => {
 				o.total = o.quantity * o.price;
 				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
 				return o;
 			});
+			// prepare sell orders
 			let sell_orders = results[1].map(o => {
 				o.total = o.quantity * o.price;
 				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
 				return o;
 			});
+			// prepare trade history
+			let trade_history = results[2].map(o => {
+				o.total = o.price * o.quantity;
+				o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+				return o;
+			});
 
 			let user_orders = [];
+			let user_token_balance = null;
+			let user_steemp_balance = null;
 			if (account) {
-				let user_buy_orders = results[2].map(o => {
+				// prepare user orders and balance
+				let user_buy_orders = results[3].map(o => {
 					o.type = 'buy';
 					o.total = o.price * o.quantity;
 					o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
 					return o;
 				});
-				let user_sell_orders = results[3].map(o => {
+				let user_sell_orders = results[4].map(o => {
 					o.type = 'sell';
 					o.total = o.price * o.quantity;
 					o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
@@ -178,6 +191,9 @@ SE = {
 				});
 				user_orders = user_buy_orders.concat(user_sell_orders);
 				user_orders.sort((a, b) => b.timestamp - a.timestamp);
+
+				user_token_balance = _.find(results[5], (balance) => balance.symbol === symbol);
+				user_steemp_balance = _.find(results[5], (balance) => balance.symbol === 'STEEMP');
 			}
 
 			$('#market_view').html(render('market_view', {
@@ -186,7 +202,10 @@ SE = {
 					precision: precision,
 					buy_orders: buy_orders,
 					sell_orders: sell_orders,
-					user_orders: user_orders
+					trade_history: trade_history,
+					user_orders: user_orders,
+					user_token_balance: user_token_balance,
+					user_steemp_balance: user_steemp_balance
 			 	}
 			}));
 
