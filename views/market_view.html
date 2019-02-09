@@ -58,8 +58,17 @@
 				</div>
 				<div class="group mt-2 pl-5 pr-2">
 					<span class="small float-left">
-						<small class="text-info">Your Balance: <a id="user-token-balance" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
-						<small class="text-info">Lowest Ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price : '-' %></a></small>
+						<small class="text-info">Your Balance:
+							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a>
+						</small>
+						<br>
+						<small class="text-info">Lowest Ask:
+							<% if(data.sell_orders && data.sell_orders.length > 0) { %>
+								<button id="lowest-ask" onclick="$('#buyPrice').val(data.sell_orders[0].price);" type="button" class="btn btn-link font-weight-bold text-dark" style="font-size: unset; padding: unset;"><%= data.sell_orders[0].price %></button>
+							<% } else { %>
+								<span class="font-weight-bold text-dark">-</span>
+							<% } %>
+						</small>
 					</span>
 					<button class="btn btn-primary btn-sm float-right" onclick="btnSubmitOrder('buy');" style="margin: auto;">Buy <%= data.token %></button>
 				</div>
@@ -104,8 +113,14 @@
 				</div>
 				<div class="group mt-2 pl-5 pr-2">
 					<span class="small float-left">
-						<small class="text-info">Your Balance: <a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a></small><br>
-						<small class="text-info">Highest Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price : '-' %></a></small>
+						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
+						<small class="text-info">Highest Bid:
+							<% if(data.buy_orders && data.buy_orders.length > 0) { %>
+								<button id="highest-bid" onclick="$('#sellPrice').val(data.buy_orders[0].price);" type="button" class="btn btn-link font-weight-bold text-dark" style="font-size: unset; padding: unset;"><%= data.buy_orders[0].price %></button>
+							<% } else { %>
+								<span class="font-weight-bold text-dark">-</span>
+							<% } %>
+						</small>
 					</span>
 					<button class="btn btn-primary btn-sm float-right" onclick="btnSubmitOrder('sell');" style="margin: auto;">Sell <%= data.token %></button>
 				</div>
@@ -146,7 +161,7 @@
 
 <script>
 	var data = <%= JSON.stringify(data) %>;
-	function OrderTypeColumn(value, options, rowdata) { return value.toUpperCase(); }
+	function OrderTypeColumn(value, options, rowdata) { return `<strong class="text-${value === 'buy' ? 'success' : 'danger'}">${value.toUpperCase()}</strong>` }
 	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
 	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value + '</strong>' }
 	function UpdateOrderTotal(type) {
@@ -162,11 +177,11 @@
 
 	console.log(data);
 
-	$("#buyPrice").change(UpdateBuyOrderTotal);
-	$("#buyQuantity").change(UpdateBuyOrderTotal);
+	$('#buyPrice').on('input', UpdateBuyOrderTotal);
+	$('#buyQuantity').on('input', UpdateBuyOrderTotal);
 
-	$("#sellPrice").change(UpdateSellOrderTotal);
-	$("#sellQuantity").change(UpdateSellOrderTotal);
+	$('#sellPrice').on('input', UpdateBuyOrderTotal);
+	$('#sellQuantity').on('input', UpdateBuyOrderTotal);
 
 	$('#buy_order_table').footable({
 		"columns": [
@@ -178,6 +193,16 @@
 		"rows": data.buy_orders.slice(0, 15)
 	});
 
+	$('#buy_order_table').on("click", 'tr', function(){
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
+
 	$('#sell_order_table').footable({
 		"columns": [
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
@@ -188,16 +213,26 @@
 		"rows": data.sell_orders.slice(0, 15)
 	});
 
+	$('#sell_order_table').on("click", 'tr', function(){
+		console.log('click');
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(1)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
 	$('#user_order_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date Created" },
 			{ "name": "$loki", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
-			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
 			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 			{ "name": "action", "title": "Action", "classes": "text-center", "formatter": function (value, options, rowdata) {
-        	var actions = $('<div/>')
+					var actions = $('<div/>')
 
 					var cancelButton = ($('<button/>', {'class':'btn btn-danger btn-sm'})
 						.append('<span>Cancel</span>')
@@ -207,46 +242,74 @@
 						}))
 						.appendTo(actions);
 
-				  return actions;
+					return actions;
 				}
 			}
 		],
 		"rows": data.user_orders
 	});
 
+	$('#user_order_table').on("click", 'tr', function() {
+		console.log('click');
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
 	$('#trade_history_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date" },
 			{ "name": "$loki", "title": "ID" },
-			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right" },
+			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right" },
 			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 		],
 		"rows": data.trade_history
 	});
 
-	// chart
-	var prices = data.buy_orders.map(o => o.price).concat(data.sell_orders.map(o => o.price));
-	var labels = _.sortedUniq(prices);
+	$('#trade_history_table').on("click", 'tr', function(){
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
 
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
+	// prepare chart datasets
+	var buyOrderLabels = _.uniq(data.buy_orders.map(o => o.price));
 	var buyOrderDataset = [];
-	var sellOrderDataset = [];
-	labels.forEach(label => {
+	var buyOrderCurrentVolume = 0;
+	buyOrderLabels.forEach(label => {
 		let matchingBuyOrders = data.buy_orders.filter(o => o.price === label);
 		if (matchingBuyOrders.length === 0) {
 			buyOrderDataset.push(null);
 		} else {
-			buyOrderDataset.push(matchingBuyOrders.reduce((acc, val) => val.price * val.quantity , 0));
+			buyOrderCurrentVolume = buyOrderCurrentVolume + matchingBuyOrders.reduce((acc, val) => { console.log('buy: ' + val.price); return val.price * val.quantity }, 0);
+			buyOrderDataset.push(buyOrderCurrentVolume);
 		}
+	});
+	buyOrderLabels.reverse();
+	buyOrderDataset.reverse();
 
+	var sellOrderLabels = _.uniq(data.sell_orders.map(o => o.price));
+	var sellOrderDataset = _.fill(Array(buyOrderDataset.length), null);
+	var sellOrderCurrentVolume = 0;
+	sellOrderLabels.forEach(label => {
 		let matchingSellOrders = data.sell_orders.filter(o => o.price === label);
 		if (matchingSellOrders.length === 0) {
 			sellOrderDataset.push(null);
 		} else {
-			sellOrderDataset.push(matchingSellOrders.reduce((acc, val) => val.price * val.quantity , 0));
+			sellOrderCurrentVolume = sellOrderCurrentVolume + matchingSellOrders.reduce((acc, val) => { console.log('sell: ' + val.price); return val.price * val.quantity }, 0);
+			sellOrderDataset.push(sellOrderCurrentVolume);
 		}
 	});
 
+	// draw chart
 	var chart_ctx = $("#market_depth_chart");
 	var market_chart = new Chart(chart_ctx, {
 		type: 'line',
@@ -254,11 +317,11 @@
 			display: false
 		},
 		data: {
-			labels: labels,
+			labels: buyOrderLabels.concat(sellOrderLabels),
 			datasets: [
 				{
 					label: 'Buy',
-					steppedLine: 'before',
+					steppedLine: 'after',
 					borderColor: '#88e86b',
 					backgroundColor: '#a9ea96',
 					data: buyOrderDataset
@@ -286,23 +349,23 @@
 		let isValid = true;
 		$('.' + type + '-form input').removeClass("is-invalid");
 
-    var price = parseFloat($("#" + type + "Price").val());
-    var quantity = parseFloat($("#" + type + "Quantity").val());
+		var price = parseFloat($("#" + type + "Price").val());
+		var quantity = parseFloat($("#" + type + "Quantity").val());
 
-    if(isNaN(price) || price <= 0) {
-      $('#' + type + 'Price').addClass("is-invalid");
-      isValid = false;
+		if(isNaN(price) || price <= 0) {
+			$('#' + type + 'Price').addClass("is-invalid");
+			isValid = false;
 		}
 
 		if(isNaN(quantity) || quantity <= 0) {
-      $('#' + type + 'Quantity').addClass("is-invalid");
-      isValid = false;
+			$('#' + type + 'Quantity').addClass("is-invalid");
+			isValid = false;
 		}
 
-    if(isValid) {
-      // show confim dialog
+		if(isValid) {
+			// show confim dialog
 			SE.ShowMarketOrderDialog(type, data.token, quantity, price);
-    }
+    	}
 	}
 
 	function btnCancelOrder(type, orderId) {
