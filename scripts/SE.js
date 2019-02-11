@@ -83,7 +83,7 @@ SE = {
 				SE.ShowFAQ();
 				break;
 			case 'market':
-				SE.ShowMarket();
+				SE.ShowMarket(parts.t);
 				break;
 			default:
 				SE.ShowHome();
