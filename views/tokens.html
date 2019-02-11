@@ -2,6 +2,8 @@
   <div class="group">
     <h1 class="m-0 p-0">TOKENS</h1>    
     <div class="buttons">
+			<input type="text" class="search" placeholder="Search Tokens"/>
+
 			<% if(SE.User) { %>
 				<button class="btn btn-primary" onclick="SE.ShowBuySSC();">BUY <%= Config.NATIVE_TOKEN %></button>
 				<button class="btn btn-secondary" onclick="SE.ShowAddToken();">CREATE</button>
@@ -29,25 +31,44 @@
 			return '';
 	}
 
-
-	$('#tokens_table').footable({
-		"on": {
-			"ready.ft.table": function(e, ft) {
-				if(SE.User) {
-					$('#tokens_table tbody tr').bind('click', function() {          
-						var index = $(this).index();        
-						SE.ShowHistory(token_data[index].symbol, token_data[index].name);
-					});
+	createTable(token_data);
+	function createTable(data) {
+		$('#tokens_table').empty();
+		$('#tokens_table').footable({
+			"on": {
+				"ready.ft.table": function(e, ft) {
+					if(SE.User) {
+						$('#tokens_table tbody tr').bind('click', function() {          
+							var index = $(this).index();        
+							SE.ShowHistory(token_data[index].symbol, token_data[index].name);
+						});
+					}
 				}
+			},
+			"columns": [
+				{ "name": "symbol", "title": "Symbol" },
+				{ "name": "name", "title": "Token Name" },
+				{ "name": "supply", "title": "Supply (Circulating)", "formatter": SupplyColumn },    
+				{ "name": "issuer", "title": "Issuer", "formatter": SteemAccountColumn },
+				{ "name": "url", "title": "URL", "formatter": URLFormatter }
+			],
+			"rows": data
+		});
+	}
+
+	$('input.search').keyup(() => {
+		var val = $('input.search').val().toLowerCase();
+		$('#tokens_table tr').each((i, r) => {
+			r = $(r);
+			var td = r.children('td');
+
+			if(td.length > 1) {
+				if(td[0].innerText.toLowerCase().indexOf(val) >= 0 || td[1].innerText.toLowerCase().indexOf(val) >= 0)
+					r.show();
+				else
+					r.hide();
 			}
-		},
-		"columns": [
-			{ "name": "symbol", "title": "Symbol" },
-			{ "name": "name", "title": "Token Name" },
-			{ "name": "supply", "title": "Supply (Circulating)", "formatter": SupplyColumn },    
-			{ "name": "issuer", "title": "Issuer", "formatter": SteemAccountColumn },
-			{ "name": "url", "title": "URL", "formatter": URLFormatter }
-		],
-		"rows": token_data
-	});
+		});
+		//createTable(token_data.filter(d => d.symbol.indexOf(val) >= 0 || d.name.indexOf(val) >= 0));
+	})
 </script>
