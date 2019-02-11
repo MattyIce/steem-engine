@@ -274,6 +274,23 @@ header .group .buttons > *{
   margin-left: 20px;
 }
 
+input.search {
+	background-color: rgba(255,255,255,0.2);
+	color: white;
+	border-radius: 18px;
+	width: 250px;
+	height: 40px;
+	border: none;
+	padding: 0 20px;
+	background-image: url(https://s3.amazonaws.com/steem-engine/images/search.png);
+	background-repeat: no-repeat;
+	background-position: 95%;
+}
+
+input.search:focus {
+	outline: none;
+}
+
 footer {
   background: url(https://s3.amazonaws.com/steem-engine/images/bg_footer.jpg) black repeat-x top right;  
   height: 200px;
@@ -476,6 +493,16 @@ table.tokensTable {
 .tokensTable tbody tr{
   height: 40px;
   vertical-align: middle;
+}
+
+.tokensTable tbody tr td {
+  padding: 0 20px;
+}
+
+.tokensTable tbody tr td:last-child {
+	max-width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .tokensTable.interactiveTable tbody tr:not(.footable-empty):hover {
