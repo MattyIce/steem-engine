@@ -1,0 +1,379 @@
+<div class="mt-3">
+	<div class="row">
+		<div class="col-md-12 text-center stats">
+			<h3 class="font-weight-bold mb-3">Market Depth (<%= data.token %>)</h3>
+			<small class="m-3 label">Last price: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? data.trade_history[0].price : '-' %></span></small>
+			<small class="m-3 label">Highest bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price : '-' %></a></small>
+			<small class="m-3 label">Lowest ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price : '-' %></a></small>
+		</div>
+	</div>
+	<div class="row mt-4">
+		<div class="col-md-12 text-center">
+			<div class="chart-container">
+				<canvas id="market_depth_chart"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- buy/sell forms -->
+	<% if(SE.User) { %>
+		<div class="row">
+			<div class="col-md-6 text-left p-3 buy-form">
+				<h4 class="font-weight-bold">Buy <%= data.token %></h4>
+				<div class="group">
+					<div class="input-group mb-1">
+						<label style="min-width: 90px;">Price</label>
+						<input type="number" id="buyPrice" placeholder="0.0" class="text-right" style="width: 180px;">
+						<div class="input-group-append">
+							<span class="input-group-text">Steem/<%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group">
+					<div class="input-group mb-1">
+						<label style="min-width: 90px;">Quantity</label>
+						<input type="number" id="buyQuantity" placeholder="0" class="text-right" style="width: 180px;">
+						<div class="input-group-append">
+							<span class="input-group-text"><%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group">
+					<div class="input-group mb-1">
+						<label style="min-width: 90px;">Total</label>
+						<input type="number" id="buyTotal" placeholder="0.0" class="text-right" style="width: 180px;" readonly disabled>
+						<div class="input-group-append">
+							<span class="input-group-text">Steem</span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group mt-2 pl-5 pr-2">
+					<span class="small float-left">
+						<small class="text-info">Your Balance:
+							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a>
+						</small>
+						<br>
+						<small class="text-info">Lowest Ask:
+							<% if(data.sell_orders && data.sell_orders.length > 0) { %>
+								<button id="lowest-ask" onclick="$('#buyPrice').val(data.sell_orders[0].price);" type="button" class="btn btn-link font-weight-bold text-dark" style="font-size: unset; padding: unset;"><%= data.sell_orders[0].price %></button>
+							<% } else { %>
+								<span class="font-weight-bold text-dark">-</span>
+							<% } %>
+						</small>
+					</span>
+					<button class="btn btn-primary btn-sm float-right" onclick="btnSubmitOrder('buy');" style="margin: auto;">Buy <%= data.token %></button>
+				</div>
+			</div>
+			<div class="col-md-6 text-left p-3 sell-form">
+				<h4 class="font-weight-bold">Sell <%= data.token %></h4>
+				<div class="group">
+					<div class="input-group mb-1">
+						<label style="min-width: 90px;">Price</label>
+						<input type="number" id="sellPrice" placeholder="0.0" class="text-right" style="width: 180px;">
+						<div class="input-group-append">
+							<span class="input-group-text">Steem/<%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group">
+					<div class="input-group mb-1">
+						<label style="min-width: 90px;">Quantity</label>
+						<input type="number" id="sellQuantity" placeholder="0" class="text-right" style="width: 180px;">
+						<div class="input-group-append">
+							<span class="input-group-text"><%= data.token %></span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group">
+					<div class="input-group mb-1">
+						<label style="min-width: 90px;">Total</label>
+						<input type="number" id="sellTotal" placeholder="0.0" class="text-right" style="width: 180px;" readonly disabled>
+						<div class="input-group-append">
+							<span class="input-group-text">Steem</span>
+						</div>
+						<div class="invalid-feedback">
+							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group mt-2 pl-5 pr-2">
+					<span class="small float-left">
+						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
+						<small class="text-info">Highest Bid:
+							<% if(data.buy_orders && data.buy_orders.length > 0) { %>
+								<button id="highest-bid" onclick="$('#sellPrice').val(data.buy_orders[0].price);" type="button" class="btn btn-link font-weight-bold text-dark" style="font-size: unset; padding: unset;"><%= data.buy_orders[0].price %></button>
+							<% } else { %>
+								<span class="font-weight-bold text-dark">-</span>
+							<% } %>
+						</small>
+					</span>
+					<button class="btn btn-primary btn-sm float-right" onclick="btnSubmitOrder('sell');" style="margin: auto;">Sell <%= data.token %></button>
+				</div>
+			</div>
+		</div>
+	<% } %>
+
+	<!-- active buy/sell orders -->
+	<div class="row">
+		<div class="col-md-6 text-left p-3">
+			<h4 class="font-weight-bold">Buy Orders</h4>
+			<table id="buy_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+		<div class="col-md-6 text-left p-3">
+			<h4 class="font-weight-bold">Sell Orders</h4>
+			<table id="sell_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+	</div>
+
+	<!-- your orders -->
+	<% if(SE.User) { %>
+	<div class="row">
+		<div class="col-md-12 text-left p-3">
+			<h4 class="font-weight-bold">My Open Orders</h4>
+			<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+	</div>
+	<% } %>
+
+	<!-- trade history -->
+	<div class="row">
+		<div class="col-md-12 text-left p-3">
+			<h4 class="font-weight-bold">Trade History</h4>
+			<table id="trade_history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+		</div>
+	</div>
+</div>
+
+<script>
+	var data = <%= JSON.stringify(data) %>;
+	function OrderTypeColumn(value, options, rowdata) { return `<strong class="text-${value === 'buy' ? 'success' : 'danger'}">${value.toUpperCase()}</strong>` }
+	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
+	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value + '</strong>' }
+	function UpdateOrderTotal(type) {
+		var price = parseFloat($("#" + type + "Price").val());
+		var quantity = parseFloat($("#" + type + "Quantity").val());
+
+		if (price && price > 0 && quantity && quantity > 0) {
+			$("#" + type + "Total").val(price * quantity);
+		}
+	}
+	function UpdateBuyOrderTotal() { return UpdateOrderTotal('buy') }
+	function UpdateSellOrderTotal() { return UpdateOrderTotal('sell') }
+
+	console.log(data);
+
+	$('#buyPrice').on('input', UpdateBuyOrderTotal);
+	$('#buyQuantity').on('input', UpdateBuyOrderTotal);
+
+	$('#sellPrice').on('input', UpdateBuyOrderTotal);
+	$('#sellQuantity').on('input', UpdateBuyOrderTotal);
+
+	$('#buy_order_table').footable({
+		"columns": [
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn }
+		],
+		"rows": data.buy_orders.slice(0, 15)
+	});
+
+	$('#buy_order_table').on("click", 'tr', function(){
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
+
+	$('#sell_order_table').footable({
+		"columns": [
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn }
+		],
+		"rows": data.sell_orders.slice(0, 15)
+	});
+
+	$('#sell_order_table').on("click", 'tr', function(){
+		console.log('click');
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(1)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
+	$('#user_order_table').footable({
+		"columns": [
+			{ "name": "timestamp_string", "title": "Date Created" },
+			{ "name": "$loki", "title": "ID" },
+			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
+			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "action", "title": "Action", "classes": "text-center", "formatter": function (value, options, rowdata) {
+					var actions = $('<div/>')
+
+					var cancelButton = ($('<button/>', {'class':'btn btn-danger btn-sm'})
+						.append('<span>Cancel</span>')
+						.on("click", this, function () {
+							console.log(rowdata);
+							btnCancelOrder(rowdata.type, rowdata.$loki);
+						}))
+						.appendTo(actions);
+
+					return actions;
+				}
+			}
+		],
+		"rows": data.user_orders
+	});
+
+	$('#user_order_table').on("click", 'tr', function() {
+		console.log('click');
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
+	$('#trade_history_table').footable({
+		"columns": [
+			{ "name": "timestamp_string", "title": "Date" },
+			{ "name": "$loki", "title": "ID" },
+			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
+			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
+			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right" },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+		],
+		"rows": data.trade_history
+	});
+
+	$('#trade_history_table').on("click", 'tr', function(){
+		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
+							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.text();			        // Retrieves the price
+
+		$("#buyPrice").val(selectedPrice);
+		$("#sellPrice").val(selectedPrice);
+	});
+
+	// prepare chart datasets
+	var buyOrderLabels = _.uniq(data.buy_orders.map(o => o.price));
+	var buyOrderDataset = [];
+	var buyOrderCurrentVolume = 0;
+	buyOrderLabels.forEach(label => {
+		let matchingBuyOrders = data.buy_orders.filter(o => o.price === label);
+		if (matchingBuyOrders.length === 0) {
+			buyOrderDataset.push(null);
+		} else {
+			buyOrderCurrentVolume = buyOrderCurrentVolume + matchingBuyOrders.reduce((acc, val) => { console.log('buy: ' + val.price); return val.price * val.quantity }, 0);
+			buyOrderDataset.push(buyOrderCurrentVolume);
+		}
+	});
+	buyOrderLabels.reverse();
+	buyOrderDataset.reverse();
+
+	var sellOrderLabels = _.uniq(data.sell_orders.map(o => o.price));
+	var sellOrderDataset = _.fill(Array(buyOrderDataset.length), null);
+	var sellOrderCurrentVolume = 0;
+	sellOrderLabels.forEach(label => {
+		let matchingSellOrders = data.sell_orders.filter(o => o.price === label);
+		if (matchingSellOrders.length === 0) {
+			sellOrderDataset.push(null);
+		} else {
+			sellOrderCurrentVolume = sellOrderCurrentVolume + matchingSellOrders.reduce((acc, val) => { console.log('sell: ' + val.price); return val.price * val.quantity }, 0);
+			sellOrderDataset.push(sellOrderCurrentVolume);
+		}
+	});
+
+	// draw chart
+	var chart_ctx = $("#market_depth_chart");
+	var market_chart = new Chart(chart_ctx, {
+		type: 'line',
+		legend: {
+			display: false
+		},
+		data: {
+			labels: buyOrderLabels.concat(sellOrderLabels),
+			datasets: [
+				{
+					label: 'Buy',
+					steppedLine: 'after',
+					borderColor: '#88e86b',
+					backgroundColor: '#a9ea96',
+					data: buyOrderDataset
+				},
+				{
+					label: 'Sell',
+					steppedLine: 'before',
+					borderColor: '#e45858',
+					backgroundColor: '#e87f7f',
+					data: sellOrderDataset
+				}
+			]
+		},
+		options: {
+			steppedLine: true
+		}
+	});
+
+	function btnSubmitOrder(type) {
+		if (type !== 'buy' && type !== 'sell') {
+			console.error('Invalid order type: ', type)
+			return;
+		}
+
+		let isValid = true;
+		$('.' + type + '-form input').removeClass("is-invalid");
+
+		var price = parseFloat($("#" + type + "Price").val());
+		var quantity = parseFloat($("#" + type + "Quantity").val());
+
+		if(isNaN(price) || price <= 0) {
+			$('#' + type + 'Price').addClass("is-invalid");
+			isValid = false;
+		}
+
+		if(isNaN(quantity) || quantity <= 0) {
+			$('#' + type + 'Quantity').addClass("is-invalid");
+			isValid = false;
+		}
+
+		if(isValid) {
+			// show confim dialog
+			SE.ShowMarketOrderDialog(type, data.token, quantity, price);
+    	}
+	}
+
+	function btnCancelOrder(type, orderId) {
+		if (type !== 'buy' && type !== 'sell') {
+			console.error('Invalid order type: ', type)
+			return;
+		}
+
+		SE.ShowMarketCancelDialog(type, orderId);
+	}
+</script>

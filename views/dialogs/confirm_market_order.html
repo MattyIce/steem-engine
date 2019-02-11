@@ -1,0 +1,48 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg confirm_add_token_dialog" style="max-width: 800px;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title">NEW <%= data.type.toUpperCase() %> ORDER DETAILS</h1>
+      <p>
+        Please review your order before proceeding.
+      </p>
+    </div>
+
+    <div class="modal-body" style="padding: 10px 0;">
+      <div class="d-flex">
+        <div class="token_info text-right" style="color: #93A3AF;">
+          <div>Token:</div>
+          <div>Quantity:</div>
+          <div>Price:</div>
+        </div>
+        <div class="token_info text-left">
+          <div><%= data.symbol.toUpperCase() %></div>
+          <div><%= data.quantity %> </div>
+          <div><%= data.price %></div>
+        </div>
+      </div>
+
+      <p class="mt-5">
+        Proceed?
+      </p>
+    </div>
+
+    <div class="modal-footer" style="border: 0; justify-content: space-evenly; margin-top: 20px;">
+      <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">CANCEL</button>
+      <button id="btnAdd" type="button" class="btn btn-primary btn-lg" onclick="onConfirmClick()"><%= data.type.toUpperCase() %></button>
+    </div>
+  </div>
+</div>
+
+<script>
+function onConfirmClick() {
+  SE.SendMarketOrder(
+    '<%= data.type %>',
+    '<%= data.symbol.toUpperCase() %>',
+    <%= data.quantity %>,
+    <%= data.price %>
+  );
+}
+
+</script>
+

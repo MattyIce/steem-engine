@@ -1,5 +1,5 @@
 <header>
-  <h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>    
+  <h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>
 </header>
 
 <div class="container">
@@ -8,13 +8,13 @@
 
 <script>
 	function SendColumn(value, options, rowdata)
-	{  
-		return `<img class="btn-send" src="https://s3.amazonaws.com/steem-engine/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;  
+	{
+		return `<img class="btn-send" src="https://s3.amazonaws.com/steem-engine/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;
 	}
 
 	function HistoryColumn(value, options, rowdata)
 	{
-		return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;  
+		return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;
 	}
 
 	function BalanceColumn(value, options, rowdata)
@@ -23,14 +23,15 @@
 	}
 
 	var data = <%= JSON.stringify(data.balances) %>;
+	console.log(data);
 	data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
 
 	$('#balances_table').footable({
 		"on": {
 				"ready.ft.table": function(e, ft) {
 					if('<%= data.account %>' == SE.User.name) {
-						$('#balances_table tbody tr').bind('click', function() {          
-							var index = $(this).index();          
+						$('#balances_table tbody tr').bind('click', function() {
+							var index = $(this).index();
 							SE.ShowHistory(data[index].symbol, data[index].name)
 						});
 					}
