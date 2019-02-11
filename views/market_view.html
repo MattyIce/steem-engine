@@ -163,7 +163,8 @@
 	var data = <%= JSON.stringify(data) %>;
 	function OrderTypeColumn(value, options, rowdata) { return `<strong class="text-${value === 'buy' ? 'success' : 'danger'}">${value.toUpperCase()}</strong>` }
 	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
-	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value + '</strong>' }
+	function SteemAmountColumn(value, options, rowdata) { return value.toFixed(3); }
+	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value.toFixed(5) + '</strong>' }
 	function UpdateOrderTotal(type) {
 		var price = parseFloat($("#" + type + "Price").val());
 		var quantity = parseFloat($("#" + type + "Quantity").val());
@@ -180,14 +181,14 @@
 	$('#buyPrice').on('input', UpdateBuyOrderTotal);
 	$('#buyQuantity').on('input', UpdateBuyOrderTotal);
 
-	$('#sellPrice').on('input', UpdateBuyOrderTotal);
-	$('#sellQuantity').on('input', UpdateBuyOrderTotal);
+	$('#sellPrice').on('input', UpdateSellOrderTotal);
+	$('#sellQuantity').on('input', UpdateSellOrderTotal);
 
 	$('#buy_order_table').footable({
 		"columns": [
-			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn }
 		],
 		"rows": data.buy_orders.slice(0, 15)
@@ -206,9 +207,9 @@
 	$('#sell_order_table').footable({
 		"columns": [
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
-			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right" },
-			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
-			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn }
+			{ "name": "quantity", "title": data.token + " (Qty)", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "amountLocked", "title": "STEEM", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn }
 		],
 		"rows": data.sell_orders.slice(0, 15)
 	});

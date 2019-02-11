@@ -132,8 +132,11 @@ SE = {
 		SE.LoadTokens(r => SE.ShowHomeView('tokens', r));
 	},
 
-	ShowMarket: function() {
-		SE.LoadTokens(r => SE.ShowHomeView('market', r.filter(t => t.symbol !== 'STEEMP')));
+	ShowMarket: function(token) {
+		if(!token)
+			token = Config.NATIVE_TOKEN;
+
+		SE.LoadTokens(r => SE.ShowHomeView('market', { selected: token, tokens: r.filter(t => t.symbol !== 'STEEMP') }, { t: token }));
 	},
 
 	ShowMarketView: function(symbol, account) {
@@ -154,15 +157,19 @@ SE = {
 		}
 		Promise.all(tasks).then(results => {
 			// prepare buy orders
+			var buy_total = 0;
 			let buy_orders = results[0].map(o => {
-				o.total = o.quantity * o.price;
-				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
+				buy_total += o.quantity * o.price;
+				o.total = buy_total;
+				o.amountLocked = o.quantity * o.price;
 				return o;
 			});
 			// prepare sell orders
+			var sell_total = 0;
 			let sell_orders = results[1].map(o => {
-				o.total = o.quantity * o.price;
-				o.amountLocked = o.tokensLocked ? o.tokensLocked * o.price : 0;
+				sell_total += o.quantity * o.price;
+				o.total = sell_total;
+				o.amountLocked = o.quantity * o.price;
 				return o;
 			});
 			// prepare trade history

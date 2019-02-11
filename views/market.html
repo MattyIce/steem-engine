@@ -17,16 +17,16 @@
 </div>
 
 <script>
-	var token_data = <%= JSON.stringify(data) %>;
+	var token_data = <%= JSON.stringify(data.tokens) %>;
 
-	SE.ShowMarketView(Config.NATIVE_TOKEN);
+	SE.ShowMarketView('<%= data.selected %>');
 
 	$('#tokens_table').footable({
 		"on": {
 			"ready.ft.table": function(e, ft) {
 				$('#tokens_table tbody tr').bind('click', function() {
 					var index = $(this).index();
-					SE.ShowMarketView(token_data[index].symbol);
+					SE.ShowMarket(token_data[index].symbol);
 				});
 			}
 		},
