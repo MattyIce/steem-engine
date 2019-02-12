@@ -241,6 +241,8 @@ SE = {
 				SE.User.account = r[0];
 		});
 
+		SE.LoadBalances(username);
+
 		if(callback)
 			callback(SE.User);
 	},
