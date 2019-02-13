@@ -52,7 +52,7 @@
 							<span class="input-group-text">Steem</span>
 						</div>
 						<div class="invalid-feedback">
-							Required field. Price must be a number greater than 0.
+							Your balance is too low to confirm this order.
 						</div>
 					</div>
 				</div>
@@ -107,7 +107,7 @@
 							<span class="input-group-text">Steem</span>
 						</div>
 						<div class="invalid-feedback">
-							Required field. Price must be a number greater than 0.
+							Your balance is too low to confirm this order.
 						</div>
 					</div>
 				</div>
@@ -361,12 +361,30 @@
 		if(isNaN(quantity) || quantity <= 0) {
 			$('#' + type + 'Quantity').addClass("is-invalid");
 			isValid = false;
+		} else if (type === 'sell' && quantity > data.user_token_balance) {
+
+		}
+
+		// check for valid user balance
+		if (isValid) {
+			console.log('Check balance ' + quantity + ', ' + price + ', ' + data.user_token_balance.balance + ', ' + data.user_steemp_balance.balance);
+			if (type === 'sell' && quantity > data.user_token_balance.balance) {
+				console.log('Invalid sell balance');
+				$('#' + type + 'Total').addClass("is-invalid");
+				isValid = false;
+			}
+
+			if (type === 'buy' && (quantity * price) > data.user_steemp_balance.balance) {
+				console.log('Invalid buy balance');
+				$('#' + type + 'Total').addClass("is-invalid");
+				isValid = false;
+			}
 		}
 
 		if(isValid) {
 			// show confim dialog
 			SE.ShowMarketOrderDialog(type, data.token, quantity, price);
-    	}
+    }
 	}
 
 	function btnCancelOrder(type, orderId) {
