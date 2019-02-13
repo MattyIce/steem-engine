@@ -215,7 +215,6 @@
 	});
 
 	$('#sell_order_table').on("click", 'tr', function(){
-		console.log('click');
 		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
 							.find("td:nth-child(1)")    // Finds the 'price' <td> element
 							.text();			        // Retrieves the price
@@ -238,7 +237,6 @@
 					var cancelButton = ($('<button/>', {'class':'btn btn-danger btn-sm'})
 						.append('<span>Cancel</span>')
 						.on("click", this, function () {
-							console.log(rowdata);
 							btnCancelOrder(rowdata.type, rowdata.$loki);
 						}))
 						.appendTo(actions);
@@ -251,7 +249,6 @@
 	});
 
 	$('#user_order_table').on("click", 'tr', function() {
-		console.log('click');
 		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
 							.find("td:nth-child(4)")    // Finds the 'price' <td> element
 							.text();			        // Retrieves the price
@@ -290,7 +287,7 @@
 		if (matchingBuyOrders.length === 0) {
 			buyOrderDataset.push(null);
 		} else {
-			buyOrderCurrentVolume = buyOrderCurrentVolume + matchingBuyOrders.reduce((acc, val) => { console.log('buy: ' + val.price); return val.price * val.quantity }, 0);
+			buyOrderCurrentVolume = buyOrderCurrentVolume + matchingBuyOrders.reduce((acc, val) => { return val.price * val.quantity }, 0);
 			buyOrderDataset.push(buyOrderCurrentVolume);
 		}
 	});
@@ -305,7 +302,7 @@
 		if (matchingSellOrders.length === 0) {
 			sellOrderDataset.push(null);
 		} else {
-			sellOrderCurrentVolume = sellOrderCurrentVolume + matchingSellOrders.reduce((acc, val) => { console.log('sell: ' + val.price); return val.price * val.quantity }, 0);
+			sellOrderCurrentVolume = sellOrderCurrentVolume + matchingSellOrders.reduce((acc, val) => { return val.price * val.quantity }, 0);
 			sellOrderDataset.push(sellOrderCurrentVolume);
 		}
 	});
@@ -367,15 +364,12 @@
 
 		// check for valid user balance
 		if (isValid) {
-			console.log('Check balance ' + quantity + ', ' + price + ', ' + data.user_token_balance.balance + ', ' + data.user_steemp_balance.balance);
 			if (type === 'sell' && quantity > data.user_token_balance.balance) {
-				console.log('Invalid sell balance');
 				$('#' + type + 'Total').addClass("is-invalid");
 				isValid = false;
 			}
 
 			if (type === 'buy' && (quantity * price) > data.user_steemp_balance.balance) {
-				console.log('Invalid buy balance');
 				$('#' + type + 'Total').addClass("is-invalid");
 				isValid = false;
 			}
