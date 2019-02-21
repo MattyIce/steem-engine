@@ -39,8 +39,8 @@ function onConfirmClick() {
   SE.SendMarketOrder(
     '<%= data.type %>',
     '<%= data.symbol.toUpperCase() %>',
-    <%= data.quantity %>,
-    <%= data.price %>
+    '<%= data.quantity %>',
+    '<%= data.price %>'
   );
 }
 

@@ -62,9 +62,10 @@
 
     function onIssueClick() {
       var to = $('#txtTo').val();
-      var amount = parseFloat($('#txtAmount').val());
+      var amount = $('#txtAmount').val();
+      var floatAmount = parseFloat($('#txtAmount').val());
       
-      if(isNaN(amount) || amount == 0) {
+      if(isNaN(floatAmount) || floatAmount == 0) {
         $('#txtAmount').addClass("is-invalid");
         isValid = false;
       }

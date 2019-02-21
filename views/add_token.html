@@ -48,9 +48,9 @@
 
       <div class="group">
         <label>Max Supply</label>
-        <input type="number" id="txtMaxSupply" min="0" max="1000000000000" maxlength="30">
+        <input type="number" id="txtMaxSupply" min="0" max="9007199254740991" maxlength="30">
         <div class="invalid-feedback">
-          Please enter a number from 1 to 1000000000000
+          Please enter a number from 1 to 9007199254740991
         </div>
 			</div>
 			
@@ -86,7 +86,7 @@
       isValid = false;
     }
 
-    if(isNaN(maxSupply) || maxSupply < 0 || maxSupply > 1000000000000) {
+    if(isNaN(maxSupply) || maxSupply < 0 || maxSupply > 9007199254740991) {
       $('#txtMaxSupply').addClass("is-invalid");
       isValid = false;
 		}
