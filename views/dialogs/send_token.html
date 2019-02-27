@@ -11,7 +11,7 @@
     <div class="modal-body">
       <label class="mb-0">BALANCE</label>
       <p class="mb-4">
-        <%= addCommas(data.balance.toFixed(SE.GetToken(data.symbol).precision)) %> <%= data.symbol %>
+        <%= addCommas(data.balance) %> <%= data.symbol %>
 			</p>						
       
       <label>TO</label>
@@ -66,10 +66,11 @@
 
   function onSendClick() {  
     var to = $('#txtTo').val();
-		var amount = parseFloat($('#txtAmount').val());
+    var amount = $('#txtAmount').val();
+    var floatAmount = parseFloat($('#txtAmount').val());
 		var memo = $('#txtMemo').val();
 
-    if(isNaN(amount) || amount == 0) {
+    if(isNaN(floatAmount) || floatAmount == 0) {
       $('#txtAmount').addClass("is-invalid");
       isValid = false;
     }

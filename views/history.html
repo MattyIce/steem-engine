@@ -12,7 +12,7 @@
 		</h2>    
     
     <div class="buttons">
-			<div class="balance" style="font-size: 25px;"><%= addCommas(SE.GetBalance(data.symbol).toFixed(SE.GetToken(data.symbol).precision)) + ' ' + data.symbol %></div>
+			<div class="balance" style="font-size: 25px;"><%= addCommas(SE.GetBalance(data.symbol)) + ' ' + data.symbol %></div>
 			<button class="btn btn-primary" onclick="sendTokens()">SEND</button>
 
 			<% if(SE.GetToken(data.symbol).issuer == SE.User.name) { %>
@@ -40,7 +40,7 @@
 		return '<div class="balance-cell ' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(parseFloat(value).toFixed(token.precision)) + ' ' + symbol + '</div>'; 
 	}
 
-	var running_balance = balance;
+	var running_balance = typeof balance === 'number' ? balance : parseFloat(balance);
 	data.rows.forEach(r => {
 		r.type = (r.to == SE.User.name) ? 'Received' : 'Sent';
 		r.to_from = (r.to == SE.User.name) ? r.from : r.to;

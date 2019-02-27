@@ -347,8 +347,8 @@
 		let isValid = true;
 		$('.' + type + '-form input').removeClass("is-invalid");
 
-		var price = parseFloat($("#" + type + "Price").val());
-		var quantity = parseFloat($("#" + type + "Quantity").val());
+		var price = $("#" + type + "Price").val();
+		var quantity = $("#" + type + "Quantity").val();
 
 		if(isNaN(price) || price <= 0) {
 			$('#' + type + 'Price').addClass("is-invalid");
