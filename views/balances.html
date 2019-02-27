@@ -18,11 +18,17 @@
 	}
 
 	function BalanceColumn(value, options, rowdata) { return addCommas(value) + ' ' + rowdata.symbol; }
-	function USDValueColumn(value, options, rowdata) { return usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2); }
-
+	function USDValueColumn(value, options, rowdata) { return '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2) + '</span>'; }
+	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
+	
 	var data = <%= JSON.stringify(data.balances) %>;
-	console.log(data);
-	data = data.map(d => Object.assign(d, { name: SE.Tokens.find(t => t.symbol == d.symbol).name }));
+	
+	data = data.map(d => {
+		var token = SE.Tokens.find(t => t.symbol == d.symbol);
+		return Object.assign(d, { name: token.name, lastPrice: token.lastPrice, priceChangePercent: token.priceChangePercent });
+	});
+
+	data.sort((a, b) => b.balance * b.lastPrice * window.steem_price - a.balance * a.lastPrice * window.steem_price);
 
 	$('#balances_table').footable({
 		"on": {
@@ -39,7 +45,8 @@
 			{ "name": "symbol", "title": "Symbol" },
 			{ "name": "name", "title": "Token Name" },
 			{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn },
-			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right", "formatter": USDValueColumn }
+			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right bold", "formatter": USDValueColumn },
+			{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn }
 		],
 		"rows": data
 	});

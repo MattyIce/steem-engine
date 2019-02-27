@@ -21,6 +21,8 @@
 	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
 	function SupplyColumn(value, options, rowdata) { return addCommas(value); }
 	function USDValueColumn(value, options, rowdata) { return value ? usdFormat(value) : '--'; }
+	function PriceColumn(value, options, rowdata) { return value ? '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value) + '</span>' : '--'; }
+	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
 	function URLFormatter(value, options, rowdata)
 	{
 		if(value != null) {
@@ -50,7 +52,8 @@
 				{ "name": "symbol", "title": "Symbol" },
 				{ "name": "name", "title": "Token Name" },
 				{ "name": "marketCap", "title": "Market Cap", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
-				{ "name": "lastPrice", "title": "Price", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
+				{ "name": "lastPrice", "title": "Price", "type": "number", "classes": "text-right bold", "formatter": PriceColumn },
+				{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn },
 				{ "name": "volume", "title": "24h Vol", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
 				{ "name": "supply", "title": "Supply", "type": "number", "classes": "text-right", "formatter": SupplyColumn },    
 				{ "name": "issuer", "title": "Issuer", "formatter": SteemAccountColumn }

@@ -499,7 +499,7 @@ table.tokensTable {
 
 .tokensTable tbody {
   color: #27475E;
-  font-size: 16px;
+	font-size: 14px;
 }
 
 .tokensTable tbody tr{
@@ -716,11 +716,15 @@ table.tokensTable .fooicon-sort-desc:before {
 	width: 180px;
 }
 
-.balance-cell.received {
-	color: green;
+.bold {
+	font-weight: bold;
 }
 
-.balance-cell.sent {
+.balance-cell.received, .green {
+	color: #009e73;
+}
+
+.balance-cell.sent, .red {
 	color: red;
 }
 

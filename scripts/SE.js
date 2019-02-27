@@ -336,6 +336,14 @@ SE = {
 
 			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(metrics => {
 				SE.Tokens.forEach(token => {
+					token.highestBid = 0;
+					token.lastPrice = 0;
+					token.lowestAsk = 0;
+					token.marketCap = 0;
+					token.volume = 0;
+					token.priceChangePercent = 0;
+					token.priceChangeSteem = 0;
+
 					var metric = metrics.find(m => token.symbol == m.symbol);
 
 					if(metric) {
@@ -343,16 +351,14 @@ SE = {
 						token.lastPrice = parseFloat(metric.lastPrice);
 						token.lowestAsk = parseFloat(metric.lowestAsk);
 						token.marketCap = token.lastPrice * token.supply;
-						token.volume = 0;
 						
 						if(Date.now() / 1000 < metric.volumeExpiration)
 							token.volume = parseFloat(metric.volume);
-					} else {
-						token.highestBid = 0;
-						token.lastPrice = 0;
-						token.lowestAsk = 0;
-						token.marketCap = 0;
-						token.volume = 0;
+
+						if(Date.now() / 1000 < metric.lastDayPriceExpiration) {
+							token.priceChangePercent = parseFloat(metric.priceChangePercent);
+							token.priceChangeSteem = parseFloat(metric.priceChangeSteem);
+						}
 					}
 
 					if(token.symbol == 'STEEMP')

@@ -34,7 +34,10 @@
 
 	SE.ShowMarketView('<%= data.selected %>');
 
-	function PriceColumn(value, options, rowdata) { return usdFormat(value, 3); }
+	function PriceColumn(value, options, rowdata) { 
+		var token = SE.GetToken(rowdata.symbol);
+		return '<span class="' + (token.priceChangePercent > 0 ? 'green' : (token.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value, 3) + '</span>'; 
+	}
 
 	$('#tokens_table').footable({
 		"on": {
@@ -50,7 +53,7 @@
 		},
 		"columns": [
 			{ "name": "symbol", "title": "Token" },
-			{ "name": "lastPrice", "title": "Last", "type": "number", "classes": "market-token-list-cell", "formatter": PriceColumn }
+			{ "name": "lastPrice", "title": "Last", "type": "number", "classes": "market-token-list-cell bold", "formatter": PriceColumn }
 		],
 		"rows": token_data
 	});
