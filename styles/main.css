@@ -39,6 +39,10 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   width: 100%;
 }
 
+.modal-content input:focus {
+	outline: none;
+}
+
 .modal-content label {
   text-align: left;
   font-family: 'Nunito', sans-serif;
@@ -264,6 +268,14 @@ header .group {
 	padding-right: 50px;
 }
 
+header .header-row {
+	padding-top: 43px;
+}
+
+header .header-row h1 {
+	padding-top: 0;
+}
+
 header .group .buttons{
   display: flex;
   width: 100%;
@@ -472,7 +484,7 @@ footer .copyright {
 }
 
 table.tokensTable {
-  top: 0px;
+  top: -45px;
 }
 
 .tokensTable thead {
@@ -692,6 +704,13 @@ table.tokensTable .fooicon-sort-desc:before {
 	text-align: right;
 }
 
+.note {
+	font-family: 'Nunito', sans-serif;
+	font-size: 15px;
+	color: #B0B7BD;
+	margin-top: 5px;
+}
+
 .balance-cell {
 	text-align: right;
 	width: 180px;
@@ -786,4 +805,8 @@ table.tokensTable .fooicon-sort-desc:before {
 .buy-form input.is-invalid~.invalid-feedback, .sell-form input.is-invalid~.invalid-feedback {
   display: block;
   text-align: left;
+}
+
+.tokensTable tbody tr td.market-token-list-cell {
+	padding: 0;
 }

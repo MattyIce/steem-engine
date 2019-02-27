@@ -19,7 +19,8 @@
 <script>
 	var token_data = <%= JSON.stringify(data) %>;
 	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
-	function SupplyColumn(value, options, rowdata) { return '<div class="balance-cell">' + addCommas(value) + '</div>'; }
+	function SupplyColumn(value, options, rowdata) { return addCommas(value); }
+	function USDValueColumn(value, options, rowdata) { return value ? usdFormat(value) : '--'; }
 	function URLFormatter(value, options, rowdata)
 	{
 		if(value != null) {
@@ -48,9 +49,11 @@
 			"columns": [
 				{ "name": "symbol", "title": "Symbol" },
 				{ "name": "name", "title": "Token Name" },
-				{ "name": "supply", "title": "Supply (Circulating)", "formatter": SupplyColumn },    
-				{ "name": "issuer", "title": "Issuer", "formatter": SteemAccountColumn },
-				{ "name": "url", "title": "URL", "formatter": URLFormatter }
+				{ "name": "marketCap", "title": "Market Cap", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
+				{ "name": "lastPrice", "title": "Price", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
+				{ "name": "volume", "title": "24h Vol", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
+				{ "name": "supply", "title": "Supply", "type": "number", "classes": "text-right", "formatter": SupplyColumn },    
+				{ "name": "issuer", "title": "Issuer", "formatter": SteemAccountColumn }
 			],
 			"rows": data
 		});

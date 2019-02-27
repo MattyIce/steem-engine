@@ -52,6 +52,8 @@
 				if(e && e.state)
 					SE.ShowHomeView(e.state.view, e.state.data, e.state.params, true);
 			};
+
+			setInterval(loadSteemPrice, 30 * 1000);
     });
   </script>
 </head>

@@ -17,10 +17,8 @@
 		return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;
 	}
 
-	function BalanceColumn(value, options, rowdata)
-	{
-		return '<div class="balance-cell">' + addCommas(value) + ' ' + rowdata.symbol + '</div>';
-	}
+	function BalanceColumn(value, options, rowdata) { return addCommas(value) + ' ' + rowdata.symbol; }
+	function USDValueColumn(value, options, rowdata) { return usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2); }
 
 	var data = <%= JSON.stringify(data.balances) %>;
 	console.log(data);
@@ -40,7 +38,8 @@
 		"columns": [
 			{ "name": "symbol", "title": "Symbol" },
 			{ "name": "name", "title": "Token Name" },
-			{ "name": "balance", "title": "Balance", "formatter": BalanceColumn }
+			{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn },
+			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right", "formatter": USDValueColumn }
 		],
 		"rows": data
 	});

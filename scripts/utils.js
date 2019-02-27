@@ -70,3 +70,25 @@ function addCommas(nStr, currency) {
 
 	return x1 + x2;
 }
+
+function loadSteemPrice(callback) {
+	$.get('https://postpromoter.net/api/prices', function (data) {
+		window.steem_price = parseFloat(data.steem_price);
+
+		if(callback)
+			callback(window.steem_price);
+	});
+}
+
+function usdFormat(val, decimal_limit) {
+	var usd = val * window.steem_price;
+
+	if(decimal_limit != null && !isNaN(parseInt(decimal_limit)))
+		return '$' + addCommas(usd.toFixed(decimal_limit));
+	if(usd >= 1)
+		return '$' + addCommas(usd.toFixed(2));
+	else if(usd >= 0.1)
+		return '$' + usd.toFixed(3);
+	else
+		return '$' + usd.toFixed(5);
+}

@@ -334,8 +334,38 @@ SE = {
 		ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {
 			SE.Tokens = result;
 
-			if(callback)
-				callback(result);
+			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(metrics => {
+				SE.Tokens.forEach(token => {
+					var metric = metrics.find(m => token.symbol == m.symbol);
+
+					if(metric) {
+						token.highestBid = parseFloat(metric.highestBid);
+						token.lastPrice = parseFloat(metric.lastPrice);
+						token.lowestAsk = parseFloat(metric.lowestAsk);
+						token.marketCap = token.lastPrice * token.supply;
+						token.volume = 0;
+						
+						if(Date.now() / 1000 < metric.volumeExpiration)
+							token.volume = parseFloat(metric.volume);
+					} else {
+						token.highestBid = 0;
+						token.lastPrice = 0;
+						token.lowestAsk = 0;
+						token.marketCap = 0;
+						token.volume = 0;
+					}
+
+					if(token.symbol == 'STEEMP')
+						token.lastPrice = 1;
+				});
+
+				SE.Tokens.sort((a, b) => {
+					return (b.volume > 0 ? b.volume : b.marketCap / 1000000000) - (a.volume > 0 ? a.volume : a.marketCap / 1000000000);
+				});
+
+				if(callback)
+					callback(SE.Tokens);
+			});
     });
 	},
 
@@ -355,7 +385,7 @@ SE = {
 			if(result && !err)
 				Object.assign(SE.Params, result);
 
-			if(++loaded >= 2 && callback)
+			if(++loaded >= 3 && callback)
 				callback();
 		});
 
@@ -363,7 +393,12 @@ SE = {
 			if(result && !err)
 				Object.assign(SE.Params, result);
 
-			if(++loaded >= 2 && callback)
+			if(++loaded >= 3 && callback)
+				callback();
+		});
+
+		loadSteemPrice(() => {
+			if(++loaded >= 3 && callback)
 				callback();
 		});
 	},
@@ -438,6 +473,8 @@ SE = {
 			if(r && !e && r.length > 0)
 				SE.User.account = r[0];
 		});
+
+		SE.LoadBalances(username);
 
 		if(callback)
 			callback(SE.User);
@@ -706,6 +743,87 @@ SE = {
 		}
   },
 
+	DepositSteem: function(amount) {
+		SE.ShowLoading();
+
+    if(!SE.User) {
+      window.location.reload();
+      return;
+    }
+
+    var transaction_data = {
+			id: Config.CHAIN_ID,
+			json: {
+				"contractName": "steempegged",
+				"contractAction": "buy",
+				"contractPayload": { }
+			}
+    };
+
+    if(useKeychain()) {
+      steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if(tx.success) {
+              SE.ShowToast(true, 'Deposit transaction sent successfully.');
+							SE.HideLoading();
+							SE.HideDialog();
+							SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
+            } else
+              SE.ShowToast(false, 'An error occurred depositing STEEM: ' + tx.error);
+					});
+        }
+        else
+					SE.HideLoading();
+      });
+    } else {
+			SE.HideLoading();
+			SE.SteemConnectTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
+				SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
+			});
+		}
+	},
+
+	WithdrawSteem: function(amount) {
+		SE.ShowLoading();
+
+    if(!SE.User) {
+      window.location.reload();
+      return;
+    }
+
+    var transaction_data = {
+			"contractName": "steempegged",
+			"contractAction": "withdraw",
+			"contractPayload": { 
+				"quantity": amount.toFixed(3)
+			}
+		};
+
+    if(useKeychain()) {
+      steem_keychain.requestCustomJson(SE.User.name, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Withdraw STEEM', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success)
+              SE.ShowToast(true, amount.toFixed(3) + ' STEEMP withdrawn to @' + SE.User.name);
+            else
+              SE.ShowToast(false, 'An error occurred submitting the transaction: ' + tx.error)
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
+					});
+        }
+        else
+					SE.HideLoading();
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
+			});
+		}
+	},
+	
   ShowTransactionDialog: function(data) {
 		SE.ShowDialog('transaction', data);
 	},

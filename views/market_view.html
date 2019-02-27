@@ -2,9 +2,10 @@
 	<div class="row">
 		<div class="col-md-12 text-center stats">
 			<h3 class="font-weight-bold mb-3">Market Depth (<%= data.token %>)</h3>
-			<small class="m-3 label">Last price: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? data.trade_history[0].price : '-' %></span></small>
-			<small class="m-3 label">Highest bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price : '-' %></a></small>
-			<small class="m-3 label">Lowest ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price : '-' %></a></small>
+			<small class="m-3 label">Last: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? data.trade_history[0].price + ' STEEM / ' + usdFormat(data.trade_history[0].price) : '--' %></span></small>
+			<small class="m-3 label">24h Vol: <span class="font-weight-bold text-dark"><%= SE.Tokens.find(t => t.symbol == data.token).volume + ' STEEM / ' + usdFormat(SE.Tokens.find(t => t.symbol == data.token).volume, 2) %></span></small>
+			<small class="m-3 label">Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price + ' STEEM' : '--' %></a></small>
+			<small class="m-3 label">Ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price + ' STEEM' : '--' %></a></small>
 		</div>
 	</div>
 	<div class="row mt-4">
