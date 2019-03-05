@@ -510,7 +510,8 @@ table.tokensTable {
 
 .tokensTable thead th {
   font-weight: normal;
-  padding-bottom: 22px;
+	padding-bottom: 22px;
+	white-space: nowrap;
 }
 
 .tokensTable tbody {
