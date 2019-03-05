@@ -23,6 +23,9 @@ SE = {
 		$('body').css('overflow', 'auto');
 		$('body').css('padding-right', '0');
 
+		if(Config.MAINTENANCE_MODE)
+			view = 'maintenance';
+
 		$('#page_container').html(render(view, { data: data }));
 
     SE.LastView = SE.CurrentView;
@@ -596,7 +599,7 @@ SE = {
         "url": url,
         "precision": precision,
         "maxSupply": maxSupply
-    }
+    	}
     };
 
     if(useKeychain()) {

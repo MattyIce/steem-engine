@@ -1,0 +1,46 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-content blue" style="min-height: 600px;">
+    <div class="modal-header">
+      <h1 class="modal-title">
+				<% if(data.metadata && data.metadata.icon) { %>
+					<img src="<%= data.metadata.icon %>" style="width: 64px; height: 64px;" />
+				<% } %>
+				<%= data.symbol %>
+			</h1>    
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">X</span>
+      </button>  
+    </div>
+
+    <div class="modal-body">
+      <label class="mb-0">Token Name</label>
+      <p class="mb-4">
+        <%= data.name %>
+			</p>
+
+			<label class="mb-0">Issuer</label>
+      <p class="mb-4">
+        <a href="https://steempeak.com/@<%= data.issuer %>" target="_blank">@<%= data.issuer %>&nbsp;&nbsp;&nbsp;<i class="fas fa-external-link-square-alt"></i></a>
+			</p>
+			
+			<label class="mb-0">Website URL</label>
+      <p class="mb-4">
+				<% if(data.metadata && data.metadata.url) { %>
+					<a href="<%= data.metadata.url %>" target="_blank" style="font-size: 20px;"><span class="text-cutoff"><%= data.metadata.url %></span>&nbsp;&nbsp;&nbsp;<i class="fas fa-external-link-square-alt"></i></a>
+				<% } else { %>
+					None
+				<% } %>
+			</p>
+			
+			<label class="mb-0">Description</label>
+      <p class="mb-4" style="font-size: 20px;">
+        <%= data.metadata.description %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+</script>
+

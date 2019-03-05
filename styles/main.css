@@ -70,6 +70,22 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   background-color: #27475E;
 }
 
+.modal-content.blue a {
+	color: white;
+}
+
+.modal-content.blue a:hover {
+	text-decoration: none;
+	color: #8E4A2C;
+}
+
+.modal-content.blue .text-cutoff {
+	max-width: 310px;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
 .modal-content.blue p, .modal-content.brown p{
   font-size: 24px;
   text-align: left;

@@ -20,7 +20,7 @@
 	var token_data = <%= JSON.stringify(data) %>;
 	
 	function IconColumn(value, options, rowdata) { 
-		return '<i class="fas fa-info-circle"></i>&nbsp;&nbsp;&nbsp;' +
+		return `<i class="fas fa-info-circle" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;` +
 			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` +
 			`<i class="fas fa-list-ul" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>`; 
 	}
