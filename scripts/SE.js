@@ -141,10 +141,22 @@ SE = {
 
 	ShowMarketView: function(symbol, account) {
 		SE.ShowLoading();
+
+		if(symbol == Config.PEGGED_TOKEN)
+			symbol = Config.NATIVE_TOKEN;
+
 		if(!account && SE.User)
 			account = SE.User.name;
 
-		let precision = SE.GetToken(symbol).precision
+		var token = SE.GetToken(symbol);
+
+		if(token.metadata && token.metadata.hide_in_market) {
+			SE.HideLoading();
+			$('#market_view').html(render('components/not_available'));
+			return;
+		}
+
+		let precision = token.precision
 
 		let tasks = [];
 		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: true }], false));
@@ -268,7 +280,7 @@ SE = {
 
 						SE.HideLoading();
 						SE.HideDialog();
-						SE.ShowMarketView(symbol, SE.User.name);
+						SE.LoadTokens(() => SE.ShowMarketView(symbol, SE.User.name));
 					});
         }
         else
@@ -276,7 +288,7 @@ SE = {
       });
     } else {
 			SE.SteemConnectJson('active', transaction_data, () => {
-				SE.ShowMarketView(symbol, SE.User.name);
+				SE.LoadTokens(() => SE.ShowMarketView(symbol, SE.User.name));
 			});
 		}
 	},
@@ -343,6 +355,10 @@ SE = {
 					token.volume = 0;
 					token.priceChangePercent = 0;
 					token.priceChangeSteem = 0;
+
+					token.metadata = tryParse(token.metadata);
+					if(!token.metadata)
+						token.metadata = {};
 
 					var metric = metrics.find(m => token.symbol == m.symbol);
 

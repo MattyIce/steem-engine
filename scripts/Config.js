@@ -3,5 +3,6 @@ Config = {
 	RPC_URL: 'https://testapi.steem-engine.com/',
 	ACCOUNTS_API_URL: 'https://testaccounts.steem-engine.com',
 	NATIVE_TOKEN: 'SSC',
-	STEEMP_ACCOUNT: 'steemsc'
+	STEEMP_ACCOUNT: 'steemsc',
+	PEGGED_TOKEN: 'STEEMP'
 }

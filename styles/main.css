@@ -484,22 +484,48 @@ footer .copyright {
 }
 
 table.tokensTable {
-  top: -45px;
+  top: -35px;
 }
 
 .tokensTable thead {
   color: #FFF;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .tokensTable thead th {
   font-weight: normal;
-  padding-bottom: 42px;
+  padding-bottom: 22px;
 }
 
 .tokensTable tbody {
   color: #27475E;
 	font-size: 14px;
+}
+
+.tokensTable td.icon {
+	padding: 0 0 0 10px;
+	width: 34px;
+}
+
+.tokensTable td.symbol {
+	padding: 0 20px 0 10px;
+}
+
+.tokensTable img.icon {
+	height: 24px;
+	width: 24px;
+}
+
+.tokensTable .icons {
+	font-size: 150%;
+}
+
+.tokensTable .icons .fas {
+	cursor: pointer;
+}
+
+.tokensTable .icons .fas:hover {
+	color: #8E4A2C;
 }
 
 .tokensTable tbody tr{
@@ -517,7 +543,11 @@ table.tokensTable {
 	white-space: nowrap;
 }
 
-.tokensTable.interactiveTable tbody tr:not(.footable-empty):hover {
+#market_tokens_table tbody tr td {
+	padding: 0;
+}
+
+#market_tokens_table.interactiveTable tbody tr:not(.footable-empty):hover, #history_table.interactiveTable tbody tr:not(.footable-empty):hover {
   color: #FFF;
   background-color: #8E4A2C;
   cursor: pointer;

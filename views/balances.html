@@ -17,6 +17,22 @@
 		return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;
 	}
 
+	function IconColumn(value, options, rowdata) { 
+		return '<i class="fas fa-info-circle"></i>&nbsp;&nbsp;&nbsp;' +
+			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` + 
+			`<i class="fas fa-share-square" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp;` + 
+			`<i class="fas fa-list-ul" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>`; 
+	}
+
+	function SymbolColumn(value, options, rowdata) { 
+		var token = SE.GetToken(value);
+
+		if(token && token.metadata && token.metadata.icon)
+			return '<img class="icon" src="' + token.metadata.icon + '"/>';
+		else
+			return ''; 
+	}
+
 	function BalanceColumn(value, options, rowdata) { return addCommas(value) + ' ' + rowdata.symbol; }
 	function USDValueColumn(value, options, rowdata) { return '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2) + '</span>'; }
 	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
@@ -31,22 +47,14 @@
 	data.sort((a, b) => b.balance * b.lastPrice * window.steem_price - a.balance * a.lastPrice * window.steem_price);
 
 	$('#balances_table').footable({
-		"on": {
-				"ready.ft.table": function(e, ft) {
-					if('<%= data.account %>' == SE.User.name) {
-						$('#balances_table tbody tr').bind('click', function() {
-							var index = $(this).index();
-							SE.ShowHistory(data[index].symbol, data[index].name)
-						});
-					}
-				}
-			},
 		"columns": [
-			{ "name": "symbol", "title": "Symbol" },
+			{ "name": "symbol", "title": "", "classes": "icon", "formatter": SymbolColumn },
+			{ "name": "symbol", "classes": "symbol", "title": "Symbol" },
 			{ "name": "name", "title": "Token Name" },
 			{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn },
 			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right bold", "formatter": USDValueColumn },
-			{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn }
+			{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn },
+			{ "name": "symbol", "title": "", "classes": "icons", "formatter": IconColumn }
 		],
 		"rows": data
 	});

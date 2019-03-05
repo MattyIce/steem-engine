@@ -92,3 +92,9 @@ function usdFormat(val, decimal_limit) {
 	else
 		return '$' + usd.toFixed(5);
 }
+
+function tryParse(json) {
+	try {
+		return JSON.parse(json);
+	} catch(err) { return null; }
+}

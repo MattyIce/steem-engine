@@ -34,10 +34,10 @@
 
 	function DateColumn(value, options, rowdata) { return new Date(value).toLocaleString(); }
 	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
-	function BalanceColumn(value, options, rowdata) { return '<div class="balance-cell">' + addCommas(value) + ' ' + symbol + '</div>'; }
+	function BalanceColumn(value, options, rowdata) { return addCommas(value) + ' ' + symbol; }
 	function AmountColumn(value, options, rowdata) { 
 		var operator = (rowdata.type == 'Received') ? '+' : '-';
-		return '<div class="balance-cell ' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(parseFloat(value).toFixed(token.precision)) + ' ' + symbol + '</div>'; 
+		return '<div class="' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(parseFloat(value).toFixed(token.precision)) + ' ' + symbol + '</div>'; 
 	}
 
 	var running_balance = typeof balance === 'number' ? balance : parseFloat(balance);
@@ -62,8 +62,8 @@
 			{ "name": "timestamp", "title": "Date", "formatter": DateColumn },
       { "name": "to_from", "title": "To/From", "formatter": SteemAccountColumn },
       { "name": "type", "title": "Type" },			
-			{ "name": "quantity", "title": "Amount", "formatter": AmountColumn },
-			{ "name": "balance", "title": "Balance", "formatter": BalanceColumn }
+			{ "name": "quantity", "title": "Amount", "type": "number", "classes": "text-right", "formatter": AmountColumn },
+			{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn }
 		],
 		"rows": data.rows
   });

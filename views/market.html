@@ -20,7 +20,7 @@
 	<div class="row">
 		<!-- token selection table -->
 		<div class="col-md-2">
-			<table id="tokens_table" class="tokensTable interactiveTable text-center mt-3" data-sorting="true"></table>
+			<table id="market_tokens_table" class="tokensTable interactiveTable text-center mt-3" data-sorting="true"></table>
 		</div>
 		<!-- main page -->
 		<div class="col-md-10">
@@ -31,6 +31,7 @@
 
 <script>
 	var token_data = <%= JSON.stringify(data.tokens) %>;
+	token_data = token_data.filter(t => t.metadata && !t.metadata.hide_in_market);
 
 	SE.ShowMarketView('<%= data.selected %>');
 
@@ -39,10 +40,10 @@
 		return '<span class="' + (token.priceChangePercent > 0 ? 'green' : (token.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value, 3) + '</span>'; 
 	}
 
-	$('#tokens_table').footable({
+	$('#market_tokens_table').footable({
 		"on": {
 			"ready.ft.table": function(e, ft) {
-				$('#tokens_table tbody tr').bind('click', function() {
+				$('#market_tokens_table tbody tr').bind('click', function() {
 					var index = $(this).index();
 					SE.ShowMarketView(token_data[index].symbol);
 
