@@ -363,6 +363,9 @@ SE = {
 					if(!token.metadata)
 						token.metadata = {};
 
+					if(!metrics)
+						return;
+
 					var metric = metrics.find(m => token.symbol == m.symbol);
 
 					if(metric) {
