@@ -100,6 +100,8 @@ function tryParse(json) {
 }
 
 function largeNumber(val) {
+	val = parseFloat(val);
+	
 	if(val >= 1000000000000)
 		return addCommas(+(val / 1000000000000).toFixed(0)) + ' T';
 	else if(val >= 1000000000)
