@@ -349,7 +349,7 @@ SE = {
 		ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {
 			SE.Tokens = result;
 
-			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(metrics => {
+			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(async (metrics) => {
 				SE.Tokens.forEach(token => {
 					token.highestBid = 0;
 					token.lastPrice = 0;
@@ -372,7 +372,7 @@ SE = {
 						token.highestBid = parseFloat(metric.highestBid);
 						token.lastPrice = parseFloat(metric.lastPrice);
 						token.lowestAsk = parseFloat(metric.lowestAsk);
-						token.marketCap = token.lastPrice * token.supply;
+						token.marketCap = token.lastPrice * token.circulatingSupply;
 						
 						if(Date.now() / 1000 < metric.volumeExpiration)
 							token.volume = parseFloat(metric.volume);
@@ -390,6 +390,14 @@ SE = {
 				SE.Tokens.sort((a, b) => {
 					return (b.volume > 0 ? b.volume : b.marketCap / 1000000000) - (a.volume > 0 ? a.volume : a.marketCap / 1000000000);
 				});
+
+				var steemp_balance = await ssc.findOne('tokens', 'balances', { account: 'steem-peg', symbol: 'STEEMP' });
+
+				if(steemp_balance && steemp_balance.balance) {
+					var token = SE.GetToken('STEEMP');
+					token.supply -= parseFloat(steemp_balance.balance);
+					token.circulatingSupply -= parseFloat(steemp_balance.balance);
+				}
 
 				if(callback)
 					callback(SE.Tokens);
@@ -450,11 +458,11 @@ SE = {
   },
 
   ShowHistory: function(symbol, name) {
-		if(!name)
-			name = SE.GetToken(symbol).name;
+		var token =  SE.GetToken(symbol);
 
     SE.Api("/history", { account: SE.User.name, limit: 100, offset: 0, type: 'user', symbol: symbol }, r => {
-      SE.ShowHomeView('history', { symbol: symbol, name : name, rows : r }, { t: symbol });
+			token.rows = r;
+      SE.ShowHomeView('history', token, { t: symbol });
     });
 	},
 
@@ -582,7 +590,49 @@ SE = {
         }
 			}
 		});
-  },
+	},
+	
+	UpdateTokenMetadata: function(symbol, metadata) {
+		SE.ShowLoading();
+    var username = localStorage.getItem('username');
+
+    if(!username) {
+      window.location.reload();
+      return;
+    }
+
+    var transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "updateMetadata",
+      "contractPayload": {
+        "symbol": symbol,
+        "metadata": metadata
+    	}
+    };
+
+    if(useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Update Token Metadata', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success)
+              SE.ShowToast(true, 'Token updated successfully!');
+            else
+              SE.ShowToast(false, 'An error occurred updating your token: ' + tx.error);
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.LoadTokens(() => SE.ShowHistory(symbol));
+					});
+        }
+        else
+					SE.HideLoading()
+      });
+    } else {
+			SE.SteemConnectJson('active', registration_data, () => {
+				SE.LoadTokens(() => SE.ShowHistory(symbol));
+			});
+		}
+	},
 
   RegisterToken: function(name, symbol, precision, maxSupply, url) {
     SE.ShowLoading();

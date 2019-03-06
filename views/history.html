@@ -1,24 +1,31 @@
 <header>
-  <div class="group">
-    <div>
+  <div class="row header-row">
+    <div class="col-md-1">
       <button class="btn btn-back" onclick="SE.ShowBalances();">
         <i class="material-icons">chevron_left</i>
       </button>
     </div>
 
-    <h2 class="m-0">
-			<%= data.name + ' (' + data.symbol + ')' %>
-			<div class="subtitle">Current Supply: <%= addCommas(SE.GetToken(data.symbol).supply) %></div>
-		</h2>    
-    
-    <div class="buttons">
-			<div class="balance" style="font-size: 25px;"><%= addCommas(SE.GetBalance(data.symbol)) + ' ' + data.symbol %></div>
-			<button class="btn btn-primary" onclick="sendTokens()">SEND</button>
+		<div class="col-md-6">
+			<h2 class="m-0" style="padding-left: 0;">
+				<% if(data.metadata && data.metadata.icon) { %>
+					<img class="icon" src="<%= data.metadata.icon %>" style="height: 64px; width: 64px; float: left; margin-right: 20px;"/>
+				<% } %>
+				<%= data.name + ' (' + data.symbol + ')' %>
+				<div class="subtitle">Current Supply: <%= addCommas(SE.GetToken(data.symbol).circulatingSupply) %></div>
+			</h2>    
+		</div>
+		
+		<div class="col-md-5">
+			<div class="buttons">
+				<span class="balance" style="font-size: 25px; margin-right: 30px;"><%= addCommas(SE.GetBalance(data.symbol)) + ' ' + data.symbol %></span>
+				<button class="btn btn-primary" onclick="sendTokens()">SEND</button>
 
-			<% if(SE.GetToken(data.symbol).issuer == SE.User.name) { %>
-				<button class="btn btn-primary" onclick="issueTokens()">ISSUE</button>
-			<% } %>
-    </div>
+				<% if(SE.GetToken(data.symbol).issuer == SE.User.name) { %>
+					<button class="btn btn-primary" onclick="issueTokens()">ISSUE</button>
+				<% } %>
+			</div>
+		</div>
   </div>
 </header>
 

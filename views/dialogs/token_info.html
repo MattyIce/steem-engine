@@ -4,7 +4,7 @@
     <div class="modal-header">
       <h1 class="modal-title">
 				<% if(data.metadata && data.metadata.icon) { %>
-					<img src="<%= data.metadata.icon %>" style="width: 64px; height: 64px;" />
+					<img src="<%= filterXSS(data.metadata.icon) %>" style="width: 64px; height: 64px;" />
 				<% } %>
 				<%= data.symbol %>
 			</h1>    
@@ -16,7 +16,12 @@
     <div class="modal-body">
       <label class="mb-0">Token Name</label>
       <p class="mb-4">
-        <%= data.name %>
+        <%= filterXSS(data.name) %>
+			</p>
+
+			<label class="mb-0">Supply (Circulating / Total / Max)</label>
+      <p class="mb-4" style="font-size: 20px;">
+					<%= largeNumber(data.circulatingSupply) %> / <%= largeNumber(data.supply) %> / <%= largeNumber(data.maxSupply) %>
 			</p>
 
 			<label class="mb-0">Issuer</label>
@@ -27,17 +32,23 @@
 			<label class="mb-0">Website URL</label>
       <p class="mb-4">
 				<% if(data.metadata && data.metadata.url) { %>
-					<a href="<%= data.metadata.url %>" target="_blank" style="font-size: 20px;"><span class="text-cutoff"><%= data.metadata.url %></span>&nbsp;&nbsp;&nbsp;<i class="fas fa-external-link-square-alt"></i></a>
+					<a href="<%= filterXSS(data.metadata.url) %>" target="_blank" style="font-size: 20px;"><span class="text-cutoff"><%= filterXSS(data.metadata.url) %></span>&nbsp;&nbsp;&nbsp;<i class="fas fa-external-link-square-alt"></i></a>
 				<% } else { %>
 					None
 				<% } %>
 			</p>
 			
 			<label class="mb-0">Description</label>
-      <p class="mb-4" style="font-size: 20px;">
-        <%= data.metadata.description %>
+      <p class="mb-4" style="font-size: 14px;">
+        <%= filterXSS(data.metadata.desc) %>
       </p>
-    </div>
+		</div>
+		
+		<% if(SE.User && SE.User.name == data.issuer) { %>
+			<div class="modal-footer">
+				<button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="SE.ShowDialog('edit_token', SE.GetToken('<%= data.symbol %>'))">EDIT</button>
+			</div>
+		<% } %>
   </div>
 </div>
 

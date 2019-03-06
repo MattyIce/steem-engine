@@ -43,6 +43,18 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 	outline: none;
 }
 
+.edit-dialog .modal-content input {
+	font-size: 15px;
+	padding: 10px 16px;
+}
+
+.edit-dialog .modal-content textarea {
+	width: 100%;
+	height: 100px;
+	font-size: 15px;
+	padding: 5px 10px;
+}
+
 .modal-content label {
   text-align: left;
   font-family: 'Nunito', sans-serif;
@@ -300,6 +312,13 @@ header .group .buttons{
 
 header .group .buttons > *{
   margin-left: 20px;
+}
+
+header .buttons .note {
+	font-size: 13px;
+	color: #B0B7BD;
+	font-style: italic;
+	margin-top: 5px;
 }
 
 input.search {

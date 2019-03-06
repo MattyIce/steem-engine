@@ -1,0 +1,51 @@
+
+<div class="edit-dialog modal-dialog modal-dialog-centered modal-lg">
+	<div class="modal-content blue" style="min-height: 600px;">
+		<div class="modal-header">
+			<h1 class="modal-title">EDIT TOKEN</h1>    
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">X</span>
+			</button>  
+		</div>
+
+		<div class="modal-body">
+			<label class="mb-0">Token Name</label>
+			<p class="mb-4" style="font-size: 20px;">
+				<%= filterXSS(data.name) %> (<%= data.symbol %>)
+			</p>
+
+			<label class="mb-0">Website URL</label>
+			<p class="mb-4">
+				<input id="token_website_url" type="text" value="<%= data.metadata.url %>"/>
+			</p>
+
+			<label class="mb-0">Icon Image URL</label>
+			<p class="mb-4">
+				<input id="token_icon_url" type="text" value="<%= data.metadata.icon %>"/>
+			</p>
+
+			<label class="mb-0">Description</label>
+			<p class="mb-0">
+				<textarea id="token_desc"><%= data.metadata.desc %></textarea>
+			</p>
+		</div>
+
+		<div class="modal-footer">
+			<button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="updateTokenData();">UPDATE</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	function updateTokenData() {
+		var metadata = <%= JSON.stringify(data.metadata) %>;
+
+		metadata.url = $('#token_website_url').val();
+		metadata.icon = $('#token_icon_url').val();
+		metadata.desc = $('#token_desc').val();
+
+		SE.UpdateTokenMetadata('<%= data.symbol %>', metadata);
+	}
+</script>
+
+	

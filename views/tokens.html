@@ -25,7 +25,7 @@
 			`<i class="fas fa-list-ul" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>`; 
 	}
 
-	function SupplyColumn(value, options, rowdata) { return addCommas(value); }
+	function SupplyColumn(value, options, rowdata) { return addCommas(+value.toFixed(3)); }
 	function SymbolColumn(value, options, rowdata) { 
 		var token = SE.GetToken(value);
 
@@ -60,7 +60,7 @@
 				{ "name": "lastPrice", "title": "Price", "type": "number", "classes": "text-right bold", "formatter": PriceColumn },
 				{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn },
 				{ "name": "volume", "title": "24h Vol", "type": "number", "classes": "text-right", "formatter": USDValueColumn },
-				{ "name": "supply", "title": "Supply", "type": "number", "classes": "text-right", "formatter": SupplyColumn },    
+				{ "name": "circulatingSupply", "title": "Supply", "type": "number", "classes": "text-right", "formatter": SupplyColumn },    
 				{ "name": "symbol", "title": "", "classes": "icons", "formatter": IconColumn }
 			],
 			"rows": data
@@ -74,7 +74,7 @@
 			var td = r.children('td');
 
 			if(td.length > 1) {
-				if(td[0].innerText.toLowerCase().indexOf(val) >= 0 || td[1].innerText.toLowerCase().indexOf(val) >= 0)
+				if(td[1].innerText.toLowerCase().indexOf(val) >= 0 || td[2].innerText.toLowerCase().indexOf(val) >= 0)
 					r.show();
 				else
 					r.hide();

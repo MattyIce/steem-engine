@@ -98,3 +98,14 @@ function tryParse(json) {
 		return JSON.parse(json);
 	} catch(err) { return null; }
 }
+
+function largeNumber(val) {
+	if(val >= 1000000000000)
+		return addCommas(+(val / 1000000000000).toFixed(0)) + ' T';
+	else if(val >= 1000000000)
+		return addCommas(+(val / 1000000000).toFixed(3)) + ' B';
+	else if(val >= 1000000)
+		return addCommas(+(val / 1000000).toFixed(3)) + ' M';
+	else
+		return addCommas(+val.toFixed(3));
+}
