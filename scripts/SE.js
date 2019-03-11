@@ -628,7 +628,7 @@ SE = {
 					SE.HideLoading()
       });
     } else {
-			SE.SteemConnectJson('active', registration_data, () => {
+			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadTokens(() => SE.ShowHistory(symbol));
 			});
 		}
