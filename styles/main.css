@@ -169,7 +169,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 .navbar-steem-engine {
   background: url(https://s3.amazonaws.com/steem-engine/images/bg_header.jpg) black repeat-x top right;
   min-height: 60px;
-  padding: 0 100px 0 100px;
+  padding: 0 50px;
 }
 
 .navbar-steem-engine .navbar-brand img{
@@ -177,12 +177,16 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   height: 32px;
 }
 
-.navbar-steem-engine .navbar-nav  .nav-link{
+.navbar-steem-engine .navbar-nav  .nav-link {
   font-family: 'Nunito', sans-serif;
   font-size: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
   color: white;
+}
+
+.navbar-steem-engine .navbar-nav .nav-link:visited {
+	color: white;
 }
 
 .navbar-steem-engine button{

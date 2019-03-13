@@ -452,7 +452,7 @@ SE = {
 	GetBalance: function(token) {
 		if(SE.User && SE.User.balances) {
 			var token = SE.User.balances.find(b => b.symbol == token);
-			return token ? token.balance : 0;
+			return token ? parseFloat(token.balance) : 0;
 		} else
 			return 0;
   },
@@ -649,11 +649,13 @@ SE = {
       "contractPayload": {
         "symbol": symbol,
         "name": name,
-        "url": url,
         "precision": precision,
         "maxSupply": maxSupply
     	}
-    };
+		};
+		
+		if(url)
+			registration_data.contractPayload.url = url;
 
     if(useKeychain()) {
       steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {
