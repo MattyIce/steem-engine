@@ -462,6 +462,7 @@ SE = {
 
     SE.Api("/history", { account: SE.User.name, limit: 100, offset: 0, type: 'user', symbol: symbol }, r => {
 			token.rows = r;
+			token.rows.forEach(r => r.memo = r.memo ? filterXSS(r.memo) : null);
       SE.ShowHomeView('history', token, { t: symbol });
     });
 	},
