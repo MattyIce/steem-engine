@@ -365,12 +365,12 @@
 
 		// check for valid user balance
 		if (isValid) {
-			if (type === 'sell' && quantity > data.user_token_balance.balance) {
+			if (type === 'sell' && parseFloat(quantity) > parseFloat(data.user_token_balance.balance)) {
 				$('#' + type + 'Total').addClass("is-invalid");
 				isValid = false;
 			}
 
-			if (type === 'buy' && (quantity * price) > data.user_steemp_balance.balance) {
+			if (type === 'buy' && (parseFloat(quantity) * parseFloat(price)) > data.user_steemp_balance.balance) {
 				$('#' + type + 'Total').addClass("is-invalid");
 				isValid = false;
 			}
