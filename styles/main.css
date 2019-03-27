@@ -247,6 +247,7 @@ header {
   height: 164px;
   padding-left: 130px;
   padding-right: 130px;
+  position: relative;
 }
 
 header::before {
@@ -883,4 +884,12 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .tokensTable tbody tr td.market-token-list-cell {
 	padding: 0;
+}
+
+#total-wallet-value {
+  color: #FAFAFA;
+  display: block;
+  font-size: 16px;
+  margin-top: -15px;
+  text-align: left;
 }
