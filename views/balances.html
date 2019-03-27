@@ -1,5 +1,6 @@
 <header>
   <h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>
+  <span id="total-wallet-value">Wallet value $<span id="wallet-value-amount">0</span> USD</span>
 </header>
 
 <div class="container">
@@ -41,10 +42,24 @@
 	
 	data = data.map(d => {
 		var token = SE.Tokens.find(t => t.symbol == d.symbol);
-		return Object.assign(d, { name: token.name, lastPrice: token.lastPrice, priceChangePercent: token.priceChangePercent });
+
+		return Object.assign(d, { 
+			name: token.name, 
+			lastPrice: token.lastPrice, 
+			priceChangePercent: token.priceChangePercent,
+			usdValue: usdFormat(d.balance * token.lastPrice, 2)
+		});
 	});
 
 	data.sort((a, b) => b.balance * b.lastPrice * window.steem_price - a.balance * a.lastPrice * window.steem_price);
+
+	var totalInUsd = 0.00;
+	data.forEach(function(o) {
+		var amount = parseFloat(o.usdValue.replace('$', '').replace(',', ''));
+		totalInUsd += amount;
+	});
+
+	$('#wallet-value-amount').text(totalInUsd.toFixed(2));
 
 	$('#balances_table').footable({
 		"columns": [
