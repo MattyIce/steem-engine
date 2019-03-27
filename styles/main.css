@@ -893,3 +893,7 @@ table.tokensTable .fooicon-sort-desc:before {
   margin-top: -15px;
   text-align: left;
 }
+
+#balance {
+  cursor: pointer;
+}

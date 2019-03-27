@@ -11,7 +11,7 @@
     <div class="modal-body">
       <label class="mb-0">BALANCE</label>
       <p class="mb-4">
-        <%= addCommas(data.balance) %> <%= data.symbol %>
+        <span id="balance"><%= addCommas(data.balance) %></span> <%= data.symbol %>
 			</p>						
       
       <label>TO</label>
@@ -49,39 +49,47 @@
 </div>
 
 <script>
-	var isValid = true;
-	var symbol = "<%= data.symbol %>";
+  var isValid = true;
+  var balance = "<%= data.balance %>";
+  var symbol = "<%= data.symbol %>";
+
+  var $balance = $('#balance');
+  var $txtTo = $('#txtTo');
+  var $txtAmount = $('#txtAmount');
+
+  $balance.on('click', function() {
+    $txtAmount.val(balance);
+  });
 	
-	$('#txtTo').focusout(() => {
-		SE.CheckAccount($('#txtTo').val(), r => {
+	$txtTo.focusout(() => {
+		SE.CheckAccount($txtTo.val(), r => {
 			if(r) {				
 				isValid = true;
-				$('#txtTo').removeClass("is-invalid");
+				$txtTo.removeClass("is-invalid");
 			} else {
 				isValid = false;
-				$('#txtTo').addClass("is-invalid");
+				$txtTo.addClass("is-invalid");
 			}
 		})
 	});
 
-  function onSendClick() {  
-    var to = $('#txtTo').val();
-    var amount = $('#txtAmount').val();
-    var floatAmount = parseFloat($('#txtAmount').val());
+  function onSendClick() {
+    var to = $txtTo.val();
+    var amount = $txtAmount.val();
+    var floatAmount = parseFloat($txtAmount.val());
 		var memo = $('#txtMemo').val();
 
     if(isNaN(floatAmount) || floatAmount == 0) {
-      $('#txtAmount').addClass("is-invalid");
+      $txtAmount.addClass("is-invalid");
       isValid = false;
     }
 
     if(to.trim() == '') {
-      $('#txtTo').addClass("is-invalid");
+      $txtTo.addClass("is-invalid");
       isValid = false;
     }
     
-    if(isValid)
-    {
+    if(isValid) {
 			$('.modal-body input').removeClass("is-invalid");
 			SE.SendToken(symbol, to, amount, memo);
     }
