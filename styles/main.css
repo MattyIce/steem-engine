@@ -884,3 +884,7 @@ table.tokensTable .fooicon-sort-desc:before {
 .tokensTable tbody tr td.market-token-list-cell {
 	padding: 0;
 }
+
+#balance {
+  cursor: pointer;
+}
