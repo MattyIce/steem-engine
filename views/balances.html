@@ -1,6 +1,19 @@
 <header>
-  <h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>
-  <span id="total-wallet-value">Est. total value: $<span id="wallet-value-amount">0</span> USD</span>
+	<div class="row header-row">
+		<div class="col-md-6">
+			<h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>
+			<span id="total-wallet-value">Est. Value: $<span id="wallet-value-amount">0</span> USD</span>
+		</div>
+		<div class="col-md-6">
+			<div class="buttons">
+				<% if(SE.User) { %>
+					<button class="btn btn-primary" onclick="SE.ShowDialog('deposit_tokens');">DEPOSIT</button>
+					<button class="btn btn-secondary" onclick="SE.ShowDialog('withdraw_tokens');">WITHDRAW</button>
+					<div class="note">NOTE: There is a 1% fee on all deposits and withdrawals.</div>
+				<% } %>
+			</div>
+		</div>
+	</div>
 </header>
 
 <div class="container">
@@ -8,16 +21,6 @@
 </div>
 
 <script>
-	function SendColumn(value, options, rowdata)
-	{
-		return `<img class="btn-send" src="https://s3.amazonaws.com/steem-engine/images/submit.svg" onclick="SE.ShowSendTokenDialog('${rowdata.symbol}',${rowdata.balance})" />`;
-	}
-
-	function HistoryColumn(value, options, rowdata)
-	{
-		return `<i class="material-icons btn-history" onclick="SE.ShowHistory('${rowdata.symbol}', '${rowdata.name}')">menu</i>`;
-	}
-
 	function IconColumn(value, options, rowdata) { 
 		return `<i class="fas fa-info-circle" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;` +
 			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` + 
@@ -59,7 +62,7 @@
 		totalInUsd += amount;
 	});
 
-	$('#wallet-value-amount').text(totalInUsd.toFixed(2));
+	$('#wallet-value-amount').text(addCommas(totalInUsd.toFixed(2)));
 
 	$('#balances_table').footable({
 		"columns": [

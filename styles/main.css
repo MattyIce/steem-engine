@@ -782,6 +782,15 @@ table.tokensTable .fooicon-sort-desc:before {
 	margin-top: 5px;
 }
 
+.modal-body .note {
+	color: white;
+	text-align: left;
+}
+
+.modal-body .note a {
+	text-decoration: underline;
+}
+
 .balance-cell {
 	text-align: right;
 	width: 180px;
@@ -887,13 +896,25 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 #total-wallet-value {
-  color: #FAFAFA;
+  color: #93A3AF;
   display: block;
   font-size: 16px;
-  margin-top: -15px;
+  margin-top: -25px;
   text-align: left;
 }
 
 #balance {
   cursor: pointer;
+}
+
+.privex {
+	margin: 0 30px 40px;
+}
+
+.deposit-address {
+	background-color: #f8f8f9;
+	padding: 5px 10px;
+	font-size: 16px;
+	color: black;
+	border-radius: 5px;
 }

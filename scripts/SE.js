@@ -986,5 +986,24 @@ SE = {
 		});
 	},
 
-	GetToken: function(symbol) { return SE.Tokens.find(t => t.symbol == symbol); }
+	GetToken: function(symbol) { return SE.Tokens.find(t => t.symbol == symbol); },
+
+	GetDepositAddress: function(symbol, callback) {
+		var pegged_token = Config.PEGGED_TOKENS.find(p => p.symbol == symbol);
+
+		if(!pegged_token)
+			return;
+
+		$.ajax({
+			url: Config.CONVERTER_API + '/convert/', 
+			type: 'POST',
+			data: JSON.stringify({ from_coin: symbol, to_coin: pegged_token.pegged_token_symbol, destination: SE.User.name }),
+			contentType: "application/json",
+			dataType: "json",
+			success: result => {
+				if(callback)
+					callback(Object.assign(result, pegged_token));
+			}
+		});
+	}
 }

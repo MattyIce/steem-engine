@@ -1,0 +1,52 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+	<div class="modal-content blue">
+		<div class="modal-header" style="padding: 40px 40px 10px 60px;">
+			<h1 class="modal-title" style="font-size: 38px;">
+				DEPOSIT TOKENS
+				<div class="note">There is a 1% fee on deposits and withdrawals.</div>
+			</h1>
+			
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">X</span>
+			</button>  
+		</div>
+
+		<div class="modal-body">	
+			<div class="note" style="text-align: left; margin-bottom: 20px;">
+				Choose which token you would like to deposit below. For more information about depositing or withdrawing external tokens to Steem Engine please <a href="/?p=faq" target="_blank">see the FAQ</a>.
+			</div>		
+
+			<label>DEPOSIT TOKEN</label>
+			<div class="input-group">
+				<select id="deposit_token">
+					<% Config.PEGGED_TOKENS.forEach(token => { %>
+						<option value="<%= token.symbol %>"><%= token.name %> (<%= token.symbol %>)</option>
+					<% }); %>
+				</select>
+			</div>				
+		</div>
+		
+		<div class="modal-footer" style="padding-bottom: 0;">
+			<button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="getDepositInfoClick()">GET DEPOSIT INFO</button>
+		</div>
+
+		<div class="privex">
+			<img src="https://www.privex.io/static/assets/svg/privex_ctc_api.svg" />
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function getDepositInfoClick() {  
+		SE.ShowLoading();
+
+		SE.GetDepositAddress($('#deposit_token').val(), result => {
+			SE.HideLoading();
+			
+			if(result && result.address)
+				SE.ShowDialog('deposit_info', result);
+		});
+	}
+</script>
+

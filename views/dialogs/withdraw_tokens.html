@@ -1,0 +1,90 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content blue">
+			<div class="modal-header" style="padding: 40px 40px 10px 60px;">
+				<h1 class="modal-title" style="font-size: 35px;">
+					WITHDRAW TOKENS
+					<div class="note">There is a 1% fee on deposits and withdrawals.</div>
+				</h1>
+				
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">X</span>
+				</button>  
+			</div>
+	
+			<div class="modal-body">
+				<label>TOKEN TO WITHDRAW</label>
+				<div class="input-group mb-4">
+					<select id="withdrawal_token">
+						<% Config.PEGGED_TOKENS.forEach(token => { %>
+							<option value="<%= token.symbol %>"><%= token.name %> (<%= token.symbol %>)</option>
+						<% }); %>
+					</select>
+				</div>				
+
+				<label class="mb-0">Current Balance</label>
+				<p id="withdraw_balance" class="mb-4">
+					<%= addCommas(SE.GetBalance('BTCP')) + ' BTCP' %>
+				</p>
+				
+				<label>WITHDRAW AMOUNT</label>
+				<div class="input-group justify-content-center align-items-center">
+					<input type="text" placeholder="0.000" id="withdraw_amount">
+					<div class="input-group-append pts">          
+							BTCP
+					</div>
+					<div class="invalid-tooltip">
+						Please enter an amount greater than 0
+					</div>
+				</div>
+				<div class="ssc-cost mb-2">You will receive: <span id="receive_amt">0</span> <span class="ts">BTC</span></div>
+				
+				<label>WITHDRAW ADDRESS</label>
+				<div class="input-group justify-content-center align-items-center">
+					<input type="text" id="withdraw_address">
+				</div>
+				<div class="ssc-cost">Please ensure this address is correct.<br/>We cannot refund incorrect withdrawals.</div>
+			</div>
+			
+			<div class="modal-footer" style="padding-bottom: 0;">
+				<button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="onWithdrawClick()" style="font-size: 30px;">WITHDRAW <span class="pts">BTCP</span></button>
+			</div>
+
+			<div class="privex">
+				<img src="https://www.privex.io/static/assets/svg/privex_ctc_api.svg" />
+			</div>
+		</div>
+	</div>
+	
+	<script>
+	function onBuyClick() {  
+		var amount = parseFloat($('#withdraw_amount').val());
+	
+		if(isNaN(amount) || amount == 0) {
+			$('#withdraw_amount').addClass("is-invalid");    
+		}  
+		else {
+			SE.WithdrawSteem(amount);
+		}
+	}
+
+	$('#withdraw_amount').keyup(() => {
+		var amt = parseFloat($('#withdraw_amount').val());
+		$('#receive_amt').text((amt * 0.99).toFixed(3));
+	});
+
+	$('#withdrawal_token').change(() => {
+		var token = Config.PEGGED_TOKENS.find(p => p.symbol == $('#withdrawal_token').val());
+
+		if(!token)
+			return;
+
+		$('#withdraw_balance').text(addCommas(SE.GetBalance(token.pegged_token_symbol)) + ' ' + token.pegged_token_symbol);
+		$('.pts').text(token.pegged_token_symbol);
+		$('.ts').text(token.symbol);
+	});
+	
+	</script>
+	
+	
+	
