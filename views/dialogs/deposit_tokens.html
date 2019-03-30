@@ -43,10 +43,13 @@
 
 		SE.GetDepositAddress($('#deposit_token').val(), result => {
 			SE.HideLoading();
-			
+
 			if(result && result.address)
 				SE.ShowDialog('deposit_info', result);
 		});
 	}
+
+	if('<%= data && data.symbol ? data.symbol : "" %>' != '')
+		$('#deposit_token').val('<%= data && data.symbol ? data.symbol : "" %>');
 </script>
 

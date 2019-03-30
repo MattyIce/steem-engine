@@ -748,7 +748,7 @@ SE = {
       "contractPayload": {
         "symbol": symbol,
         "to": to,
-				"quantity": quantity,
+				"quantity": quantity + '',
 				"memo": memo
       }
     };
@@ -998,6 +998,25 @@ SE = {
 			url: Config.CONVERTER_API + '/convert/', 
 			type: 'POST',
 			data: JSON.stringify({ from_coin: symbol, to_coin: pegged_token.pegged_token_symbol, destination: SE.User.name }),
+			contentType: "application/json",
+			dataType: "json",
+			success: result => {
+				if(callback)
+					callback(Object.assign(result, pegged_token));
+			}
+		});
+	},
+	
+	GetWithdrawalAddress: function(symbol, address, callback) {
+		var pegged_token = Config.PEGGED_TOKENS.find(p => p.symbol == symbol);
+
+		if(!pegged_token)
+			return;
+
+		$.ajax({
+			url: Config.CONVERTER_API + '/convert/', 
+			type: 'POST',
+			data: JSON.stringify({ from_coin: pegged_token.pegged_token_symbol, to_coin: symbol, destination: address }),
 			contentType: "application/json",
 			dataType: "json",
 			success: result => {
