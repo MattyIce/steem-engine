@@ -11,6 +11,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+.dropdown-menu { 
+	left: -46px; 
+}
+
 tr:nth-child(even) {background-color: #E9EEF2;}
 
 .modal-backdrop-opaque.show {
@@ -917,4 +921,8 @@ table.tokensTable .fooicon-sort-desc:before {
 	font-size: 15px;
 	color: black;
 	border-radius: 5px;
+}
+
+.w150 {
+	max-width: 150px !important;
 }

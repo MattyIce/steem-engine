@@ -88,6 +88,9 @@ SE = {
 			case 'market':
 				SE.ShowMarket(parts.t);
 				break;
+			case 'conversion_history':
+				SE.ShowConversionHistory();
+				break;
 			default:
 				SE.ShowHome();
 				break;
@@ -469,6 +472,16 @@ SE = {
 
   ShowAbout: function() {
     SE.ShowHomeView('about');
+	},
+	
+	ShowConversionHistory: function() {
+		$.get('https://converter-api.steem-engine.com/api/deposits/', { limit: 20, offset: 0, from_account: SE.User.name }, from_result => {
+			$.get('https://converter-api.steem-engine.com/api/deposits/', { limit: 20, offset: 0, to_account: SE.User.name }, to_result => {
+				var list = from_result.results.concat(to_result.results);
+				list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+				SE.ShowHomeView('conversion_history', list);
+			});
+		});
   },
 
   ShowFAQ: function() {
