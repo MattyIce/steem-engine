@@ -476,8 +476,19 @@ SE = {
 	
 	ShowConversionHistory: function() {
 		$.get('https://converter-api.steem-engine.com/api/deposits/', { limit: 20, offset: 0, from_account: SE.User.name }, from_result => {
-			$.get('https://converter-api.steem-engine.com/api/deposits/', { limit: 20, offset: 0, to_account: SE.User.name }, to_result => {
-				var list = from_result.results.concat(to_result.results);
+			$.get('https://converter-api.steem-engine.com/api/conversions/', { limit: 20, offset: 0, to_address: SE.User.name }, to_result => {
+				var to_results = to_result.results.map(r => {
+					return {
+						id: 0,
+						coin_symbol: r.from_coin_symbol,
+						created_at: r.created_at,
+						amount: parseFloat(r.to_amount) + parseFloat(r.ex_fee),
+						memo: r.to_memo,
+						txid: r.to_txid
+					}
+				});
+
+				var list = from_result.results.concat(to_results);
 				list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 				SE.ShowHomeView('conversion_history', list);
 			});

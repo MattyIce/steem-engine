@@ -24,30 +24,30 @@
 
 				<label class="mb-0">Current Balance</label>
 				<p id="withdraw_balance" class="mb-4">
-					<%= addCommas(SE.GetBalance('BTCP')) + ' BTCP' %>
+					<%= addCommas(SE.GetBalance('STEEMP')) + ' STEEMP' %>
 				</p>
 				
 				<label>WITHDRAW AMOUNT</label>
 				<div class="input-group justify-content-center align-items-center">
 					<input type="text" placeholder="0.000" id="withdraw_amount">
 					<div class="input-group-append pts">          
-							BTCP
+							STEEMP
 					</div>
 					<div class="invalid-tooltip">
 						Please enter an amount greater than 0 and not more than your current balance.
 					</div>
 				</div>
-				<div class="ssc-cost mb-2">You will receive: <span id="receive_amt">0</span> <span class="ts">BTC</span></div>
+				<div class="ssc-cost mb-2">You will receive: <span id="receive_amt">0</span> <span class="ts">STEEM</span></div>
 				
 				<label>WITHDRAW ADDRESS</label>
 				<div class="input-group justify-content-center align-items-center">
-					<input type="text" id="withdraw_address">
+					<input type="text" id="withdraw_address" value="<%= SE.User.name %>" disabled="disabled"/>
 				</div>
 				<div class="ssc-cost">Please ensure this address is correct.<br/>We cannot refund incorrect withdrawals.</div>
 			</div>
 			
 			<div class="modal-footer" style="padding-bottom: 0;">
-				<button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="onWithdrawClick()" style="font-size: 30px;">WITHDRAW <span class="pts">BTCP</span></button>
+				<button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="onWithdrawClick()" style="font-size: 28px;">WITHDRAW <span class="ts">STEEM</span></button>
 			</div>
 
 			<div class="privex">
@@ -68,17 +68,25 @@
 		if(isNaN(amount) || amount == 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
 			$('#withdraw_amount').addClass("is-invalid");    
 		} else {
-			SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), result => {
-				if(result && result.memo) {
-					SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
-				}
-			});
+			if(token.symbol == 'STEEM')
+				SE.WithdrawSteem(amount);
+			else {
+				SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), result => {
+					if(result && result.memo) {
+						SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
+					}
+				});
+			}
 		}
 	}
 
 	$('#withdraw_amount').keyup(() => {
 		var amt = parseFloat($('#withdraw_amount').val());
-		$('#receive_amt').text((amt * 0.99).toFixed(8));
+
+		if(isNaN(amt))
+			amt = 0;
+
+		$('#receive_amt').text((amt * 0.99).toFixed($('#withdrawal_token').val() == 'STEEM' ? 3 : 8));
 	});
 
 	$('#withdrawal_token').change(updateToken);
@@ -92,6 +100,9 @@
 		$('#withdraw_balance').text(addCommas(SE.GetBalance(token.pegged_token_symbol)) + ' ' + token.pegged_token_symbol);
 		$('.pts').text(token.pegged_token_symbol);
 		$('.ts').text(token.symbol);
+
+		$('#withdraw_address').prop('disabled', token.symbol == 'STEEM');
+		$('#withdraw_address').val((token.symbol == 'STEEM') ? SE.User.name : '');
 	}
 
 	if('<%= data && data.symbol ? data.symbol : "" %>' != '') {

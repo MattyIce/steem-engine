@@ -22,14 +22,17 @@
 <script>
 	function DateColumn(value, options, rowdata) { return new Date(value).toLocaleString(); }
 	function AmountColumn(value, options, rowdata) { return parseFloat(value).toFixed(8); }
-	function AddressColumn(value, options, rowdata) { return value.substr(value.indexOf(' ') + 1); }
+	function AddressColumn(value, options, rowdata) { return value.substr(value.lastIndexOf(' ') + 1); }
 
 	function TxColumn(value, options, rowdata) { 
-		// Check if this is a Steem transaction
+		return '<a href="https://steemd.com/tx/' + value + '" target="_blank">' + value + '</a>'; 
+		
+		/* Check if this is a Steem transaction
 		if(Config.PEGGED_TOKENS.find(p => p.pegged_token_symbol == rowdata.coin_symbol)) {
 			return '<a href="https://steemd.com/tx/' + value + '" target="_blank">' + value + '</a>'; 
 		} else
 			return value;
+		*/
 	}
 
 	function TypeColumn(value, options, rowdata) { 

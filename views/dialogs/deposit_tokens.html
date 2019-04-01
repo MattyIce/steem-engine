@@ -39,6 +39,11 @@
 
 <script type="text/javascript">
 	function getDepositInfoClick() {  
+		if($('#deposit_token').val() == 'STEEM') {
+			SE.ShowDialog('deposit_steem');
+			return;
+		}
+
 		SE.ShowLoading();
 
 		SE.GetDepositAddress($('#deposit_token').val(), result => {
