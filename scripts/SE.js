@@ -475,20 +475,31 @@ SE = {
 	},
 	
 	ShowConversionHistory: function() {
-		$.get('https://converter-api.steem-engine.com/api/deposits/', { limit: 20, offset: 0, from_account: SE.User.name }, from_result => {
+		$.get('https://converter-api.steem-engine.com/api/conversions/', { limit: 20, offset: 0, deposit__from_account: SE.User.name }, from_result => {
 			$.get('https://converter-api.steem-engine.com/api/conversions/', { limit: 20, offset: 0, to_address: SE.User.name }, to_result => {
 				var to_results = to_result.results.map(r => {
 					return {
-						id: 0,
 						coin_symbol: r.from_coin_symbol,
 						created_at: r.created_at,
 						amount: parseFloat(r.to_amount) + parseFloat(r.ex_fee),
-						memo: r.to_memo,
-						txid: r.to_txid
+						to_address: r.to_memo.substr(r.to_memo.lastIndexOf(' ') + 1),
+						txid: r.to_txid,
+						ex_fee: r.ex_fee
 					}
 				});
 
-				var list = from_result.results.concat(to_results);
+				var from_results = from_result.results.map(r => {
+					return {
+						coin_symbol: r.from_coin_symbol,
+						created_at: r.created_at,
+						amount: parseFloat(r.to_amount) + parseFloat(r.ex_fee),
+						to_address: r.to_address,
+						txid: r.to_txid,
+						ex_fee: r.ex_fee
+					}
+				});
+
+				var list = from_results.concat(to_results);
 				list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 				SE.ShowHomeView('conversion_history', list);
 			});

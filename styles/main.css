@@ -841,18 +841,19 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .faq-section-title {
-	font-size: 42px;
+	font-size: 34px;
 	margin-top: 20px;
 	margin-left: -40px;
 }
 
 .faq-content .panel-title a {
-	font-size: 30px;
+	font-size: 22px;
 	color: #532B19;
 }
 
 .faq-content .panel-body {
 	margin-bottom: 20px;
+	font-size: 17px;
 }
 
 .faq-content .panel-body a {
