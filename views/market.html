@@ -31,7 +31,7 @@
 </div>
 
 <script>
-	var token_data = <%= JSON.stringify(data.tokens) %>;
+	var token_data = SE.Tokens.filter(t => t.symbol != 'STEEMP');
 	token_data = token_data.filter(t => t.metadata && !t.metadata.hide_in_market);
 
 	SE.ShowMarketView('<%= data.selected %>');

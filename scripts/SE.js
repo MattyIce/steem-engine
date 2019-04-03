@@ -142,7 +142,7 @@ SE = {
 		if(!token)
 			token = Config.NATIVE_TOKEN;
 
-		SE.LoadTokens(r => SE.ShowHomeView('market', { selected: token, tokens: r.filter(t => t.symbol !== 'STEEMP') }, { t: token }));
+		SE.LoadTokens(r => SE.ShowHomeView('market', { selected: token }, { t: token }));
 	},
 
 	ShowMarketView: function(symbol, account) {
@@ -365,6 +365,8 @@ SE = {
 					token.metadata = tryParse(token.metadata);
 					if(!token.metadata)
 						token.metadata = {};
+
+					Object.keys(token.metadata).forEach(key => token.metadata[key] = filterXSS(token.metadata[key]));
 
 					if(!metrics)
 						return;
