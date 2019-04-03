@@ -39,10 +39,40 @@
 </div>
 
 <script>
-  var data = <%= JSON.stringify(data) %>;
-  var symbol = data.symbol;
-	var balance = SE.GetBalance(symbol);
+	var symbol = '<%= data.symbol %>';
 	var token = SE.GetToken(symbol);
+	var balance = SE.GetBalance(symbol);
+
+	SE.Api("/history", { account: SE.User.name, limit: 100, offset: 0, type: 'user', symbol: symbol }, data => {
+		var running_balance = typeof balance === 'number' ? balance : parseFloat(balance);
+		data.forEach(r => {
+			r.memo = r.memo ? filterXSS(r.memo) : null;
+			r.type = (r.to == SE.User.name) ? 'Received' : 'Sent';
+			r.to_from = (r.to == SE.User.name) ? r.from : r.to;
+			r.balance = running_balance.toFixed(token.precision);
+			running_balance = (r.to == SE.User.name) ? running_balance - parseFloat(r.quantity) : running_balance + parseFloat(r.quantity);
+		});
+
+		$('#history_table').footable({
+			"on": {
+				"ready.ft.table": function(e, ft){        
+					$("#history_table tbody tr:not(.footable-empty)").bind('click', function() {          
+						var index = $(this).index();        
+						console.log(data[index]);
+						SE.ShowTransactionDialog(data[index])
+					});
+				}
+			},
+			"columns": [
+				{ "name": "timestamp", "title": "Date", "formatter": DateColumn },
+				{ "name": "to_from", "title": "To/From", "formatter": SteemAccountColumn },
+				{ "name": "type", "title": "Type" },			
+				{ "name": "quantity", "title": "Amount", "type": "number", "classes": "text-right", "formatter": AmountColumn },
+				{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn }
+			],
+			"rows": data
+		});
+  });	
 
 	function DateColumn(value, options, rowdata) { return new Date(value).toLocaleString(); }
 	function SteemAccountColumn(value, options, rowdata) { return '@' + value; }
@@ -51,34 +81,6 @@
 		var operator = (rowdata.type == 'Received') ? '+' : '-';
 		return '<div class="' + ((rowdata.type == 'Received') ? 'received' : 'sent') + '">' + operator + ' ' + addCommas(parseFloat(value).toFixed(token.precision)) + ' ' + symbol + '</div>'; 
 	}
-
-	var running_balance = typeof balance === 'number' ? balance : parseFloat(balance);
-	data.rows.forEach(r => {
-		r.type = (r.to == SE.User.name) ? 'Received' : 'Sent';
-		r.to_from = (r.to == SE.User.name) ? r.from : r.to;
-		r.balance = running_balance.toFixed(token.precision);
-		running_balance = (r.to == SE.User.name) ? running_balance - parseFloat(r.quantity) : running_balance + parseFloat(r.quantity);
-	});
-
-	$('#history_table').footable({
-    "on": {
-			"ready.ft.table": function(e, ft){        
-        $("#history_table tbody tr:not(.footable-empty)").bind('click', function() {          
-          var index = $(this).index();        
-          console.log(data.rows[index]);
-          SE.ShowTransactionDialog(data.rows[index])
-        });
-			}
-		},
-		"columns": [
-			{ "name": "timestamp", "title": "Date", "formatter": DateColumn },
-      { "name": "to_from", "title": "To/From", "formatter": SteemAccountColumn },
-      { "name": "type", "title": "Type" },			
-			{ "name": "quantity", "title": "Amount", "type": "number", "classes": "text-right", "formatter": AmountColumn },
-			{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn }
-		],
-		"rows": data.rows
-  });
   
   function sendTokens() {    
     SE.ShowSendTokenDialog(symbol, balance);
