@@ -67,7 +67,7 @@
 
 		var amount = parseFloat($('#withdraw_amount').val());
 	
-		if(isNaN(amount) || amount == 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
+		if(isNaN(amount) || amount <= 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
 			$('#withdraw_amount').addClass("is-invalid");    
 		} else {
 			if(token.symbol == 'STEEM')
