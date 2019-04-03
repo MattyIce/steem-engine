@@ -16,9 +16,7 @@
   <table id="tokens_table" class="tokensTable interactiveTable" data-sorting="true"></table>
 </div>
 
-<script>
-	var token_data = <%= JSON.stringify(data) %>;
-	
+<script>	
 	function IconColumn(value, options, rowdata) { 
 		return `<i class="fas fa-info-circle" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;` +
 			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` +
@@ -48,7 +46,7 @@
 			return '';
 	}
 
-	createTable(token_data);
+	createTable(SE.Tokens);
 	function createTable(data) {
 		$('#tokens_table').empty();
 		$('#tokens_table').footable({
