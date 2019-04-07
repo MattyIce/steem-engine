@@ -6,6 +6,7 @@ Config = {
 	CONVERTER_API: 'https://converter-api.steem-engine.com/api',
 	NATIVE_TOKEN: 'ENG',
 	STEEMP_ACCOUNT: 'steem-peg',
+	DISABLED_TOKENS: ['BTC', 'STEEM', 'SBD', 'BCC'],
 	PEGGED_TOKEN: 'STEEMP',
 	PEGGED_TOKENS: [
 		{
