@@ -41,7 +41,7 @@
 	function USDValueColumn(value, options, rowdata) { return '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2) + '</span>'; }
 	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
 	
-	var data = <%= JSON.stringify(data.balances) %>;
+	var data = <%= JSON.stringify(data.balances.filter(b => !Config.DISABLED_TOKENS.includes(b.symbol))) %>;
 	
 	data = data.map(d => {
 		var token = SE.Tokens.find(t => t.symbol == d.symbol);
