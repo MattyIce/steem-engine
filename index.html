@@ -48,6 +48,11 @@
 					else
 						SE.ShowHome();
 				});
+
+				if(parseInt(localStorage.getItem('actifit_promo')) != new Date().getDate()) {
+					localStorage.setItem('actifit_promo', new Date().getDate());
+					SE.ShowDialog('actifit_promo');
+				}
 			});
 
 			window.onpopstate = function(e) {
