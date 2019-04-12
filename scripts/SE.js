@@ -353,7 +353,9 @@ SE = {
 			SE.Tokens = result.filter(t => !Config.DISABLED_TOKENS.includes(t.symbol));
 
 			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(async (metrics) => {
-				SE.Tokens.forEach(token => {
+				for(var i = 0; i < SE.Tokens.length; i++) {
+					var token = SE.Tokens[i];
+				
 					token.highestBid = 0;
 					token.lastPrice = 0;
 					token.lowestAsk = 0;
@@ -387,13 +389,15 @@ SE = {
 							token.priceChangeSteem = parseFloat(metric.priceChangeSteem);
 						}
 
-						if(token.symbol == 'AFIT')
-							token.volume = 6459;
+						if(token.symbol == 'AFIT') {
+							var afit_data = await ssc.find('market', 'tradesHistory', { symbol: 'AFIT' }, 100, 0, [{ index: 'timestamp', descending: false }], false);
+							token.volume = afit_data.reduce((t, v) => t += parseFloat(v.price) * parseFloat(v.quantity), 0);
+						}
 					}
 
 					if(token.symbol == 'STEEMP')
 						token.lastPrice = 1;
-				});
+				}
 
 				SE.Tokens.sort((a, b) => {
 					return (b.volume > 0 ? b.volume : b.marketCap / 1000000000) - (a.volume > 0 ? a.volume : a.marketCap / 1000000000);
