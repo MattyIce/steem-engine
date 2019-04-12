@@ -386,6 +386,9 @@ SE = {
 							token.priceChangePercent = parseFloat(metric.priceChangePercent);
 							token.priceChangeSteem = parseFloat(metric.priceChangeSteem);
 						}
+
+						if(token.symbol == 'AFIT')
+							token.volume = 6459;
 					}
 
 					if(token.symbol == 'STEEMP')
