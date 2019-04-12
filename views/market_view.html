@@ -227,7 +227,7 @@
 	$('#user_order_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date Created" },
-			{ "name": "$loki", "title": "ID" },
+			{ "name": "txId", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
@@ -238,7 +238,7 @@
 					var cancelButton = ($('<button/>', {'class':'btn btn-danger btn-sm'})
 						.append('<span>Cancel</span>')
 						.on("click", this, function () {
-							btnCancelOrder(rowdata.type, rowdata.$loki);
+							btnCancelOrder(rowdata.type, rowdata.txId);
 						}))
 						.appendTo(actions);
 
@@ -261,7 +261,7 @@
 	$('#trade_history_table').footable({
 		"columns": [
 			{ "name": "timestamp_string", "title": "Date" },
-			{ "name": "$loki", "title": "ID" },
+			{ "name": "txId", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right" },
