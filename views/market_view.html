@@ -47,6 +47,19 @@
 				</div>
 				<div class="group">
 					<div class="input-group mb-1">
+						<div class="input-group">
+							<label for="" style="min-width: 90px;"></label>
+							<div class="btn-group">
+								<button id="buyQty25Percent">25%</button>
+								<button id="buyQty50Percent">50%</button>
+								<button id="buyQty75Percent">75%</button>
+								<button id="buyQty100Percent">100%</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="group">
+					<div class="input-group mb-1">
 						<label style="min-width: 90px;">Total</label>
 						<input type="number" id="buyTotal" placeholder="0.0" class="text-right" style="width: 180px;" readonly disabled>
 						<div class="input-group-append">
@@ -97,6 +110,19 @@
 						</div>
 						<div class="invalid-feedback">
 							Required field. Price must be a number greater than 0.
+						</div>
+					</div>
+				</div>
+				<div class="group">
+					<div class="input-group mb-1">
+						<div class="input-group btn-group-toggle">
+							<label for="" style="min-width: 90px;"></label>
+							<div class="btn-group" role="group" aria-label="Sell quantity percatage">
+								<button class="" id="sellQty25Percent">25%</button>
+								<button class="" id="sellQty50Percent">50%</button>
+								<button class="" id="sellQty75Percent">75%</button>
+								<button class="" id="sellQty100Percent">100%</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -177,7 +203,54 @@
 	function UpdateBuyOrderTotal() { return UpdateOrderTotal('buy') }
 	function UpdateSellOrderTotal() { return UpdateOrderTotal('sell') }
 
+	function UpdateQuantity(type, rate) {
+		var quanity = type === 'buy' ? data.buy_orders[0].quantity : data.sell_orders[0].quantity;
+		var currentQuantity = parseFloat(quanity);
+		var newQuantity = currentQuantity * rate;
+
+		$('#' + type + 'Quantity').val(newQuantity.toFixed(data.precision));
+	}
+
+	function GetBestPrice(type) {
+		if (type === 'buy') {
+			return data.buy_orders[0] && data.buy_orders[0].price || 0;
+		}
+
+		if (type === 'sell') {
+			return data.sell_orders[0] && data.sell_orders[0].price || 0;
+		}
+	}
+
+	function GetQuantity(type) {
+		if (type === 'buy') {
+			return data.buy_orders[0] && data.buy_orders[0].quantity || 0;
+		}
+
+		if (type === 'sell') {
+			return data.sell_orders[0] && data.sell_orders[0].quantity || 0;
+		}
+	}
+
 	console.log(data);
+
+	$('#buyPrice').val(() => GetBestPrice('buy'));
+	$('#buyQuantity').val(() => GetQuantity('buy'));
+	UpdateBuyOrderTotal();
+
+	$('#sellPrice').val(() => GetBestPrice('sell'));
+	$('#sellQuantity').val(() => GetQuantity('sell'));
+	UpdateSellOrderTotal();
+
+	$('#buyQty25Percent').on('click', () => UpdateQuantity('buy', 0.25));
+	$('#buyQty50Percent').on('click', () => UpdateQuantity('buy', 0.5));
+	$('#buyQty75Percent').on('click', () => UpdateQuantity('buy', 0.75));
+	$('#buyQty100Percent').on('click', () => UpdateQuantity('buy', 1));
+
+	$('#sellQty25Percent').on('click', () => UpdateQuantity('sell', 0.25));
+	$('#sellQty50Percent').on('click', () => UpdateQuantity('sell', 0.5));
+	$('#sellQty75Percent').on('click', () => UpdateQuantity('sell', 0.75));
+	$('#sellQty100Percent').on('click', () => UpdateQuantity('sell', 1));
+
 
 	$('#buyPrice').on('input', UpdateBuyOrderTotal);
 	$('#buyQuantity').on('input', UpdateBuyOrderTotal);
