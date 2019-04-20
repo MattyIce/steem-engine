@@ -101,7 +101,7 @@ function tryParse(json) {
 
 function largeNumber(val) {
 	val = parseFloat(val);
-	
+
 	if(val >= 1000000000000)
 		return addCommas(+(val / 1000000000000).toFixed(0)) + ' T';
 	else if(val >= 1000000000)
@@ -110,4 +110,16 @@ function largeNumber(val) {
 		return addCommas(+(val / 1000000).toFixed(3)) + ' M';
 	else
 		return addCommas(+val.toFixed(3));
+}
+
+function calcLastPrice(lastTrade) {
+
+  var quantity = parseFloat(lastTrade.quantity);
+  var price = parseFloat(lastTrade.price);
+
+  if (quantity < 1) {
+    return price * quantity;
+  }
+
+  return price;
 }
