@@ -21,34 +21,34 @@
 </div>
 
 <script>
-	function IconColumn(value, options, rowdata) { 
+	function IconColumn(value, options, rowdata) {
 		return `<i class="fas fa-info-circle" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;` +
-			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` + 
-			`<i class="fas fa-share-square" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp;` + 
-			`<i class="fas fa-list-ul" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>`; 
+			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` +
+			`<i class="fas fa-share-square" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp;` +
+			`<i class="fas fa-list-ul" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>`;
 	}
 
-	function SymbolColumn(value, options, rowdata) { 
+	function SymbolColumn(value, options, rowdata) {
 		var token = SE.GetToken(value);
 
 		if(token && token.metadata && token.metadata.icon)
 			return '<img class="icon" src="' + token.metadata.icon + '"/>';
 		else
-			return ''; 
+			return '';
 	}
 
 	function BalanceColumn(value, options, rowdata) { return addCommas(value) + ' ' + rowdata.symbol; }
 	function USDValueColumn(value, options, rowdata) { return '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2) + '</span>'; }
 	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
-	
+
 	var data = <%= JSON.stringify(data.balances.filter(b => !Config.DISABLED_TOKENS.includes(b.symbol))) %>;
-	
+
 	data = data.map(d => {
 		var token = SE.Tokens.find(t => t.symbol == d.symbol);
 
-		return Object.assign(d, { 
-			name: token.name, 
-			lastPrice: token.lastPrice, 
+		return Object.assign(d, {
+			name: token.name,
+			lastPrice: token.lastPrice,
 			priceChangePercent: token.priceChangePercent,
 			usdValue: usdFormat(d.balance * token.lastPrice, 2)
 		});
@@ -58,7 +58,8 @@
 
 	var totalInUsd = 0.00;
 	data.forEach(function(o) {
-		var amount = parseFloat(o.usdValue.replace('$', '').replace(',', ''));
+		var raw = o.usdValue.replace('$', '').split(',').join('');
+		var amount = parseFloat(raw);
 		totalInUsd += amount;
 	});
 
