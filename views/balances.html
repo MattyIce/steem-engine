@@ -22,16 +22,19 @@
 
 <script>
 	function IconColumn(value, options, rowdata) { 
+		const token = SE.GetToken(value);
+
 		return `<i class="fas fa-info-circle" title="Token information" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;
 			<i class="fas fa-exchange-alt" title="Token market" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;
 			<i class="fas fa-share-square" title="Send tokens" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp; 
 			<i class="fas fa-list-ul" title="Show token history" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>&nbsp;&nbsp;&nbsp;
 			<i class="fas fa-handshake" title="Stake Tokens" onclick="SE.ShowStakeDialog('${value}', ${rowdata.balance})"></i>
+			${token.issuer === SE.User.name ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
 			`; 
 	}
 
 	function SymbolColumn(value, options, rowdata) { 
-		var token = SE.GetToken(value);
+		const token = SE.GetToken(value);
 
 		if(token && token.metadata && token.metadata.icon)
 			return '<img class="icon" src="' + token.metadata.icon + '"/>';
