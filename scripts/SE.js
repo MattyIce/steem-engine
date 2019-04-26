@@ -952,6 +952,10 @@ SE = {
 		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
 	},
 
+	ShowEnableStakeDialog: function(symbol) {
+		SE.ShowDialog('stake_token_enable', { symbol: symbol });
+	},
+
   SendToken: function(symbol, to, quantity, memo) {
     SE.ShowLoading();
     var username = localStorage.getItem('username');
