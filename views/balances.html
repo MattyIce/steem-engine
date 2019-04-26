@@ -29,7 +29,7 @@
 			<i class="fas fa-share-square" title="Send tokens" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp; 
 			<i class="fas fa-list-ul" title="Show token history" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>&nbsp;&nbsp;&nbsp;
 			<i class="fas fa-handshake" title="Stake Tokens" onclick="SE.ShowStakeDialog('${value}', ${rowdata.balance})"></i>
-			${token.issuer === SE.User.name ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
+			${token.issuer === SE.User.name && !token.stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
 			`; 
 	}
 
