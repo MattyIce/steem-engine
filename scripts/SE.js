@@ -68,6 +68,17 @@ SE = {
 			case 'tokens':
 				SE.ShowTokens();
 				break;
+			case 'pendingUnstakes':
+				if (SE.User || parts.a) {
+					SE.LoadPendingUnstakes(parts.a ? parts.a : SE.User.name, () => {
+						if (parts.t && SE.Tokens.find(t => t.symbol === parts.t)) {
+							SE.ShowPendingUnstakes(parts.t);
+						} else {
+							SE.ShowBalances();
+						}
+					});
+				}
+				break;
 			case 'history':
 				if(SE.User || parts.a) {
 					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {
@@ -627,6 +638,18 @@ SE = {
 		});
 	},
 
+	LoadPendingUnstakes: function(account, callback) {
+		ssc.find('tokens', 'pendingUnstakes', { account: account }, 1000, 0, '', false).then(r => {
+			if (SE.User && account === SE.User.name) {
+				SE.User.pendingUnstakes = r;
+			}
+
+			if (callback) {
+				callback(r);
+			}
+		});
+	},
+
 	LoadBalances: function(account, callback) {
 		ssc.find('tokens', 'balances', { account: account }, 1000, 0, '', false).then(r => {
 			if(SE.User && account == SE.User.name)
@@ -648,6 +671,11 @@ SE = {
   ShowHistory: function(symbol, name) {
 		var token =  SE.GetToken(symbol);
 		SE.ShowHomeView('history', token, { t: symbol });
+	},
+
+	ShowPendingUnstakes: function(symbol, name) {
+		const token = SE.GetToken(symbol);
+		SE.ShowHomeView('unstakes', token, { t: symbol });
 	},
 
   ShowAbout: function() {
@@ -727,6 +755,7 @@ SE = {
 		});
 
 		SE.LoadBalances(username);
+		SE.LoadPendingUnstakes(username);
 
 		if(callback)
 			callback(SE.User);
