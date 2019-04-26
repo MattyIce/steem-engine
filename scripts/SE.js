@@ -427,6 +427,53 @@ SE = {
 		});
 	},
 
+	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "enableStaking",
+      "contractPayload": {
+        "symbol": symbol,
+				"unstakingCooldown": unstakingCooldown,
+				"numberTransactions": numberTransactions
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token staking enabled!');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+			});
+        } else {
+					SE.HideLoading();
+		}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+		}
+	},
+		}
+	},
+	},
 	LoadParams: function(callback) {
 		var loaded = 0;
 
