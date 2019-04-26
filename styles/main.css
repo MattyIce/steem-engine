@@ -927,3 +927,7 @@ table.tokensTable .fooicon-sort-desc:before {
 .w150 {
 	max-width: 150px !important;
 }
+
+.text-small {
+  font-size: 12px !important;
+}
