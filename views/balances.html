@@ -22,10 +22,12 @@
 
 <script>
 	function IconColumn(value, options, rowdata) { 
-		return `<i class="fas fa-info-circle" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;` +
-			`<i class="fas fa-exchange-alt" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;` + 
-			`<i class="fas fa-share-square" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp;` + 
-			`<i class="fas fa-list-ul" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>`; 
+		return `<i class="fas fa-info-circle" title="Token information" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;
+			<i class="fas fa-exchange-alt" title="Token market" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;
+			<i class="fas fa-share-square" title="Send tokens" onclick="SE.ShowSendTokenDialog('${value}', ${rowdata.balance});"></i>&nbsp;&nbsp;&nbsp; 
+			<i class="fas fa-list-ul" title="Show token history" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>&nbsp;&nbsp;&nbsp;
+			<i class="fas fa-handshake" title="Stake Tokens" onclick="SE.ShowStakeDialog('${value}', ${rowdata.balance})"></i>
+			`; 
 	}
 
 	function SymbolColumn(value, options, rowdata) { 
@@ -41,6 +43,17 @@
 	function USDValueColumn(value, options, rowdata) { return '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2) + '</span>'; }
 	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
 	
+	function StakeColumn(value, options, rowdata) {
+		const token = SE.GetToken(rowdata.symbol);
+		const parsedAmount = parseFloat(value);
+
+		if (typeof token.stakingEnabled !== 'undefined' && token.stakingEnabled) {
+			return `<span>${value.toFixed(token.precision)}</span>`;
+		}
+
+		return '<span>--</span>';;
+	}
+
 	var data = <%= JSON.stringify(data.balances.filter(b => !Config.DISABLED_TOKENS.includes(b.symbol))) %>;
 	
 	data = data.map(d => {
@@ -72,6 +85,8 @@
 			{ "name": "balance", "title": "Balance", "type": "number", "classes": "text-right", "formatter": BalanceColumn },
 			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right bold", "formatter": USDValueColumn },
 			{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn },
+			{ "name": "stake", "title": "Staked", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
+			{ "name": "pendingUnstake", "title": "Pending Unstake", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
 			{ "name": "symbol", "title": "", "classes": "icons", "formatter": IconColumn }
 		],
 		"rows": data
