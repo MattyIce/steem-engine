@@ -418,8 +418,9 @@ SE = {
 	},
 
   ShowBalances: function(account) {
-		if(!account && SE.User)
+		if(!account && SE.User) {
 			account = SE.User.name;
+		}
 
 		SE.LoadBalances(account, r => {
 			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
