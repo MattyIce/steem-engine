@@ -859,7 +859,11 @@ SE = {
 
   ShowSendTokenDialog: function(symbol, balance) {
     SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
-  },
+	},
+	
+	ShowStakeDialog: function(symbol, balance) {
+		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
+	},
 
   SendToken: function(symbol, to, quantity, memo) {
     SE.ShowLoading();
