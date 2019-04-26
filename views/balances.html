@@ -44,7 +44,7 @@
 			return ''; 
 	}
 
-	function BalanceColumn(value, options, rowdata) { return addCommas(value) + ' ' + rowdata.symbol; }
+	function BalanceColumn(value, options, rowdata) { return addCommas(value); }
 	function USDValueColumn(value, options, rowdata) { return '<span class="' + (rowdata.priceChangePercent > 0 ? 'green' : (rowdata.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value * SE.Tokens.find(t => t.symbol == rowdata.symbol).lastPrice, 2) + '</span>'; }
 	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
 	
@@ -91,7 +91,7 @@
 			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right bold", "formatter": USDValueColumn },
 			{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn },
 			{ "name": "stake", "title": "Staked", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
-			{ "name": "pendingUnstake", "title": "Pending Unstake", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
+			{ "name": "pendingUnstake", "title": "Pending", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
 			{ "name": "symbol", "title": "", "classes": "icons", "formatter": IconColumn }
 		],
 		"rows": data
