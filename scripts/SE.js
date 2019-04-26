@@ -68,20 +68,9 @@ SE = {
 			case 'tokens':
 				SE.ShowTokens();
 				break;
-			case 'pendingUnstakes':
-				if (SE.User || parts.a) {
-					SE.LoadPendingUnstakes(parts.a ? parts.a : SE.User.name, () => {
-						if (parts.t && SE.Tokens.find(t => t.symbol === parts.t)) {
-							SE.ShowPendingUnstakes(parts.t);
-						} else {
-							SE.ShowBalances();
-						}
-					});
-				}
-				break;
 			case 'history':
 				if(SE.User || parts.a) {
-					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {
+					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {						
 						if(parts.t && SE.Tokens.find(t => t.symbol == parts.t))
 							SE.ShowHistory(parts.t);
 						else
@@ -90,9 +79,14 @@ SE = {
 				} else
 					SE.ShowTokens();
 				break;
+				case 'pending_unstakes':
+					SE.LoadPendingUnstakes(SE.User.name, () => {
+						SE.ShowPendingUnstakes();
+					});
+					break;
 			case 'add_token':
 				SE.ShowAddToken();
-				break;
+				break;pending_unstakes
 			case 'faq':
 				SE.ShowFAQ();
 				break;
@@ -590,16 +584,17 @@ SE = {
 
     if (useKeychain()) {
       steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
-        if(response.success && response.result) {
+        if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success) {
-							SE.ShowToast(true, 'Token successfully staked');
+							SE.ShowToast(true, 'Token successfully unstaked');
 						} else {
-							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
+							SE.ShowToast(false, 'An error occurred attempting to unstake tokens: ' + tx.error);
 						}
 
 						SE.HideLoading();
 						SE.HideDialog();
+						SE.ShowHomeView('pending_unstakes');
 					});
         } else {
 					SE.HideLoading();
@@ -609,6 +604,7 @@ SE = {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.HideLoading();
 				SE.HideDialog();
+				SE.ShowHomeView('pending_unstakes');
 			});
 		}
 	},
@@ -640,7 +636,7 @@ SE = {
 
 	LoadPendingUnstakes: function(account, callback) {
 		ssc.find('tokens', 'pendingUnstakes', { account: account }, 1000, 0, '', false).then(r => {
-			if (SE.User && account === SE.User.name) {
+			if (SE.User && account == SE.User.name) {
 				SE.User.pendingUnstakes = r;
 			}
 
@@ -673,9 +669,8 @@ SE = {
 		SE.ShowHomeView('history', token, { t: symbol });
 	},
 
-	ShowPendingUnstakes: function(symbol, name) {
-		const token = SE.GetToken(symbol);
-		SE.ShowHomeView('unstakes', token, { t: symbol });
+	ShowPendingUnstakes: function() {
+		SE.ShowHomeView('pending_unstakes');
 	},
 
   ShowAbout: function() {
@@ -979,6 +974,10 @@ SE = {
 	
 	ShowStakeDialog: function(symbol, balance) {
 		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
+	},
+	
+	ShowUnstakeDialog: function(symbol, staked) {
+		SE.ShowDialog('unstake_token', { symbol: symbol, balance: staked });
 	},
 
 	ShowEnableStakeDialog: function(symbol) {
