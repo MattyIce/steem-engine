@@ -584,7 +584,6 @@ SE = {
 					try {
 						if(steem.auth.wifToPublic(key) == r[0].memo_key || steem.auth.wifToPublic(key) == r[0].posting.key_auths[0][0]) {
 							localStorage.setItem('username', username);
-							localStorage.setItem('key', key);
 							window.location.reload();
 						} else {
               SE.HideLoading();
