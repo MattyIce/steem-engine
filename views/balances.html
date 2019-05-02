@@ -1,7 +1,7 @@
 <header>
 	<div class="row header-row">
 		<div class="col-md-6">
-			<h1><%= data.account == SE.User.name ? 'MY' : '@' + data.account + "'s" %> TOKEN WALLET</h1>
+			<h1><%= data.account == SE.User.name ? 'MY' : '@' + filterXSS(data.account) + "'s" %> TOKEN WALLET</h1>
 			<span id="total-wallet-value">Est. Value: $<span id="wallet-value-amount">0</span> USD</span>
 		</div>
 		<div class="col-md-6">
