@@ -70,7 +70,7 @@ SE = {
 				break;
 			case 'history':
 				if(SE.User || parts.a) {
-					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {
+					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {						
 						if(parts.t && SE.Tokens.find(t => t.symbol == parts.t))
 							SE.ShowHistory(parts.t);
 						else
@@ -79,9 +79,14 @@ SE = {
 				} else
 					SE.ShowTokens();
 				break;
+				case 'pending_unstakes':
+					SE.LoadPendingUnstakes(SE.User.name, () => {
+						SE.ShowPendingUnstakes();
+					});
+					break;
 			case 'add_token':
 				SE.ShowAddToken();
-				break;
+				break;pending_unstakes
 			case 'faq':
 				SE.ShowFAQ();
 				break;
@@ -418,12 +423,190 @@ SE = {
 	},
 
   ShowBalances: function(account) {
-		if(!account && SE.User)
+		if(!account && SE.User) {
 			account = SE.User.name;
+		}
 
 		SE.LoadBalances(account, r => {
 			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
 		});
+	},
+
+	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "enableStaking",
+      "contractPayload": {
+        "symbol": symbol,
+				"unstakingCooldown": unstakingCooldown,
+				"numberTransactions": numberTransactions
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token staking enabled!');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+		}
+	},
+
+	Stake: function(symbol, quantity) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "stake",
+      "contractPayload": {
+        "symbol": symbol,
+				"quantity": quantity
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+        if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token successfully staked');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.ShowBalances(SE.User.name);
+			});
+		}
+	},
+
+	Unstake: function(symbol, quantity) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "unstake",
+      "contractPayload": {
+        "symbol": symbol,
+				"quantity": quantity
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token successfully staked');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+		}
+	},
+
+	CancelUnstake: function(txID) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "cancelUnstake",
+      "contractPayload": {
+        "txID": txID
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+        if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token successfully unstaked');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to unstake tokens: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.ShowHomeView('pending_unstakes');
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+				SE.ShowHomeView('pending_unstakes');
+			});
+		}
 	},
 
 	LoadParams: function(callback) {
@@ -451,6 +634,18 @@ SE = {
 		});
 	},
 
+	LoadPendingUnstakes: function(account, callback) {
+		ssc.find('tokens', 'pendingUnstakes', { account: account }, 1000, 0, '', false).then(r => {
+			if (SE.User && account == SE.User.name) {
+				SE.User.pendingUnstakes = r;
+			}
+
+			if (callback) {
+				callback(r);
+			}
+		});
+	},
+
 	LoadBalances: function(account, callback) {
 		ssc.find('tokens', 'balances', { account: account }, 1000, 0, '', false).then(r => {
 			if(SE.User && account == SE.User.name)
@@ -472,6 +667,10 @@ SE = {
   ShowHistory: function(symbol, name) {
 		var token =  SE.GetToken(symbol);
 		SE.ShowHomeView('history', token, { t: symbol });
+	},
+
+	ShowPendingUnstakes: function() {
+		SE.ShowHomeView('pending_unstakes');
 	},
 
   ShowAbout: function() {
@@ -551,6 +750,7 @@ SE = {
 		});
 
 		SE.LoadBalances(username);
+		SE.LoadPendingUnstakes(username);
 
 		if(callback)
 			callback(SE.User);
@@ -769,7 +969,19 @@ SE = {
 
   ShowSendTokenDialog: function(symbol, balance) {
     SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
-  },
+	},
+	
+	ShowStakeDialog: function(symbol, balance) {
+		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
+	},
+	
+	ShowUnstakeDialog: function(symbol, staked) {
+		SE.ShowDialog('unstake_token', { symbol: symbol, balance: staked });
+	},
+
+	ShowEnableStakeDialog: function(symbol) {
+		SE.ShowDialog('stake_token_enable', { symbol: symbol });
+	},
 
   SendToken: function(symbol, to, quantity, memo) {
     SE.ShowLoading();

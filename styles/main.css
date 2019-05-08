@@ -927,3 +927,13 @@ table.tokensTable .fooicon-sort-desc:before {
 .w150 {
 	max-width: 150px !important;
 }
+
+.cancel-btn {
+  border-radius: 5px !important;
+  font-size: 15px !important;
+  padding: 3px 10px !important;
+}
+
+.text-small {
+  font-size: 12px !important;
+}

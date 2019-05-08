@@ -1,0 +1,62 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-content blue">
+    <div class="modal-header">
+      <h1 class="modal-title">UNSTAKE TOKEN</h1>    
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">X</span>
+      </button>  
+    </div>
+
+    <div class="modal-body">
+      <label class="mb-0">STAKED</label>
+      <p class="mb-4">
+        <span id="balance"><%= addCommas(data.balance) %> <%= data.symbol %></span>
+			</p>						
+      
+      <label>AMOUNT</label>
+      <div class="input-group justify-content-center align-items-center mb-4">
+        <input type="text" placeholder="0.00000000" id="stakeAmount">
+        <div class="input-group-append">          
+          <%= data.symbol %>
+        </div>
+        <div class="invalid-tooltip">
+          Please enter an amount greater than 0
+        </div>        
+			</div>
+    </div>
+    
+    <div class="modal-footer">
+      <button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="onStakeClick()">UNSTAKE</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var isValid = true;
+  var balance = "<%= data.balance %>";
+  var symbol = "<%= data.symbol %>";
+
+  var $balance = $('#balance');
+  var $stakeAmount = $('#stakeAmount');
+
+  $balance.on('click', function() {
+    $stakeAmount.val(balance);
+  });
+
+  function onStakeClick() {
+    const amount = $stakeAmount.val();
+    const floatAmount = parseFloat(amount);
+
+    if (isNaN(floatAmount) || floatAmount == 0) {
+      $txtAmount.addClass("is-invalid");
+      isValid = false;
+    }
+    
+    if (isValid) {
+      $('.modal-body input').removeClass("is-invalid");
+      SE.Unstake(symbol, amount);
+    }
+  }
+</script>
+
