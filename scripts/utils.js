@@ -111,3 +111,21 @@ function largeNumber(val) {
 	else
 		return addCommas(+val.toFixed(3));
 }
+
+function xss(text) {
+  text = filterXSS(text);
+
+  while(text.match(/onload/gi))
+		text = text.replace(/onload/gi, '');
+
+	while(text.match(/onerror/gi))
+		text = text.replace(/onerror/gi, '');
+
+	while(text.match(/javascript/gi))
+		text = text.replace(/javascript/gi, '');
+
+	while(text.match(/&#/gi))
+    text = text.replace(/&#/gi, '');
+    
+  return text;
+}
