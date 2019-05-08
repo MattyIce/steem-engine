@@ -4,7 +4,7 @@
     <div class="modal-header">
       <h1 class="modal-title">
 				<% if(data.metadata && data.metadata.icon) { %>
-					<img src="<%= filterXSS(data.metadata.icon) %>" style="width: 64px; height: 64px;" />
+					<img src="<%= encodeURI(xss(data.metadata.icon)) %>" style="width: 64px; height: 64px;" />
 				<% } %>
 				<%= data.symbol %>
 			</h1>    
@@ -32,7 +32,7 @@
 			<label class="mb-0">Website URL</label>
       <p class="mb-4">
 				<% if(data.metadata && data.metadata.url) { %>
-					<a href="<%= filterXSS(data.metadata.url) %>" target="_blank" style="font-size: 20px;"><span class="text-cutoff"><%= filterXSS(data.metadata.url) %></span>&nbsp;&nbsp;&nbsp;<i class="fas fa-external-link-square-alt"></i></a>
+					<a href="<%= encodeURI(xss(data.metadata.url)) %>" target="_blank" style="font-size: 20px;"><span class="text-cutoff"><%= filterXSS(data.metadata.url) %></span>&nbsp;&nbsp;&nbsp;<i class="fas fa-external-link-square-alt"></i></a>
 				<% } else { %>
 					None
 				<% } %>
