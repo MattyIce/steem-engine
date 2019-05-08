@@ -49,6 +49,9 @@
 	function PctColumn(value, options, rowdata) { return '<span class="' + (value > 0 ? 'green' : (value < 0 ? 'red' : '')) + '">' + value.toFixed(2) + '%</span>'; }
 	
 	function StakeColumn(value, options, rowdata) {
+    if(!value || isNaN(parseFloat(value)))
+      value = 0;
+
 		const token = SE.GetToken(rowdata.symbol);
 		const parsedAmount = parseFloat(value);
 
