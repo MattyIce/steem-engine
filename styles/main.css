@@ -937,3 +937,20 @@ table.tokensTable .fooicon-sort-desc:before {
 .text-small {
   font-size: 12px !important;
 }
+
+.token-claims-wrapper {
+  color: #333;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.token-claims-wrapper p {
+  font-size: 16px;
+}
+
+.claim-btn {
+  background: none;
+  border: none;
+  font-weight: bold;
+  padding: 0;
+}

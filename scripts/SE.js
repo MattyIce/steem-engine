@@ -1,7 +1,8 @@
 SE = {
 	User: null,
 	Params: {},
-  Tokens: [],
+	Tokens: [],
+	ScotTokens: {},
 
   Api: function(url, data, callback, always) {
     if (data == null || data == undefined) data = {};
@@ -428,8 +429,53 @@ SE = {
 		}
 
 		SE.LoadBalances(account, r => {
-			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
+			SE.GetScotUserTokens(account, scotTokens => {
+				SE.ShowHomeView('balances', { balances: r, scotTokens: scotTokens, account: account }, { a: account });
+			});
 		});
+	},
+
+	GetScotUserTokens: function(account, callback) {
+		if (!account && SE.User) {
+			account = SE.User.name;
+		}
+
+		$.get(Config.SCOT_API + `@${account}`, { v: new Date().getTime() }, results => {
+			SE.User.ScotTokens = results;
+
+			if (callback) {
+				callback(Object.entries(results));
+			}
+		});
+	},
+
+	ClaimToken: function(symbol) {
+		SE.ShowLoading();
+		
+		const token = SE.Tokens.find(t => t.symbol === symbol);
+		const username = SE.User.name;
+		const amount = SE.User.ScotTokens[symbol].pending_token;
+		const factor = Math.pow(10, token.precision);
+		const calculated = amount / factor;
+
+		const claimData = {
+			symbol
+		};
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function(response) {
+        if (response.success && response.result) {
+					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
+					SE.HideLoading();
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJsonId('posting', claimData, 'scot_claim_token', () => {
+				SE.HideLoading();
+			});
+		}
 	},
 
 	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
@@ -1174,6 +1220,27 @@ SE = {
 			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
 
 		url += '&id=' + Config.CHAIN_ID;
+		url += '&json=' + encodeURI(JSON.stringify(data));
+
+		popupCenter(url, 'steemconnect', 500, 560);
+		SE._sc_callback = callback;
+	},
+
+	SteemConnectJsonId: function(auth_type, id, data, callback) {
+		SE.HideLoading();
+		SE.ShowDialog('steem_connect')
+
+		var username = localStorage.getItem('username');
+		var url = 'https://steemconnect.com/sign/custom-json?';
+
+		if (auth_type == 'active') {
+			url += 'required_posting_auths=' + encodeURI('[]');
+			url += '&required_auths=' + encodeURI('["' + username + '"]');
+		} else {
+			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
+		}
+
+		url += '&id=' + id;
 		url += '&json=' + encodeURI(JSON.stringify(data));
 
 		popupCenter(url, 'steemconnect', 500, 560);
