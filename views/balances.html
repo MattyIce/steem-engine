@@ -23,6 +23,7 @@
 <script>
 	function IconColumn(value, options, rowdata) { 
 		const token = SE.GetToken(value);
+		const scotConfig = (Object.keys(SE.User.ScotTokens).length && typeof SE.User.ScotTokens[value] !== 'undefined') ? SE.User.ScotTokens[value] : null;
 
 		return `<i class="fas fa-info-circle" title="Token information" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;
 			<i class="fas fa-exchange-alt" title="Token market" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;
@@ -32,6 +33,7 @@
 			${token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-unlock" title="Unstake Tokens" onclick="SE.ShowUnstakeDialog('${value}', ${rowdata.stake})"></i>` : ``}
 			${token.issuer === SE.User.name && !token.stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
 			${rowdata.pendingUnstake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-eye" onclick="SE.ShowHomeView('pending_unstakes')"></i>` : ``}
+			${scotConfig ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-hand-holding-usd" onclick="SE.ClaimToken('${value}')" title="Claim ${value} tokens"></i>` : ``}
 			`; 
 	}
 
