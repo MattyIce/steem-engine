@@ -440,11 +440,11 @@ SE = {
 			account = SE.User.name;
 		}
 
-		$.get(Config.SCOT_API + `@${account}`, results => {
+		$.get(Config.SCOT_API + `@${account}`, { v: new Date().getTime() }, results => {
 			SE.User.ScotTokens = results;
 
 			if (callback) {
-				callback(results);
+				callback(Object.entries(results));
 			}
 		});
 	},
@@ -453,22 +453,20 @@ SE = {
 		SE.ShowLoading();
 		
 		const token = SE.Tokens.find(t => t.symbol === symbol);
-		const username = 'beggars';
+		const username = SE.User.name;
 		const amount = SE.User.ScotTokens[symbol].pending_token;
-		const amountCalculated = Math.pow((amount / 10), token.precision);
-
-		console.log(amount, token.precision);
-
-		console.log(amountCalculated);
+		const factor = Math.pow(10, token.precision);
+		const calculated = amount / factor;
 
 		const claimData = {
 			symbol
 		};
 
     if (useKeychain()) {
-      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Active', JSON.stringify(claimData), `Claim ${symbol.toUpperCase()} Tokens`, function(response) {
-        if(response.success && response.result) {
+      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Active', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function(response) {
+        if (response.success && response.result) {
 					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
+					SE.HideLoading();
         } else {
 					SE.HideLoading();
 				}
