@@ -1180,6 +1180,27 @@ SE = {
 		SE._sc_callback = callback;
 	},
 
+	SteemConnectJsonId: function(auth_type, id, data, callback) {
+		SE.HideLoading();
+		SE.ShowDialog('steem_connect')
+
+		var username = localStorage.getItem('username');
+		var url = 'https://steemconnect.com/sign/custom-json?';
+
+		if (auth_type == 'active') {
+			url += 'required_posting_auths=' + encodeURI('[]');
+			url += '&required_auths=' + encodeURI('["' + username + '"]');
+		} else {
+			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
+		}
+
+		url += '&id=' + id;
+		url += '&json=' + encodeURI(JSON.stringify(data));
+
+		popupCenter(url, 'steemconnect', 500, 560);
+		SE._sc_callback = callback;
+	},
+
 	SteemConnectTransfer: function(from, to, amount, memo, callback) {
 		SE.HideLoading();
 		SE.ShowDialog('steem_connect')
