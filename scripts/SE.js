@@ -463,7 +463,7 @@ SE = {
 		};
 
     if (useKeychain()) {
-      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Active', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function(response) {
+      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function(response) {
         if (response.success && response.result) {
 					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
 					SE.HideLoading();
@@ -472,7 +472,7 @@ SE = {
 				}
       });
     } else {
-			SE.SteemConnectJsonId('active', claimData, 'scot_claim_token', () => {
+			SE.SteemConnectJsonId('posting', claimData, 'scot_claim_token', () => {
 				SE.HideLoading();
 			});
 		}
