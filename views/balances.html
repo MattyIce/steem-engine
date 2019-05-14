@@ -17,10 +17,23 @@
 </header>
 
 <div class="container">
+	<% if (data.scotTokens) { %>
+	<div class="row">
+		<div class="col-md-12 token-claims-wrapper">
+			<% for (const [symbol, config] of data.scotTokens) { %>
+				<% if (config.pending_token > 0) { %>
+					<% var token = SE.Tokens.find(t => t.symbol === symbol); %>
+					<p>You have <%= config.pending_token / Math.pow(10, token.precision) %> <%= symbol %> to claim <button class="claim-btn" onclick="SE.ClaimToken('<%= symbol %>')" title="Claim <%= config.pending_token / Math.pow(10, token.precision) %> <%= symbol %> tokens">click here</button></p>
+				<% } %>
+			<% } %>
+		</div>
+	</div>
+	<% } %>
   <table id="balances_table" class="tokensTable <%= data.account == SE.User.name ? 'interactiveTable' : '' %>" data-sorting="true"></table>
 </div>
 
 <script>
+	
 	function IconColumn(value, options, rowdata) { 
 		const token = SE.GetToken(value);
 		const scotConfig = (Object.keys(SE.User.ScotTokens).length && typeof SE.User.ScotTokens[value] !== 'undefined') ? SE.User.ScotTokens[value] : null;
@@ -33,7 +46,7 @@
 			${token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-unlock" title="Unstake Tokens" onclick="SE.ShowUnstakeDialog('${value}', ${rowdata.stake})"></i>` : ``}
 			${token.issuer === SE.User.name && !token.stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
 			${rowdata.pendingUnstake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-eye" onclick="SE.ShowHomeView('pending_unstakes')"></i>` : ``}
-			${scotConfig ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-hand-holding-usd" onclick="SE.ClaimToken('${value}')" title="Claim ${value} tokens"></i>` : ``}
+			${scotConfig && scotConfig.pending_token > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-hand-holding-usd" onclick="SE.ClaimToken('${value}')" title="Claim ${value} tokens"></i>` : ``}
 			`; 
 	}
 
@@ -67,13 +80,17 @@
 	var data = <%= JSON.stringify(data.balances.filter(b => !Config.DISABLED_TOKENS.includes(b.symbol))) %>;
 	
 	data = data.map(d => {
-		var token = SE.Tokens.find(t => t.symbol == d.symbol);
+		const token = SE.Tokens.find(t => t.symbol == d.symbol);
+
+		const scotConfig = (Object.keys(SE.User.ScotTokens).length && typeof SE.User.ScotTokens[token.symbol] !== 'undefined') 
+			? SE.User.ScotTokens[token.symbol] : null;
 
 		return Object.assign(d, { 
 			name: token.name, 
 			lastPrice: token.lastPrice, 
 			priceChangePercent: token.priceChangePercent,
-			usdValue: usdFormat(d.balance * token.lastPrice, 2)
+			usdValue: usdFormat(d.balance * token.lastPrice, 2),
+			scotConfig
 		});
 	});
 
