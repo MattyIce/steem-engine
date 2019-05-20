@@ -248,7 +248,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 header {
   background: linear-gradient(263deg, #27475E, #080E13);
-  height: 164px;
+  height: 220px;
   padding-left: 130px;
   padding-right: 130px;
   position: relative;
@@ -939,18 +939,20 @@ table.tokensTable .fooicon-sort-desc:before {
 }
 
 .token-claims-wrapper {
-  color: #333;
+  color: #FFF;
   margin-bottom: 20px;
   margin-top: 20px;
 }
 
 .token-claims-wrapper p {
   font-size: 16px;
+  text-align: center;
 }
 
 .claim-btn {
   background: none;
   border: none;
+  color: #FFF;
   font-weight: bold;
   padding: 0;
 }
