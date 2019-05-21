@@ -472,7 +472,7 @@ SE = {
 				}
       });
     } else {
-			SE.SteemConnectJsonId('posting', claimData, 'scot_claim_token', () => {
+			SE.SteemConnectJsonId('posting', 'scot_claim_token', claimData, () => {
 				SE.HideLoading();
 			});
 		}
