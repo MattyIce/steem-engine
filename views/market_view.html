@@ -3,7 +3,7 @@
 		<div class="col-md-12 text-center stats">
 			<h3 class="font-weight-bold mb-3">Market Depth (<%= data.token %>) <i class="fas fa-info-circle" style="cursor:pointer" onclick="SE.ShowDialog('token_info', SE.GetToken(data.token));"></i></h3>
 			<small class="m-1 label">Last: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? data.trade_history[0].price + ' STEEM / ' + usdFormat(data.trade_history[0].price) : '--' %></span></small>
-			<small class="m-1 label">24h Vol: <span class="font-weight-bold text-dark"><%= SE.Tokens.find(t => t.symbol == data.token).volume + ' STEEM / ' + usdFormat(SE.Tokens.find(t => t.symbol == data.token).volume, 2) %></span></small>
+			<small class="m-1 label">24h Vol: <span class="font-weight-bold text-dark"><%= addCommas(SE.Tokens.find(t => t.symbol == data.token).volume) + ' STEEM / ' + usdFormat(SE.Tokens.find(t => t.symbol == data.token).volume, 2) %></span></small>
 			<small class="m-1 label">Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price + ' STEEM' : '--' %></a></small>
 			<small class="m-1 label">Ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price + ' STEEM' : '--' %></a></small>
 		</div>

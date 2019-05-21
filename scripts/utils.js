@@ -83,9 +83,11 @@ function loadSteemPrice(callback) {
 function usdFormat(val, decimal_limit) {
 	var usd = val * window.steem_price;
 
-	if(decimal_limit != null && !isNaN(parseInt(decimal_limit)))
+	if(decimal_limit && !isNaN(parseInt(decimal_limit)))
 		return '$' + addCommas(usd.toFixed(decimal_limit));
-	if(usd >= 1)
+	else if(usd >= 1000)
+		return '$' + addCommas(usd.toFixed());
+	else if(usd >= 1)
 		return '$' + addCommas(usd.toFixed(2));
 	else if(usd >= 0.1)
 		return '$' + usd.toFixed(3);

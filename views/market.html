@@ -38,7 +38,7 @@
 
 	function PriceColumn(value, options, rowdata) { 
 		var token = SE.GetToken(rowdata.symbol);
-		return '<span class="' + (token.priceChangePercent > 0 ? 'green' : (token.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value, 3) + '</span>'; 
+		return '<span class="' + (token.priceChangePercent > 0 ? 'green' : (token.priceChangePercent < 0 ? 'red' : '')) + '">' + usdFormat(value) + '</span>'; 
 	}
 
 	$('#market_tokens_table').footable({
