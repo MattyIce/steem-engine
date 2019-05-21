@@ -75,7 +75,13 @@
 		const parsedAmount = parseFloat(value);
 
 		if (typeof token.stakingEnabled !== 'undefined' && token.stakingEnabled) {
-			return `<span>${value.toFixed(token.precision)}</span>`;
+			var text = `<span>${+value.toFixed(token.precision)}`;
+			var token_data = data.find(d => d.symbol == rowdata.symbol);
+
+			if(token_data.pendingUnstake)
+				text += ' (' + (+parseFloat(token_data.pendingUnstake).toFixed(token.precision)) + ')';
+
+			return text + '</span>';
 		}
 
 		return '<span>--</span>';;
@@ -117,7 +123,6 @@
 			{ "name": "balance", "title": "USD Value", "type": "number", "classes": "text-right bold", "formatter": USDValueColumn },
 			{ "name": "priceChangePercent", "title": "% Chg", "type": "number", "classes": "text-right bold", "formatter": PctColumn },
 			{ "name": "stake", "title": "Staked", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
-			{ "name": "pendingUnstake", "title": "Pending", "type": "number", "classes": "text-right bold", "formatter": StakeColumn },
 			{ "name": "symbol", "title": "", "classes": "icons", "formatter": IconColumn }
 		],
 		"rows": data
