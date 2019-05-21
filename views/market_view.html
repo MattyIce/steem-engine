@@ -278,30 +278,32 @@
 	});
 
 	// prepare chart datasets
-	var buyOrderLabels = _.uniq(data.buy_orders.map(o => o.price));
+	var buyOrderLabels = _.uniq(data.buy_orders.map(o => parseFloat(o.price)));
 	var buyOrderDataset = [];
 	var buyOrderCurrentVolume = 0;
 	buyOrderLabels.forEach(label => {
-		let matchingBuyOrders = data.buy_orders.filter(o => o.price === label);
+		let matchingBuyOrders = data.buy_orders.filter(o => parseFloat(o.price) === label);
+
 		if (matchingBuyOrders.length === 0) {
 			buyOrderDataset.push(null);
 		} else {
-			buyOrderCurrentVolume = buyOrderCurrentVolume + matchingBuyOrders.reduce((acc, val) => { return val.price * val.quantity }, 0);
+			buyOrderCurrentVolume = buyOrderCurrentVolume + matchingBuyOrders.reduce((acc, val) => acc + parseFloat(val.quantity), 0);
 			buyOrderDataset.push(buyOrderCurrentVolume);
 		}
 	});
 	buyOrderLabels.reverse();
 	buyOrderDataset.reverse();
 
-	var sellOrderLabels = _.uniq(data.sell_orders.map(o => o.price));
+	var sellOrderLabels = _.uniq(data.sell_orders.map(o => parseFloat(o.price)));
 	var sellOrderDataset = _.fill(Array(buyOrderDataset.length), null);
 	var sellOrderCurrentVolume = 0;
 	sellOrderLabels.forEach(label => {
-		let matchingSellOrders = data.sell_orders.filter(o => o.price === label);
+		let matchingSellOrders = data.sell_orders.filter(o => parseFloat(o.price) === label);
+		
 		if (matchingSellOrders.length === 0) {
 			sellOrderDataset.push(null);
 		} else {
-			sellOrderCurrentVolume = sellOrderCurrentVolume + matchingSellOrders.reduce((acc, val) => { return val.price * val.quantity }, 0);
+			sellOrderCurrentVolume = sellOrderCurrentVolume + matchingSellOrders.reduce((acc, val) => acc + parseFloat(val.quantity), 0);
 			sellOrderDataset.push(sellOrderCurrentVolume);
 		}
 	});
