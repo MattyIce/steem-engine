@@ -60,7 +60,7 @@
 				<div class="group mt-2 pl-1 pr-2">
 					<span class="small float-left">
 						<small class="text-info">Your Balance:
-							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a>
+							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? addCommas(parseFloat(data.user_steemp_balance.balance)) + ' STEEMP' : '-' %></a>
 						</small>
 						<br>
 						<small class="text-info">Lowest Ask:
@@ -114,7 +114,7 @@
 				</div>
 				<div class="group mt-2 pl-1 pr-2">
 					<span class="small float-left">
-						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
+						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? addCommas(parseFloat(data.user_token_balance.balance)) + ' ' + data.token : '-' %></a></small><br>
 						<small class="text-info">Highest Bid:
 							<% if(data.buy_orders && data.buy_orders.length > 0) { %>
 								<button id="highest-bid" onclick="$('#sellPrice').val(data.buy_orders[0].price);" type="button" class="btn btn-link font-weight-bold text-dark" style="font-size: unset; padding: unset;"><%= data.buy_orders[0].price %></button>
@@ -163,8 +163,8 @@
 <script>
 	var data = <%= JSON.stringify(data) %>;
 	function OrderTypeColumn(value, options, rowdata) { return `<strong class="text-${value === 'buy' ? 'success' : 'danger'}">${value.toUpperCase()}</strong>` }
-	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
-	function SteemAmountColumn(value, options, rowdata) { return value.toFixed(5); }
+	function OrderAmountColumn(value, options, rowdata) { return addCommas(value.toFixed(data.precision)); }
+	function SteemAmountColumn(value, options, rowdata) { return addCommas(value.toFixed(5)); }
 	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value.toFixed(5) + '</strong>' }
 	function UpdateOrderTotal(type) {
 		var price = parseFloat($("#" + type + "Price").val());
@@ -299,7 +299,7 @@
 	var sellOrderCurrentVolume = 0;
 	sellOrderLabels.forEach(label => {
 		let matchingSellOrders = data.sell_orders.filter(o => parseFloat(o.price) === label);
-		
+
 		if (matchingSellOrders.length === 0) {
 			sellOrderDataset.push(null);
 		} else {
