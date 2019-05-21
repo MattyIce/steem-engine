@@ -57,7 +57,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="group mt-2 pl-5 pr-2">
+				<div class="group mt-2 pl-1 pr-2">
 					<span class="small float-left">
 						<small class="text-info">Your Balance:
 							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a>
@@ -112,7 +112,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="group mt-2 pl-5 pr-2">
+				<div class="group mt-2 pl-1 pr-2">
 					<span class="small float-left">
 						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
 						<small class="text-info">Highest Bid:
@@ -164,20 +164,18 @@
 	var data = <%= JSON.stringify(data) %>;
 	function OrderTypeColumn(value, options, rowdata) { return `<strong class="text-${value === 'buy' ? 'success' : 'danger'}">${value.toUpperCase()}</strong>` }
 	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
-	function SteemAmountColumn(value, options, rowdata) { return value.toFixed(3); }
+	function SteemAmountColumn(value, options, rowdata) { return value.toFixed(5); }
 	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value.toFixed(5) + '</strong>' }
 	function UpdateOrderTotal(type) {
 		var price = parseFloat($("#" + type + "Price").val());
 		var quantity = parseFloat($("#" + type + "Quantity").val());
 
 		if (price && price > 0 && quantity && quantity > 0) {
-			$("#" + type + "Total").val(price * quantity);
+			$("#" + type + "Total").val(+(price * quantity).toFixed(5));
 		}
 	}
 	function UpdateBuyOrderTotal() { return UpdateOrderTotal('buy') }
 	function UpdateSellOrderTotal() { return UpdateOrderTotal('sell') }
-
-	console.log(data);
 
 	$('#buyPrice').on('input', UpdateBuyOrderTotal);
 	$('#buyQuantity').on('input', UpdateBuyOrderTotal);
@@ -231,7 +229,7 @@
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
-			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
 			{ "name": "action", "title": "Action", "classes": "text-center", "formatter": function (value, options, rowdata) {
 					var actions = $('<div/>')
 
@@ -265,7 +263,7 @@
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right" },
-			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
 		],
 		"rows": data.trade_history
 	});
@@ -388,6 +386,6 @@
 			return;
 		}
 
-		SE.ShowMarketCancelDialog(type, orderId);
+		SE.ShowMarketCancelDialog(type, orderId, data.token);
 	}
 </script>

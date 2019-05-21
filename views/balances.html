@@ -18,7 +18,12 @@
 			<div class="col-md-12 token-claims-wrapper">
 				<% for (const [symbol, config] of data.scotTokens) { %>
 					<% if (config.pending_token > 0) { %>
-						<% var token = SE.Tokens.find(t => t.symbol === symbol); %>
+						<% 
+							var token = SE.Tokens.find(t => t.symbol === symbol); 
+
+							if(!token)
+								continue;
+						%>
 						<p>You have <%= config.pending_token / Math.pow(10, token.precision) %> <%= symbol %> to claim <button class="claim-btn" onclick="SE.ClaimToken('<%= symbol %>')" title="Claim <%= config.pending_token / Math.pow(10, token.precision) %> <%= symbol %> tokens">click here</button></p>
 					<% } %>
 				<% } %>

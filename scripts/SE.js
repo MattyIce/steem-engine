@@ -251,8 +251,8 @@ SE = {
     SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
 	},
 
-	ShowMarketCancelDialog: function(type, orderId) {
-    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId });
+	ShowMarketCancelDialog: function(type, orderId, symbol) {
+    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol });
   },
 
 	SendMarketOrder: function(type, symbol, quantity, price) {
@@ -305,7 +305,7 @@ SE = {
 		}
 	},
 
-	SendCancelMarketOrder: function(type, orderId) {
+	SendCancelMarketOrder: function(type, orderId, symbol) {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
