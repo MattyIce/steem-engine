@@ -7,7 +7,7 @@ Config = {
 	SCOT_API: 'https://scot-api.steem-engine.com/',
 	NATIVE_TOKEN: 'ENG',
 	STEEMP_ACCOUNT: 'steem-peg',
-	DISABLED_TOKENS: ['BTC', 'STEEM', 'SBD', 'BCC'],
+	DISABLED_TOKENS: ['BTC', 'STEEM', 'SBD', 'BCC', 'XAP'],
 	PEGGED_TOKEN: 'STEEMP',
 	PEGGED_TOKENS: [
 		{
