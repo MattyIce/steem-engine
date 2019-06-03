@@ -21,6 +21,11 @@ Config = {
 			pegged_token_symbol: 'LTCP'
 		}, 
 		{
+			name: 'EOS',
+			symbol: 'EOS',
+			pegged_token_symbol: 'EOSP'
+		},
+		{
 			name: 'Bitcoin Cash',
 			symbol: 'BCH',
 			pegged_token_symbol: 'BCHP'
