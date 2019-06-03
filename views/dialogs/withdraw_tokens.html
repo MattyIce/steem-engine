@@ -42,6 +42,7 @@
 				<label>WITHDRAW ADDRESS</label>
 				<div class="input-group justify-content-center align-items-center">
 					<input type="text" id="withdraw_address" value="<%= SE.User.name %>" disabled="disabled"/>
+					<div class="invalid-tooltip" id="error_response"></div>
 				</div>
 				<div class="ssc-cost">Please ensure this address is correct.<br/>We cannot refund incorrect withdrawals.</div>
 			</div>
@@ -73,8 +74,15 @@
 			if(token.symbol == 'STEEM')
 				SE.WithdrawSteem(amount);
 			else {
-				SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), result => {
-					if(result && result.memo) {
+				$('#error_response').text('');
+				SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), (err, result) => {
+					if (err) {
+						$('#withdraw_address').addClass('is-invalid');
+						$('#error_response').text(err.responseJSON.message);
+						return;
+					}
+
+					if (result && result.memo) {
 						SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
 					}
 				});
