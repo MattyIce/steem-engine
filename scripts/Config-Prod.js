@@ -11,6 +11,11 @@ Config = {
 	PEGGED_TOKEN: 'STEEMP',
 	PEGGED_TOKENS: [
 		{
+			name: 'Steem',
+			symbol: 'STEEM',
+			pegged_token_symbol: 'STEEMP'
+		}, 
+		{
 			name: 'Bitcoin',
 			symbol: 'BTC',
 			pegged_token_symbol: 'BTCP'
@@ -19,6 +24,11 @@ Config = {
 			name: 'Litecoin',
 			symbol: 'LTC',
 			pegged_token_symbol: 'LTCP'
+		},
+		{
+			name: 'EOS',
+			symbol: 'EOS',
+			pegged_token_symbol: 'EOSP'
 		}, 
 		{
 			name: 'Bitcoin Cash',

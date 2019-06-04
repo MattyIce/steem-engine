@@ -1336,9 +1336,14 @@ SE = {
 			data: JSON.stringify({ from_coin: pegged_token.pegged_token_symbol, to_coin: symbol, destination: address }),
 			contentType: "application/json",
 			dataType: "json",
+			error:(xhr, status, errorThrown) => {
+				if (callback) {
+					callback(xhr, null);
+				}
+			},
 			success: result => {
 				if(callback)
-					callback(Object.assign(result, pegged_token));
+					callback(null, Object.assign(result, pegged_token));
 			}
 		});
 	}
