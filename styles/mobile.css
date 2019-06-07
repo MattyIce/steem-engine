@@ -15,4 +15,20 @@
     overflow-x: scroll;
     margin-top: -35px;
   }
+
+  #page_container {
+    margin-top: 93px !important;
+  }
+  header {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  header .group {
+    display: block;
+    padding-right: 0;
+    width: 100%;
+  }
+  .faq-section-title {
+    margin-left: 0;
+  }
 }
