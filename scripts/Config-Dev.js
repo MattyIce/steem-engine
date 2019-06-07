@@ -5,6 +5,7 @@ Config = {
 	ACCOUNTS_API_URL: 'https://testaccounts.steem-engine.com',
 	CONVERTER_API: 'https://converter-api.steem-engine.com/api',
 	SCOT_API: 'https://scot-api.steem-engine.com/',
+	NODE_API: 'https://node-api.steem-engine.com/v1/',
 	NATIVE_TOKEN: 'SSC',
 	STEEMP_ACCOUNT: 'steemsc',
 	DISABLED_TOKENS: ['BTC', 'STEEM', 'SBD', 'BCC', 'XAP'],

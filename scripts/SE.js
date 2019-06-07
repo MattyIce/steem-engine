@@ -428,6 +428,8 @@ SE = {
 			account = SE.User.name;
 		}
 
+		SE.CheckPalClaimdrop();
+
 		SE.LoadBalances(account, r => {
 			SE.GetScotUserTokens(account, scotTokens => {
 				SE.ShowHomeView('balances', { balances: r, scotTokens: scotTokens, account: account }, { a: account });
@@ -445,6 +447,46 @@ SE = {
 
 			if (callback) {
 				callback(Object.entries(results));
+			}
+		});
+	},
+
+	ClaimPalCoin: function() {
+		const username = SE.User.name;
+
+    const transaction_data = {
+      "symbol": "PAL"
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
+        if(response.success && response.result) {
+						SE.HideLoading();
+						SE.ShowBalances(SE.User.name);
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJsonId('active', 'ssc-claimdrop', transaction_data, () => {
+				SE.HideLoading();
+				SE.ShowBalances(SE.User.name);
+			});
+		}
+	},
+
+	CheckPalClaimdrop: function(account, callback) {
+		if (!account && SE.User) {
+			account = SE.User.name;
+		}
+
+		$.getJSON(Config.NODE_API + `claimdrop/PAL/@${account}`, { v: new Date().getTime() }, result => {
+			if (result) {
+				SE.User.claimDrop = result;
+			}
+
+			if (callback) {
+				callback(result);
 			}
 		});
 	},
