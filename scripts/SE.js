@@ -450,7 +450,7 @@ SE = {
 			if (callback) {
 				callback(Object.entries(results));
 			}
-		}).always(() => {
+		}).fail(() => {
 			if (callback)
 				callback([]);
 		});
