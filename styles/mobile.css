@@ -8,4 +8,11 @@
   .home-1 {
     padding: 50px 25px 25px 25px;
   }
+  table.tokensTable {
+    top: 0;
+  }
+  .tokens-container {
+    overflow-x: scroll;
+    margin-top: -35px;
+  }
 }
