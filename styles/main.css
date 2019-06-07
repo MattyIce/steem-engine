@@ -957,3 +957,22 @@ table.tokensTable .fooicon-sort-desc:before {
   font-weight: bold;
   padding: 0;
 }
+
+.claimdrop-btn {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 50px;
+  left: 20px;
+  position: absolute;
+  top: 20px;
+  width: 50px;
+  z-index: 999;
+}
+
+.claimdrop-btn img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
