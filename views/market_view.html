@@ -133,11 +133,15 @@
 	<div class="row">
 		<div class="col-md-6 text-left p-3">
 			<h4 class="font-weight-bold">Buy Orders</h4>
-			<table id="buy_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+				<table id="buy_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 		<div class="col-md-6 text-left p-3">
 			<h4 class="font-weight-bold">Sell Orders</h4>
-			<table id="sell_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+  				<table id="sell_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 
@@ -146,7 +150,9 @@
 	<div class="row">
 		<div class="col-md-12 text-left p-3">
 			<h4 class="font-weight-bold">My Open Orders</h4>
-			<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+				<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 	<% } %>
@@ -155,7 +161,9 @@
 	<div class="row">
 		<div class="col-md-12 text-left p-3">
 			<h4 class="font-weight-bold">Trade History</h4>
-			<table id="trade_history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+				<table id="trade_history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 </div>

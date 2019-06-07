@@ -15,7 +15,9 @@
     overflow-x: scroll;
     margin-top: -35px;
   }
-
+  .ordertable-container {
+    overflow-x: scroll;
+  }
   #page_container {
     margin-top: 93px !important;
   }
