@@ -1,5 +1,8 @@
 <header>
 	<div class="row header-row">
+		<% if (SE.User.claimDrop && SE.User.claimDrop.hasClaimDrop) { %>
+			<button class="claimdrop-btn" onclick="SE.ClaimPalCoin()" title="Claim PALCoin"><img src="https://cdn.steemitimages.com/DQmXtBwx7kBvo68vbF3NpRV1jKBC2Ddbs667b7GPzovSxDp/image.png"></button>
+		<% } %>
 		<div class="col-md-6">
 			<h1><%= data.account == SE.User.name ? 'MY' : '@' + filterXSS(data.account) + "'s" %> TOKEN WALLET</h1>
 			<span id="total-wallet-value">Est. Value: $<span id="wallet-value-amount">0</span> USD</span>
@@ -28,7 +31,7 @@
 					<% } %>
 				<% } %>
 			</div>
-			<% } %>
+		<% } %>
 	</div>
 </header>
 
