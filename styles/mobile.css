@@ -1,4 +1,10 @@
 @media screen and (max-width: 768px) {
+  .navbar-steem-engine {
+    background-size: 1366px 93px;
+  }
+  .navbar-steem-engine button {
+    margin: 0 auto 15px;
+  }
   .home-1 {
     padding: 25px;
   }
