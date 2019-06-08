@@ -442,12 +442,17 @@ SE = {
 			account = SE.User.name;
 		}
 
+		SE.User.ScotTokens = {};
+
 		$.get(Config.SCOT_API + `@${account}`, { v: new Date().getTime() }, results => {
 			SE.User.ScotTokens = results;
 
 			if (callback) {
 				callback(Object.entries(results));
 			}
+		}).fail(() => {
+			if (callback)
+				callback([]);
 		});
 	},
 
