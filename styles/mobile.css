@@ -1,0 +1,36 @@
+@media screen and (max-width: 768px) {
+  .navbar-steem-engine {
+    background-size: 1366px 93px;
+  }
+  .navbar-steem-engine button {
+    margin: 0 auto 15px;
+  }
+  .home-1 {
+    padding: 50px 25px 25px 25px;
+  }
+  table.tokensTable {
+    top: 0;
+  }
+  .tokens-container {
+    overflow-x: scroll;
+    margin-top: -35px;
+  }
+  .ordertable-container {
+    overflow-x: scroll;
+  }
+  #page_container {
+    margin-top: 93px !important;
+  }
+  header {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  header .group {
+    display: block;
+    padding-right: 0;
+    width: 100%;
+  }
+  .faq-section-title {
+    margin-left: 0;
+  }
+}

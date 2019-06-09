@@ -472,6 +472,7 @@ footer .copyright {
   background: url(https://s3.amazonaws.com/steem-engine/images/img_train.svg) transparent no-repeat top left;
   height: 700px;
   width: 700px;
+  max-width: 100%;
   position: absolute;
   left: 0;
 }
