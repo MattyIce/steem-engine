@@ -1,0 +1,78 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-content blue">
+    <div class="modal-header">
+      <h1 class="modal-title">TOKEN STAKING</h1>    
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">X</span>
+      </button>  
+    </div>
+
+    <div class="modal-body">			
+      
+      <label>UNSTAKING COOLDOWN (days)</label>
+      <p class="text-small">Number of days that a user will have to wait until the tokens are added to their balance (between 1 and 365 days)</p>
+      <div class="input-group justify-content-center align-items-center mb-4">
+        <input type="text" placeholder="0" id="unstakingCooldown">
+        <div class="input-group-append">days</div>
+        <div class="invalid-tooltip">
+          Please enter an amount greater than 0
+        </div>        
+      </div>
+      <label>NUMBER TRANSACTIONS</label>
+      <p class="text-small">Number of transactions that an unstake will be divided in (between 1 and 365 days)</p>
+      <div class="input-group justify-content-center align-items-center mb-4">
+        <input type="text" placeholder="0" id="numberTransactions">
+        <div class="input-group-append">transactions</div>
+        <div class="invalid-tooltip">
+          Please enter an amount greater than 0
+        </div>        
+      </div>
+      
+    </div>
+    
+    <div class="modal-footer">
+      <button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="onEnableClick()">ENABLE STAKING</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var isValid = true;
+  var symbol = "<%= data.symbol %>";
+
+  var $unstakingCooldown = $('#unstakingCooldown');
+  var $numberTransactions = $('#numberTransactions');
+
+  function onEnableClick() {
+
+    const unstakingCooldown = parseInt($unstakingCooldown.val());
+    const numberTransactions = parseInt($numberTransactions.val());
+
+    if (isNaN(unstakingCooldown)) {
+      $unstakingCooldown.addClass("is-invalid");
+      isValid = false;
+    }
+
+    if (isNaN(numberTransactions)) {
+      $numberTransactions.addClass('is-invalid');
+      isValid = false;
+    }
+
+    if (unstakingCooldown <= 0) {
+      $unstakingCooldown.addClass("is-invalid");
+      isValid = false;
+    }
+
+    if (numberTransactions <= 0) {
+      $numberTransactions.addClass("is-invalid");
+      isValid = false;
+    }
+    
+    if (isValid) {
+      $('.modal-body input').removeClass("is-invalid");
+      SE.EnableStaking(symbol, unstakingCooldown, numberTransactions);
+    }
+  }
+</script>
+

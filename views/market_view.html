@@ -2,10 +2,10 @@
 	<div class="row">
 		<div class="col-md-12 text-center stats">
 			<h3 class="font-weight-bold mb-3">Market Depth (<%= data.token %>) <i class="fas fa-info-circle" style="cursor:pointer" onclick="SE.ShowDialog('token_info', SE.GetToken(data.token));"></i></h3>
-			<small class="m-1 label">Last: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? data.trade_history[0].price + ' STEEM / ' + usdFormat(data.trade_history[0].price) : '--' %></span></small>
-			<small class="m-1 label">24h Vol: <span class="font-weight-bold text-dark"><%= SE.Tokens.find(t => t.symbol == data.token).volume + ' STEEM / ' + usdFormat(SE.Tokens.find(t => t.symbol == data.token).volume, 2) %></span></small>
-			<small class="m-1 label">Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? data.buy_orders[0].price + ' STEEM' : '--' %></a></small>
-			<small class="m-1 label">Ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? data.sell_orders[0].price + ' STEEM' : '--' %></a></small>
+			<small class="m-1 label">Last: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? parseFloat(data.trade_history[0].price) + ' STEEM / ' + usdFormat(data.trade_history[0].price) : '--' %></span></small>
+			<small class="m-1 label">24h Vol: <span class="font-weight-bold text-dark"><%= addCommas(parseFloat(SE.Tokens.find(t => t.symbol == data.token).volume).toFixed()) + ' STEEM / ' + usdFormat(SE.Tokens.find(t => t.symbol == data.token).volume, 2) %></span></small>
+			<small class="m-1 label">Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? parseFloat(data.buy_orders[0].price) + ' STEEM' : '--' %></a></small>
+			<small class="m-1 label">Ask: <a id="lowest-ask" class="font-weight-bold text-dark"><%= data.sell_orders && data.sell_orders.length > 0 ? parseFloat(data.sell_orders[0].price) + ' STEEM' : '--' %></a></small>
 		</div>
 	</div>
 	<div class="row mt-4">
@@ -57,10 +57,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="group mt-2 pl-5 pr-2">
+				<div class="group mt-2 pl-1 pr-2">
 					<span class="small float-left">
 						<small class="text-info">Your Balance:
-							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? data.user_steemp_balance.balance + ' STEEMP' : '-' %></a>
+							<a id="user-steemp-balance" class="font-weight-bold text-dark"><%= data.user_steemp_balance ? addCommas(parseFloat(data.user_steemp_balance.balance)) + ' STEEMP' : '-' %></a>
 						</small>
 						<br>
 						<small class="text-info">Lowest Ask:
@@ -112,9 +112,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="group mt-2 pl-5 pr-2">
+				<div class="group mt-2 pl-1 pr-2">
 					<span class="small float-left">
-						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? data.user_token_balance.balance + ' ' + data.token : '-' %></a></small><br>
+						<small class="text-info">Your Balance: <a id="user-token-balance" onclick="btnSubmitOrder('sell');" class="font-weight-bold text-dark"><%= data.user_token_balance ? addCommas(parseFloat(data.user_token_balance.balance)) + ' ' + data.token : '-' %></a></small><br>
 						<small class="text-info">Highest Bid:
 							<% if(data.buy_orders && data.buy_orders.length > 0) { %>
 								<button id="highest-bid" onclick="$('#sellPrice').val(data.buy_orders[0].price);" type="button" class="btn btn-link font-weight-bold text-dark" style="font-size: unset; padding: unset;"><%= data.buy_orders[0].price %></button>
@@ -133,11 +133,15 @@
 	<div class="row">
 		<div class="col-md-6 text-left p-3">
 			<h4 class="font-weight-bold">Buy Orders</h4>
-			<table id="buy_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+				<table id="buy_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 		<div class="col-md-6 text-left p-3">
 			<h4 class="font-weight-bold">Sell Orders</h4>
-			<table id="sell_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+  				<table id="sell_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 
@@ -146,7 +150,9 @@
 	<div class="row">
 		<div class="col-md-12 text-left p-3">
 			<h4 class="font-weight-bold">My Open Orders</h4>
-			<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+				<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 	<% } %>
@@ -155,7 +161,9 @@
 	<div class="row">
 		<div class="col-md-12 text-left p-3">
 			<h4 class="font-weight-bold">Trade History</h4>
-			<table id="trade_history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			<div class="ordertable-container">
+				<table id="trade_history_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -163,21 +171,19 @@
 <script>
 	var data = <%= JSON.stringify(data) %>;
 	function OrderTypeColumn(value, options, rowdata) { return `<strong class="text-${value === 'buy' ? 'success' : 'danger'}">${value.toUpperCase()}</strong>` }
-	function OrderAmountColumn(value, options, rowdata) { return value.toFixed(data.precision); }
-	function SteemAmountColumn(value, options, rowdata) { return value.toFixed(3); }
+	function OrderAmountColumn(value, options, rowdata) { return addCommas(value.toFixed(data.precision)); }
+	function SteemAmountColumn(value, options, rowdata) { return addCommas(value.toFixed(5)); }
 	function OrderPriceColumn(value, options, rowdata) { return '<strong>' + value.toFixed(5) + '</strong>' }
 	function UpdateOrderTotal(type) {
 		var price = parseFloat($("#" + type + "Price").val());
 		var quantity = parseFloat($("#" + type + "Quantity").val());
 
 		if (price && price > 0 && quantity && quantity > 0) {
-			$("#" + type + "Total").val(price * quantity);
+			$("#" + type + "Total").val(+(price * quantity).toFixed(5));
 		}
 	}
 	function UpdateBuyOrderTotal() { return UpdateOrderTotal('buy') }
 	function UpdateSellOrderTotal() { return UpdateOrderTotal('sell') }
-
-	console.log(data);
 
 	$('#buyPrice').on('input', UpdateBuyOrderTotal);
 	$('#buyQuantity').on('input', UpdateBuyOrderTotal);
@@ -231,7 +237,7 @@
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
 			{ "name": "quantity", "title": data.token + " (Qty)", "classes": "text-right" },
-			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Steem", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
 			{ "name": "action", "title": "Action", "classes": "text-center", "formatter": function (value, options, rowdata) {
 					var actions = $('<div/>')
 
@@ -264,8 +270,8 @@
 			{ "name": "txId", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
 			{ "name": "price", "title": "Price", "type": "number", "classes": "text-right", "formatter": OrderPriceColumn },
-			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right" },
-			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "quantity", "title": "Quantity", "type": "number", "classes": "text-right", "formatter": OrderAmountColumn },
+			{ "name": "total", "title": "Total STEEM", "type": "number", "classes": "text-right", "formatter": SteemAmountColumn },
 		],
 		"rows": data.trade_history
 	});
@@ -280,6 +286,7 @@
 	});
 
 	// prepare chart datasets
+<<<<<<< HEAD
 	for (let i = 0; i < data.sell_orders.length; i++) {
 		data.sell_orders[i].stacked_volume = parseFloat(data.sell_orders[i].quantity) * parseFloat(data.sell_orders[i].price)
 		if (i > 0)
@@ -390,6 +397,6 @@
 			return;
 		}
 
-		SE.ShowMarketCancelDialog(type, orderId);
+		SE.ShowMarketCancelDialog(type, orderId, data.token);
 	}
 </script>

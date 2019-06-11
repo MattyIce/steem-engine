@@ -248,7 +248,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 header {
   background: linear-gradient(263deg, #27475E, #080E13);
-  height: 164px;
+  height: 220px;
   padding-left: 130px;
   padding-right: 130px;
   position: relative;
@@ -472,6 +472,7 @@ footer .copyright {
   background: url(https://s3.amazonaws.com/steem-engine/images/img_train.svg) transparent no-repeat top left;
   height: 700px;
   width: 700px;
+  max-width: 100%;
   position: absolute;
   left: 0;
 }
@@ -888,7 +889,8 @@ table.tokensTable .fooicon-sort-desc:before {
 .market .stats .label {
   border-radius: 4px;
   border: 1px solid #ccc!important;
-  padding: 5px 15px;
+	padding: 5px 15px;
+	display: inline-block;
 }
 
 .buy-form input.is-invalid~.invalid-feedback, .sell-form input.is-invalid~.invalid-feedback {
@@ -926,4 +928,52 @@ table.tokensTable .fooicon-sort-desc:before {
 
 .w150 {
 	max-width: 150px !important;
+}
+
+.cancel-btn {
+  border-radius: 5px !important;
+  font-size: 15px !important;
+  padding: 3px 10px !important;
+}
+
+.text-small {
+  font-size: 12px !important;
+}
+
+.token-claims-wrapper {
+  color: #FFF;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.token-claims-wrapper p {
+  font-size: 16px;
+  text-align: center;
+}
+
+.claim-btn {
+  background: none;
+  border: none;
+  color: #FFF;
+  font-weight: bold;
+  padding: 0;
+}
+
+.claimdrop-btn {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 50px;
+  left: 20px;
+  position: absolute;
+  top: 20px;
+  width: 50px;
+  z-index: 999;
+}
+
+.claimdrop-btn img {
+  display: block;
+  height: auto;
+  max-width: 100%;
 }

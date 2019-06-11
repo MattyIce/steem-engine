@@ -36,7 +36,8 @@
 function onConfirmClick() {
   SE.SendCancelMarketOrder(
     '<%= data.type %>',
-    '<%= data.orderId %>'
+		'<%= data.orderId %>',
+		'<%= data.symbol %>'
   );
 }
 

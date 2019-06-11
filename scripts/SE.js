@@ -1,7 +1,8 @@
 SE = {
 	User: null,
 	Params: {},
-  Tokens: [],
+	Tokens: [],
+	ScotTokens: {},
 
   Api: function(url, data, callback, always) {
     if (data == null || data == undefined) data = {};
@@ -70,7 +71,7 @@ SE = {
 				break;
 			case 'history':
 				if(SE.User || parts.a) {
-					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {
+					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {						
 						if(parts.t && SE.Tokens.find(t => t.symbol == parts.t))
 							SE.ShowHistory(parts.t);
 						else
@@ -79,9 +80,14 @@ SE = {
 				} else
 					SE.ShowTokens();
 				break;
+				case 'pending_unstakes':
+					SE.LoadPendingUnstakes(SE.User.name, () => {
+						SE.ShowPendingUnstakes();
+					});
+					break;
 			case 'add_token':
 				SE.ShowAddToken();
-				break;
+				break;pending_unstakes
 			case 'faq':
 				SE.ShowFAQ();
 				break;
@@ -245,8 +251,8 @@ SE = {
     SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
 	},
 
-	ShowMarketCancelDialog: function(type, orderId) {
-    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId });
+	ShowMarketCancelDialog: function(type, orderId, symbol) {
+    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol });
   },
 
 	SendMarketOrder: function(type, symbol, quantity, price) {
@@ -299,7 +305,7 @@ SE = {
 		}
 	},
 
-	SendCancelMarketOrder: function(type, orderId) {
+	SendCancelMarketOrder: function(type, orderId, symbol) {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
@@ -400,7 +406,7 @@ SE = {
 				}
 
 				SE.Tokens.sort((a, b) => {
-					return (b.volume > 0 ? b.volume : b.marketCap / 1000000000) - (a.volume > 0 ? a.volume : a.marketCap / 1000000000);
+					return (b.volume > 0 ? b.volume : b.marketCap / 1000000000000) - (a.volume > 0 ? a.volume : a.marketCap / 1000000000000);
 				});
 
 				var steemp_balance = await ssc.findOne('tokens', 'balances', { account: 'steem-peg', symbol: 'STEEMP' });
@@ -418,12 +424,282 @@ SE = {
 	},
 
   ShowBalances: function(account) {
-		if(!account && SE.User)
+		if(!account && SE.User) {
 			account = SE.User.name;
+		}
+
+		SE.CheckPalClaimdrop();
 
 		SE.LoadBalances(account, r => {
-			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
+			SE.GetScotUserTokens(account, scotTokens => {
+				SE.ShowHomeView('balances', { balances: r, scotTokens: scotTokens, account: account }, { a: account });
+			});
 		});
+	},
+
+	GetScotUserTokens: function(account, callback) {
+		if (!account && SE.User) {
+			account = SE.User.name;
+		}
+
+		SE.User.ScotTokens = {};
+
+		$.get(Config.SCOT_API + `@${account}`, { v: new Date().getTime() }, results => {
+			SE.User.ScotTokens = results;
+
+			if (callback) {
+				callback(Object.entries(results));
+			}
+		}).fail(() => {
+			if (callback)
+				callback([]);
+		});
+	},
+
+	ClaimPalCoin: function() {
+		const username = SE.User.name;
+
+    const transaction_data = {
+      "symbol": "PAL"
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
+        if(response.success && response.result) {
+						SE.HideLoading();
+						SE.ShowBalances(SE.User.name);
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJsonId('active', 'ssc-claimdrop', transaction_data, () => {
+				SE.HideLoading();
+				SE.ShowBalances(SE.User.name);
+			});
+		}
+	},
+
+	CheckPalClaimdrop: function(account, callback) {
+		if (!account && SE.User) {
+			account = SE.User.name;
+		}
+
+		$.getJSON(Config.NODE_API + `claimdrop/PAL/@${account}`, { v: new Date().getTime() }, result => {
+			if (result) {
+				SE.User.claimDrop = result;
+			}
+
+			if (callback) {
+				callback(result);
+			}
+		});
+	},
+
+	ClaimToken: function(symbol) {
+		SE.ShowLoading();
+		
+		const token = SE.Tokens.find(t => t.symbol === symbol);
+		const username = SE.User.name;
+		const amount = SE.User.ScotTokens[symbol].pending_token;
+		const factor = Math.pow(10, token.precision);
+		const calculated = amount / factor;
+
+		const claimData = {
+			symbol
+		};
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function(response) {
+        if (response.success && response.result) {
+					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
+					SE.HideLoading();
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJsonId('posting', 'scot_claim_token', claimData, () => {
+				SE.HideLoading();
+			});
+		}
+	},
+
+	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "enableStaking",
+      "contractPayload": {
+        "symbol": symbol,
+				"unstakingCooldown": unstakingCooldown,
+				"numberTransactions": numberTransactions
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token staking enabled!');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+		}
+	},
+
+	Stake: function(symbol, quantity) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "stake",
+      "contractPayload": {
+        "symbol": symbol,
+				"quantity": quantity
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+        if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token successfully staked');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.ShowBalances(SE.User.name);
+			});
+		}
+	},
+
+	Unstake: function(symbol, quantity) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "unstake",
+      "contractPayload": {
+        "symbol": symbol,
+				"quantity": quantity
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+        if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token successfully staked');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+		}
+	},
+
+	CancelUnstake: function(txID) {
+		SE.ShowLoading();
+
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      window.location.reload();
+      return;
+    }
+
+    const transaction_data = {
+      "contractName": "tokens",
+      "contractAction": "cancelUnstake",
+      "contractPayload": {
+        "txID": txID
+    	}
+    };
+
+    if (useKeychain()) {
+      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+        if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            if(tx.success) {
+							SE.ShowToast(true, 'Token successfully unstaked');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to unstake tokens: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.ShowHomeView('pending_unstakes');
+					});
+        } else {
+					SE.HideLoading();
+				}
+      });
+    } else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+				SE.ShowHomeView('pending_unstakes');
+			});
+		}
 	},
 
 	LoadParams: function(callback) {
@@ -451,6 +727,18 @@ SE = {
 		});
 	},
 
+	LoadPendingUnstakes: function(account, callback) {
+		ssc.find('tokens', 'pendingUnstakes', { account: account }, 1000, 0, '', false).then(r => {
+			if (SE.User && account == SE.User.name) {
+				SE.User.pendingUnstakes = r;
+			}
+
+			if (callback) {
+				callback(r);
+			}
+		});
+	},
+
 	LoadBalances: function(account, callback) {
 		ssc.find('tokens', 'balances', { account: account }, 1000, 0, '', false).then(r => {
 			if(SE.User && account == SE.User.name)
@@ -472,6 +760,10 @@ SE = {
   ShowHistory: function(symbol, name) {
 		var token =  SE.GetToken(symbol);
 		SE.ShowHomeView('history', token, { t: symbol });
+	},
+
+	ShowPendingUnstakes: function() {
+		SE.ShowHomeView('pending_unstakes');
 	},
 
   ShowAbout: function() {
@@ -551,6 +843,7 @@ SE = {
 		});
 
 		SE.LoadBalances(username);
+		SE.LoadPendingUnstakes(username);
 
 		if(callback)
 			callback(SE.User);
@@ -584,7 +877,6 @@ SE = {
 					try {
 						if(steem.auth.wifToPublic(key) == r[0].memo_key || steem.auth.wifToPublic(key) == r[0].posting.key_auths[0][0]) {
 							localStorage.setItem('username', username);
-							localStorage.setItem('key', key);
 							window.location.reload();
 						} else {
               SE.HideLoading();
@@ -770,7 +1062,19 @@ SE = {
 
   ShowSendTokenDialog: function(symbol, balance) {
     SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
-  },
+	},
+	
+	ShowStakeDialog: function(symbol, balance) {
+		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
+	},
+	
+	ShowUnstakeDialog: function(symbol, staked) {
+		SE.ShowDialog('unstake_token', { symbol: symbol, balance: staked });
+	},
+
+	ShowEnableStakeDialog: function(symbol) {
+		SE.ShowDialog('stake_token_enable', { symbol: symbol });
+	},
 
   SendToken: function(symbol, to, quantity, memo) {
     SE.ShowLoading();
@@ -969,6 +1273,27 @@ SE = {
 		SE._sc_callback = callback;
 	},
 
+	SteemConnectJsonId: function(auth_type, id, data, callback) {
+		SE.HideLoading();
+		SE.ShowDialog('steem_connect')
+
+		var username = localStorage.getItem('username');
+		var url = 'https://steemconnect.com/sign/custom-json?';
+
+		if (auth_type == 'active') {
+			url += 'required_posting_auths=' + encodeURI('[]');
+			url += '&required_auths=' + encodeURI('["' + username + '"]');
+		} else {
+			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
+		}
+
+		url += '&id=' + id;
+		url += '&json=' + encodeURI(JSON.stringify(data));
+
+		popupCenter(url, 'steemconnect', 500, 560);
+		SE._sc_callback = callback;
+	},
+
 	SteemConnectTransfer: function(from, to, amount, memo, callback) {
 		SE.HideLoading();
 		SE.ShowDialog('steem_connect')
@@ -1058,9 +1383,14 @@ SE = {
 			data: JSON.stringify({ from_coin: pegged_token.pegged_token_symbol, to_coin: symbol, destination: address }),
 			contentType: "application/json",
 			dataType: "json",
+			error:(xhr, status, errorThrown) => {
+				if (callback) {
+					callback(xhr, null);
+				}
+			},
 			success: result => {
 				if(callback)
-					callback(Object.assign(result, pegged_token));
+					callback(null, Object.assign(result, pegged_token));
 			}
 		});
 	}

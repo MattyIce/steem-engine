@@ -83,9 +83,11 @@ function loadSteemPrice(callback) {
 function usdFormat(val, decimal_limit) {
 	var usd = val * window.steem_price;
 
-	if(decimal_limit != null && !isNaN(parseInt(decimal_limit)))
+	if(decimal_limit && !isNaN(parseInt(decimal_limit)))
 		return '$' + addCommas(usd.toFixed(decimal_limit));
-	if(usd >= 1)
+	else if(usd >= 1000)
+		return '$' + addCommas(usd.toFixed());
+	else if(usd >= 1)
 		return '$' + addCommas(usd.toFixed(2));
 	else if(usd >= 0.1)
 		return '$' + usd.toFixed(3);
@@ -110,4 +112,22 @@ function largeNumber(val) {
 		return addCommas(+(val / 1000000).toFixed(3)) + ' M';
 	else
 		return addCommas(+val.toFixed(3));
+}
+
+function xss(text) {
+  text = filterXSS(text);
+
+  while(text.match(/onload/gi))
+		text = text.replace(/onload/gi, '');
+
+	while(text.match(/onerror/gi))
+		text = text.replace(/onerror/gi, '');
+
+	while(text.match(/javascript/gi))
+		text = text.replace(/javascript/gi, '');
+
+	while(text.match(/&#/gi))
+    text = text.replace(/&#/gi, '');
+    
+  return text;
 }

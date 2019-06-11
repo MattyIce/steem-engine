@@ -51,6 +51,11 @@
 		SE.GetDepositAddress($('#deposit_token').val(), result => {
 			SE.HideLoading();
 
+			if (result && typeof result.memo !== 'undefined' && result.memo.includes('EOSP')) {
+				SE.ShowDialog('deposit_info', result);
+				return;
+			}
+
 			if(result && result.address)
 				SE.ShowDialog('deposit_info', result);
 		});
