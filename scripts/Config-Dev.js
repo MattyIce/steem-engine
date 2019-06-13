@@ -20,11 +20,16 @@ Config = {
 			name: 'Litecoin',
 			symbol: 'LTC',
 			pegged_token_symbol: 'LTCP'
-		}, 
+		},
 		{
 			name: 'EOS',
 			symbol: 'EOS',
 			pegged_token_symbol: 'EOSP'
+		},
+		{
+			name: 'Crypto Peso',
+			symbol: 'PSO',
+			pegged_token_symbol: 'PSOP'
 		},
 		{
 			name: 'Bitcoin Cash',
