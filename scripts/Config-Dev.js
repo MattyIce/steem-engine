@@ -20,7 +20,7 @@ Config = {
 			name: 'Litecoin',
 			symbol: 'LTC',
 			pegged_token_symbol: 'LTCP'
-		}, 
+		},
 		{
 			name: 'EOS',
 			symbol: 'EOS',
