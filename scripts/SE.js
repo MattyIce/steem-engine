@@ -570,7 +570,7 @@ SE = {
 		}
 	},
 
-	Stake: function(symbol, quantity) {
+	Stake: function(symbol, quantity, to) {
 		SE.ShowLoading();
 
     const username = localStorage.getItem('username');
@@ -584,27 +584,29 @@ SE = {
       "contractName": "tokens",
       "contractAction": "stake",
       "contractPayload": {
+		"to": to,
         "symbol": symbol,
-				"quantity": quantity
-    	}
+		"quantity": quantity
+      }
     };
 
     if (useKeychain()) {
       steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
         if (response.success && response.result) {
-					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success) {
-							SE.ShowToast(true, 'Token successfully staked');
-						} else {
-							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
-						}
-
-						SE.HideLoading();
-						SE.HideDialog();
-					});
-        } else {
-					SE.HideLoading();
+			SE.CheckTransaction(response.result.id, 3, tx => {
+            	if (tx.success) {
+					SE.ShowToast(true, 'Token successfully staked');
+					SE.ShowBalances(SE.User.name);
+				} else {
+					SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
 				}
+
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+        } else {
+			SE.HideLoading();
+		}
       });
     } else {
 			SE.SteemConnectJson('active', transaction_data, () => {

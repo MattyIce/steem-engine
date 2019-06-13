@@ -12,7 +12,12 @@
       <label class="mb-0">BALANCE</label>
       <p class="mb-4">
         <span id="balance"><%= addCommas(data.balance) %> <%= data.symbol %></span>
-			</p>						
+      </p>
+      
+      <label>TO</label>
+      <div class="input-group justify-content-center align-items-center mb-4">
+        <input type="text" id="stakeTo" value="<%= SE.User.name %>">   
+			</div>	
       
       <label>AMOUNT</label>
       <div class="input-group justify-content-center align-items-center mb-4">
@@ -39,6 +44,7 @@
 
   var $balance = $('#balance');
   var $stakeAmount = $('#stakeAmount');
+  var $stakeTo = $('#stakeTo');
 
   $balance.on('click', function() {
     $stakeAmount.val(balance);
@@ -47,6 +53,7 @@
   function onStakeClick() {
     const amount = $stakeAmount.val();
     const floatAmount = parseFloat(amount);
+    const to = $stakeTo.val();
 
     if (isNaN(floatAmount) || floatAmount == 0) {
       $txtAmount.addClass("is-invalid");
@@ -55,7 +62,7 @@
     
     if (isValid) {
       $('.modal-body input').removeClass("is-invalid");
-      SE.Stake(symbol, amount);
+      SE.Stake(symbol, amount, to);
     }
   }
 </script>
