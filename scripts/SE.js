@@ -1144,7 +1144,7 @@ SE = {
     };
 
     if(useKeychain()) {
-      steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
+      steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(8), JSON.stringify(transaction_data), 'STEEM', function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if(tx.success) {
@@ -1161,7 +1161,7 @@ SE = {
       });
     } else {
 			SE.HideLoading();
-			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
+			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(8) + ' STEEM', JSON.stringify(transaction_data), () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
 			});
 		}
@@ -1185,7 +1185,7 @@ SE = {
     };
 
     if(useKeychain()) {
-      steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
+      steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(8), JSON.stringify(transaction_data), 'STEEM', function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if(tx.success) {
@@ -1202,7 +1202,7 @@ SE = {
       });
     } else {
 			SE.HideLoading();
-			SE.SteemConnectTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
+			SE.SteemConnectTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(8) + ' STEEM', JSON.stringify(transaction_data), () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
 			});
 		}
@@ -1220,7 +1220,7 @@ SE = {
 			"contractName": "steempegged",
 			"contractAction": "withdraw",
 			"contractPayload": { 
-				"quantity": amount.toFixed(3)
+				"quantity": amount.toFixed(8)
 			}
 		};
 
