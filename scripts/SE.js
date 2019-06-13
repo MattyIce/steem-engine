@@ -532,28 +532,28 @@ SE = {
 	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
 		SE.ShowLoading();
 
-    const username = localStorage.getItem('username');
+		const username = localStorage.getItem('username');
 
-    if (!username) {
-      window.location.reload();
-      return;
-    }
+		if (!username) {
+			window.location.reload();
+			return;
+		}
 
-    const transaction_data = {
-      "contractName": "tokens",
-      "contractAction": "enableStaking",
-      "contractPayload": {
-        "symbol": symbol,
+		const transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "enableStaking",
+			"contractPayload": {
+				"symbol": symbol,
 				"unstakingCooldown": unstakingCooldown,
 				"numberTransactions": numberTransactions
-    	}
-    };
+			}
+		};
 
-    if (useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success) {
+						if (tx.success) {
 							SE.ShowToast(true, 'Token staking enabled!');
 						} else {
 							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
@@ -562,11 +562,11 @@ SE = {
 						SE.HideLoading();
 						SE.HideDialog();
 					});
-        } else {
+				} else {
 					SE.HideLoading();
 				}
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.HideLoading();
 				SE.HideDialog();
@@ -704,6 +704,140 @@ SE = {
 				SE.HideLoading();
 				SE.HideDialog();
 				SE.ShowHomeView('pending_unstakes');
+			});
+		}
+	},
+
+	EnableDelegation: function(symbol, undelegationCooldown) {
+		SE.ShowLoading();
+
+		const username = localStorage.getItem('username');
+
+		if (!username) {
+			window.location.reload();
+			return;
+		}
+
+		const transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "enableDelegation",
+			"contractPayload": {
+				"symbol": symbol,
+				"undelegationCooldown": undelegationCooldown
+			}
+		};
+
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function(response) {
+				if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if (tx.success) {
+							SE.ShowToast(true, 'Token delegation enabled!');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to enable delegation on your token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+				} else {
+					SE.HideLoading();
+				}
+			});
+		} else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
+			});
+		}
+	},
+
+	Delegate: function(symbol, quantity, to) {
+		SE.ShowLoading();
+
+    	const username = localStorage.getItem('username');
+
+		if (!username) {
+			window.location.reload();
+			return;
+		}
+
+		const transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "delegate",
+			"contractPayload": {
+				"to": to,
+				"symbol": symbol,
+				"quantity": quantity
+		  	}
+		};
+
+    	if (useKeychain()) {
+      		steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Delegate Token', function(response) {
+        		if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+            			if (tx.success) {
+							SE.ShowToast(true, 'Token successfully delegated');
+						SE.ShowBalances(SE.User.name);
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to delegate token: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+        		} else {
+					SE.HideLoading();
+				}
+      		});
+    	} else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.ShowBalances(SE.User.name);
+			});
+		}
+	},
+
+	Undelegate: function(symbol, quantity, to) {
+		SE.ShowLoading();
+
+		const username = localStorage.getItem('username');
+
+		if (!username) {
+			window.location.reload();
+			return;
+		}
+
+		const transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "undelegate",
+			"contractPayload": {
+				"to": to,
+				"symbol": symbol,
+				"quantity": quantity
+			}
+		};
+
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Undelegate Tokens', function(response) {
+				if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if (tx.success) {
+							SE.ShowToast(true, 'Token undelegated');
+						} else {
+							SE.ShowToast(false, 'An error occurred attempting to undelegate: ' + tx.error);
+						}
+
+						SE.HideLoading();
+						SE.HideDialog();
+					});
+				} else {
+					SE.HideLoading();
+				}
+			});
+		} else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
 			});
 		}
 	},
@@ -1066,8 +1200,8 @@ SE = {
 		}
   },
 
-  ShowSendTokenDialog: function(symbol, balance) {
-    SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
+	ShowSendTokenDialog: function(symbol, balance) {
+		SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
 	},
 	
 	ShowStakeDialog: function(symbol, balance) {
@@ -1080,6 +1214,18 @@ SE = {
 
 	ShowEnableStakeDialog: function(symbol) {
 		SE.ShowDialog('stake_token_enable', { symbol: symbol });
+	},
+
+	ShowDelegateDialog: function(symbol, balance) {
+		SE.ShowDialog('delegate_token', { symbol: symbol, balance: balance });
+	},
+	
+	ShowUndelegateDialog: function(symbol, staked) {
+		SE.ShowDialog('undelegate_token', { symbol: symbol, balance: staked });
+	},
+
+	ShowEnableDelegationDialog: function(symbol) {
+		SE.ShowDialog('token_delegation_enable', { symbol: symbol });
 	},
 
   SendToken: function(symbol, to, quantity, memo) {
