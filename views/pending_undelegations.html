@@ -20,11 +20,14 @@
 				{ "name": "symbol", "title": "Symbol" },
 				{ "name": "txID", "title": "Transaction ID" },
 				{ "name": "quantity", "title": "Quantity" },
-				{ "name": "quantityLeft", "title": "Quantity Left" },
-				{ "name": "nextTransactionTimestamp", "title": "Next Transaction", "type": "number" },
-				{ "name": "numberTransactionsLeft", "title": "Transactions Left", "type": "number" }
+				{ "name": "completeTimestamp", "title": "Complete", "formatter": timestampColumn }
 			],
 			"rows": pendingUndelegations
 		});
+
+		function timestampColumn(value, options, rowdata) {
+			const date = parseInt(value);
+			return moment(date).format('MM-DD-YYYY HH:mm');
+		}
 	});
 </script>
