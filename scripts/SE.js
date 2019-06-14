@@ -82,9 +82,14 @@ SE = {
 				break;
 				case 'pending_unstakes':
 					SE.LoadPendingUnstakes(SE.User.name, () => {
-						SE.ShowPendingUnstakes();
-					});
-					break;
+					SE.ShowPendingUnstakes();
+				});
+			break;
+			case 'pending_undelegations':
+				SE.LoadPendingUndelegations(SE.User.name, () => {
+					SE.ShowPendingUndelegations();
+				});
+			break;
 			case 'add_token':
 				SE.ShowAddToken();
 				break;pending_unstakes
@@ -879,6 +884,18 @@ SE = {
 		});
 	},
 
+	LoadPendingUndelegations : function(account, callback) {
+		ssc.find('tokens', 'pendingUndelegations', { account: account }, 1000, 0, '', false).then(r => {
+			if (SE.User && account == SE.User.name) {
+				SE.User.pendingUndelegations = r;
+			}
+
+			if (callback) {
+				callback(r);
+			}
+		});
+	},
+
 	LoadBalances: function(account, callback) {
 		ssc.find('tokens', 'balances', { account: account }, 1000, 0, '', false).then(r => {
 			if(SE.User && account == SE.User.name)
@@ -904,6 +921,10 @@ SE = {
 
 	ShowPendingUnstakes: function() {
 		SE.ShowHomeView('pending_unstakes');
+	},
+
+	ShowPendingUndelegations: function() {
+		SE.ShowHomeView('pending_undelegations');
 	},
 
   ShowAbout: function() {
