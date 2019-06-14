@@ -80,8 +80,8 @@ SE = {
 				} else
 					SE.ShowTokens();
 				break;
-				case 'pending_unstakes':
-					SE.LoadPendingUnstakes(SE.User.name, () => {
+			case 'pending_unstakes':
+				SE.LoadPendingUnstakes(SE.User.name, () => {
 					SE.ShowPendingUnstakes();
 				});
 			break;
@@ -914,7 +914,7 @@ SE = {
 			return 0;
   },
 
-  ShowHistory: function(symbol, name) {
+	ShowHistory: function(symbol, name) {
 		var token =  SE.GetToken(symbol);
 		SE.ShowHomeView('history', token, { t: symbol });
 	},
@@ -1005,9 +1005,11 @@ SE = {
 
 		SE.LoadBalances(username);
 		SE.LoadPendingUnstakes(username);
+		SE.LoadPendingUndelegations(username);
 
-		if(callback)
+		if (callback) {
 			callback(SE.User);
+		}
 	},
 
   LogIn: function(username, key) {
