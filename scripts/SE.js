@@ -691,7 +691,7 @@ SE = {
         		if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             			if (tx.success) {
-							SE.ShowToast(true, 'Token successfully unstaked');
+							SE.ShowToast(true, 'Token unstaking successfully cancelled');
 							SE.ShowHomeView('pending_unstakes');
 						} else {
 							SE.ShowToast(false, 'An error occurred attempting to unstake tokens: ' + tx.error);
