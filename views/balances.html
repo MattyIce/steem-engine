@@ -61,7 +61,7 @@
 			${pendingUnstake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-eye" title="View pending unstakes" onclick="SE.ShowHomeView('pending_unstakes')"></i>` : ``}
 			${parseFloat(userToken.pendingUndelegations) > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-divide" title="View pending undelegations" onclick="SE.ShowHomeView('pending_undelegations')"></i>` : ``}
 			${scotConfig && scotConfig.pending_token > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-hand-holding-usd" onclick="SE.ClaimToken('${value}')" title="Claim ${value} tokens"></i>` : ``}
-			${delegationEnabled && token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gift" onclick="SE.ShowDelegateDialog('${value}', ${rowdata.balance})" title="Delegate ${value} tokens"></i>` : ``}
+			${delegationEnabled && token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gift" onclick="SE.ShowDelegateDialog('${value}', ${rowdata.stake})" title="Delegate ${rowdata.stake} tokens"></i>` : ``}
 			${token.issuer === SE.User.name && !delegationEnabled && token.stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-dolly" title="Enable Delegation" onclick="SE.ShowEnableDelegationDialog('${value}')"></i>` : ''}
 			${delegationEnabled && delegationsOut ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-folder-minus" title="Undelegate Tokens" onclick="SE.ShowUndelegateDialog('${value}', ${delegationsOut})"></i>` : ``}
 			`; 
