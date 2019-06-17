@@ -802,7 +802,7 @@ SE = {
 		}
 	},
 
-	Undelegate: function(symbol, quantity, to) {
+	Undelegate: function(symbol, quantity, from) {
 		SE.ShowLoading();
 
 		const username = localStorage.getItem('username');
@@ -816,7 +816,7 @@ SE = {
 			"contractName": "tokens",
 			"contractAction": "undelegate",
 			"contractPayload": {
-				"to": to,
+				"from": from,
 				"symbol": symbol,
 				"quantity": quantity
 			}
