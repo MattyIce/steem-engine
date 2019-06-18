@@ -9,34 +9,73 @@
 		</div>
 
 		<div class="modal-body">
-			<label class="mb-0">Token Name</label>
-			<p class="mb-4" style="font-size: 20px;">
-				<%= filterXSS(data.name) %> (<%= data.symbol %>)
-			</p>
+			<button type="button" class="btn btn-secondary btn-sm w-100" id="tokenPrecisionToggle" 
+				data-precision="Change token precision"
+				data-metadata="Change token metadata" style="margin-bottom: 15px;">Change token precision</button>
 
-			<label class="mb-0">Website URL</label>
-			<p class="mb-4">
-				<input id="token_website_url" type="text" value="<%= data.metadata.url %>"/>
-			</p>
-
-			<label class="mb-0">Icon Image URL</label>
-			<p class="mb-4">
-				<input id="token_icon_url" type="text" value="<%= data.metadata.icon %>"/>
-			</p>
-
-			<label class="mb-0">Description</label>
-			<p class="mb-0">
-				<textarea id="token_desc"><%= data.metadata.desc %></textarea>
-			</p>
+			<div id="metadataWrapper" style="display: block;">
+				<label class="mb-0">Token Name</label>
+				<p class="mb-4" style="font-size: 20px;">
+					<%= filterXSS(data.name) %> (<%= data.symbol %>)
+				</p>
+	
+				<label class="mb-0">Website URL</label>
+				<p class="mb-4">
+					<input id="token_website_url" type="text" value="<%= data.metadata.url %>"/>
+				</p>
+	
+				<label class="mb-0">Icon Image URL</label>
+				<p class="mb-4">
+					<input id="token_icon_url" type="text" value="<%= data.metadata.icon %>"/>
+				</p>
+	
+				<label class="mb-0">Description</label>
+				<p class="mb-0">
+					<textarea id="token_desc"><%= data.metadata.desc %></textarea>
+				</p>
+			</div>
+			<div id="precisionWrapper" style="display: none;">
+				<label class="mb-0">Precision</label>
+				<div class="input-group mb-4">
+					<input id="token_precision" type="text" data-old-precision="<%= data.precision %>" value="<%= data.precision %>"/>
+					<div class="invalid-tooltip">
+						You can only increase decimal precision. The new value must be higher.
+					</div>    
+				</div>
+			</div>
 		</div>
 
 		<div class="modal-footer">
-			<button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="updateTokenData();">UPDATE</button>
+			<button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="handleUpdateClick();">UPDATE</button>
 		</div>
 	</div>
 </div>
 
 <script>
+	let $tokenPrecisionToggle = $('#tokenPrecisionToggle');
+	let $metadataWrapper = $('#metadataWrapper');
+	let $precisionWrapper = $('#precisionWrapper');
+
+	$tokenPrecisionToggle.click(() => {
+		if ($metadataWrapper.is(':visible')) {
+			$metadataWrapper.hide();
+			$precisionWrapper.show();
+			$tokenPrecisionToggle.text($tokenPrecisionToggle.data('metadata'));
+		} else {
+			$metadataWrapper.show();
+			$precisionWrapper.hide();
+			$tokenPrecisionToggle.text($tokenPrecisionToggle.data('precision'));
+		}
+	});
+
+	function handleUpdateClick() {
+		if ($metadataWrapper.is(':visible')) {
+			updateTokenData();
+		} else {
+			updateTokenPrecision();
+		}
+	}
+
 	function updateTokenData() {
 		var metadata = <%= JSON.stringify(data.metadata) %>;
 
@@ -45,6 +84,19 @@
 		metadata.desc = $('#token_desc').val();
 
 		SE.UpdateTokenMetadata('<%= data.symbol %>', metadata);
+	}
+
+	function updateTokenPrecision() {
+		let $tokenPrecision = $('#token_precision');
+		let oldPrecision = parseInt($tokenPrecision.data('old-precision'));
+		let precision = parseInt($tokenPrecision.val());
+
+		if (precision >= 0 > precision > oldPrecision) {
+			$tokenPrecision.removeClass('is-invalid');
+			SE.UpdateTokenPrecision('<%= data.symbol %>', precision);
+		} else {
+			$tokenPrecision.addClass('is-invalid');
+		}
 	}
 </script>
 
