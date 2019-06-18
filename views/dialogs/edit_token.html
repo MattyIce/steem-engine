@@ -38,7 +38,7 @@
 				<label class="mb-0">Precision</label>
 				<div class="input-group mb-4">
 					<input id="token_precision" type="text" data-old-precision="<%= data.precision %>" value="<%= data.precision %>"/>
-					<div class="invalid-tooltip">
+					<div class="invalid-tooltip" id="precisionError" style="left: 0;">
 						You can only increase decimal precision. The new value must be higher.
 					</div>    
 				</div>
@@ -52,9 +52,10 @@
 </div>
 
 <script>
-	let $tokenPrecisionToggle = $('#tokenPrecisionToggle');
-	let $metadataWrapper = $('#metadataWrapper');
-	let $precisionWrapper = $('#precisionWrapper');
+	var $tokenPrecisionToggle = $('#tokenPrecisionToggle');
+	var $metadataWrapper = $('#metadataWrapper');
+	var $precisionWrapper = $('#precisionWrapper');
+	var $precisionError = $('#precisionError');
 
 	$tokenPrecisionToggle.click(() => {
 		if ($metadataWrapper.is(':visible')) {
@@ -87,18 +88,49 @@
 	}
 
 	function updateTokenPrecision() {
-		let $tokenPrecision = $('#token_precision');
-		let oldPrecision = parseInt($tokenPrecision.data('old-precision'));
-		let precision = parseInt($tokenPrecision.val());
+		var $tokenPrecision = $('#token_precision');
+		var oldPrecision = parseInt($tokenPrecision.data('old-precision'));
+		var precision = parseInt($tokenPrecision.val());
+		var hasError = false;
 
-		// The precision needs to be greater than or equal to zero
-		// It also needs to be higher than the previous precision
-		// It also cannot be higher than 8
-		if (precision >= 0 && (precision > oldPrecision) && !(precision > 8)) {
+		// Only numeric values
+		if (isNaN(precision) && !hasError) {
+			$precisionError.text(`Please only enter valid numeric values between 0 and 8.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// Value must be higher than 0
+		if (precision < 0 && !hasError) {
+			$precisionError.text(`Please enter a value between 0 and 8.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// Token already at max precision
+		if (precision === 8 && !hasError) {
+			$precisionError.text(`Your token is already the maximum allowed precision value of 8. You cannot increase it further.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// New precision is not higher than the old precision
+		if (!(precision > oldPrecision) && !hasError) {
+			$precisionError.text(`You can only increase the precision. Please enter a precision value higher than ${oldPrecision}`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// The entered precision is greater than 8
+		if (precision > 8 && !hasError) {
+			$precisionError.text(`The maximum allowed precision is 8.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		if (!hasError) {
 			$tokenPrecision.removeClass('is-invalid');
 			SE.UpdateTokenPrecision('<%= data.symbol %>', precision);
-		} else {
-			$tokenPrecision.addClass('is-invalid');
 		}
 	}
 </script>
