@@ -802,7 +802,7 @@ SE = {
 		}
 	},
 
-	Undelegate: function(symbol, quantity, to) {
+	Undelegate: function(symbol, quantity, from) {
 		SE.ShowLoading();
 
 		const username = localStorage.getItem('username');
@@ -816,7 +816,7 @@ SE = {
 			"contractName": "tokens",
 			"contractAction": "undelegate",
 			"contractPayload": {
-				"to": to,
+				"from": from,
 				"symbol": symbol,
 				"quantity": quantity
 			}
@@ -1126,6 +1126,49 @@ SE = {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadTokens(() => SE.ShowHistory(symbol));
 			});
+		}
+	},
+
+	UpdateTokenPrecision: function(symbol, precision) {
+		SE.ShowLoading();
+
+    	const username = localStorage.getItem('username');
+
+		if (!username) {
+			window.location.reload();
+			return;
+		}
+
+		var transaction_data = {
+		"contractName": "tokens",
+		"contractAction": "updatePrecision",
+		"contractPayload": {
+			"symbol": symbol,
+			"precision": precision
+			}
+		};
+
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Update Token Prevision', function(response) {
+				if(response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if (tx.success) {
+							SE.ShowToast(true, 'Token updated successfully!');
+						} else {
+							SE.ShowToast(false, 'An error occurred updating your token: ' + tx.error);
+							SE.HideLoading();
+							SE.HideDialog();
+							SE.LoadTokens(() => SE.ShowHistory(symbol));
+						}
+					});
+				} else {
+					SE.HideLoading();
+				}
+			});
+		} else {
+				SE.SteemConnectJson('active', transaction_data, () => {
+					SE.LoadTokens(() => SE.ShowHistory(symbol));
+				});
 		}
 	},
 
