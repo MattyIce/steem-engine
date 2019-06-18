@@ -91,7 +91,10 @@
 		let oldPrecision = parseInt($tokenPrecision.data('old-precision'));
 		let precision = parseInt($tokenPrecision.val());
 
-		if (precision >= 0 && precision > oldPrecision) {
+		// The precision needs to be greater than or equal to zero
+		// It also needs to be higher than the previous precision
+		// It also cannot be higher than 8
+		if (precision >= 0 && (precision > oldPrecision) && !(precision > 8)) {
 			$tokenPrecision.removeClass('is-invalid');
 			SE.UpdateTokenPrecision('<%= data.symbol %>', precision);
 		} else {
