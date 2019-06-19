@@ -971,3 +971,12 @@ table.tokensTable .fooicon-sort-desc:before {
 .rewardsTable td {
   color: #000;
 }
+
+.badge.rewards {
+  background: #c71e1e;
+  border-radius: 50%;
+  font-size: 14px;
+  top: -2px;
+  position: relative;
+  line-height: 1;
+}

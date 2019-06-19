@@ -1047,7 +1047,7 @@ SE = {
 		SE.ShowLoading();
 		SE.User = { name: username };
 		$("#btnSignIn").hide();
-		$("#lnkUsername").text('@' + username);
+		$("#lnkUsername").html(`@${username}`);
 		$("#ddlLoggedIn").show();
 		$('#nav_wallet').show();
 
@@ -1060,6 +1060,12 @@ SE = {
 		SE.LoadBalances(username);
 		SE.LoadPendingUnstakes(username);
 		SE.LoadPendingUndelegations(username);
+
+		SE.GetScotUserTokens(username, scotTokens => {
+			if (scotTokens.length) {
+				$("#lnkUsername").html(`@${username} <span class="badge rewards">${scotTokens.length}</span>`);
+			}
+		});
 
 		if (callback) {
 			callback(SE.User);
