@@ -66,6 +66,9 @@ SE = {
 			case 'balances':
 				SE.ShowBalances(parts.a ? parts.a : SE.User.name);
 				break;
+			case 'rewards':
+				SE.ShowRewards(parts.a ? parts.a : SE.User.name);
+				break;
 			case 'tokens':
 				SE.ShowTokens();
 				break;
@@ -433,16 +436,24 @@ SE = {
 	},
 
   ShowBalances: function(account) {
-		if(!account && SE.User) {
+		if (!account && SE.User) {
 			account = SE.User.name;
 		}
 
 		SE.CheckPalClaimdrop();
 
 		SE.LoadBalances(account, r => {
-			SE.GetScotUserTokens(account, scotTokens => {
-				SE.ShowHomeView('balances', { balances: r, scotTokens: scotTokens, account: account }, { a: account });
-			});
+			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
+		});
+	},
+
+	ShowRewards: function(account) {
+		if (!account && SE.User) {
+			account = SE.User.name;
+		}
+
+		SE.GetScotUserTokens(account, scotTokens => {
+			SE.ShowHomeView('rewards', { scotTokens: scotTokens, account: account }, { a: account });
 		});
 	},
 
@@ -451,13 +462,29 @@ SE = {
 			account = SE.User.name;
 		}
 
-		SE.User.ScotTokens = {};
+		if (!SE.User) {
+			SE.User = {};
+		}
+
+		SE.User.ScotTokens = [];
 
 		$.get(Config.SCOT_API + `@${account}`, { v: new Date().getTime() }, results => {
-			SE.User.ScotTokens = results;
+			if (results) {
+				let mapped = [];
 
-			if (callback) {
-				callback(Object.entries(results));
+				for (const key in results) {
+					const config = results[key];
+
+					if (config.pending_token) {
+						mapped.push(config);
+					}
+				}
+
+				SE.User.ScotTokens = mapped;
+
+				if (callback) {
+					callback(mapped);
+				}
 			}
 		}).fail(() => {
 			if (callback)
@@ -505,12 +532,11 @@ SE = {
 		});
 	},
 
-	ClaimToken: function(symbol) {
+	ClaimToken: function(symbol, amount) {
 		SE.ShowLoading();
 		
 		const token = SE.Tokens.find(t => t.symbol === symbol);
 		const username = SE.User.name;
-		const amount = SE.User.ScotTokens[symbol].pending_token;
 		const factor = Math.pow(10, token.precision);
 		const calculated = amount / factor;
 
@@ -523,6 +549,7 @@ SE = {
         if (response.success && response.result) {
 					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
 					SE.HideLoading();
+					SE.ShowRewards();
         } else {
 					SE.HideLoading();
 				}
@@ -530,6 +557,7 @@ SE = {
     } else {
 			SE.SteemConnectJsonId('posting', 'scot_claim_token', claimData, () => {
 				SE.HideLoading();
+				SE.ShowRewards();
 			});
 		}
 	},
