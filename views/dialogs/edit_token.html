@@ -9,34 +9,74 @@
 		</div>
 
 		<div class="modal-body">
-			<label class="mb-0">Token Name</label>
-			<p class="mb-4" style="font-size: 20px;">
-				<%= filterXSS(data.name) %> (<%= data.symbol %>)
-			</p>
+			<button type="button" class="btn btn-secondary btn-sm w-100" id="tokenPrecisionToggle" 
+				data-precision="Change token precision"
+				data-metadata="Change token metadata" style="margin-bottom: 15px;">Change token precision</button>
 
-			<label class="mb-0">Website URL</label>
-			<p class="mb-4">
-				<input id="token_website_url" type="text" value="<%= data.metadata.url %>"/>
-			</p>
-
-			<label class="mb-0">Icon Image URL</label>
-			<p class="mb-4">
-				<input id="token_icon_url" type="text" value="<%= data.metadata.icon %>"/>
-			</p>
-
-			<label class="mb-0">Description</label>
-			<p class="mb-0">
-				<textarea id="token_desc"><%= data.metadata.desc %></textarea>
-			</p>
+			<div id="metadataWrapper" style="display: block;">
+				<label class="mb-0">Token Name</label>
+				<p class="mb-4" style="font-size: 20px;">
+					<%= filterXSS(data.name) %> (<%= data.symbol %>)
+				</p>
+	
+				<label class="mb-0">Website URL</label>
+				<p class="mb-4">
+					<input id="token_website_url" type="text" value="<%= data.metadata.url %>"/>
+				</p>
+	
+				<label class="mb-0">Icon Image URL</label>
+				<p class="mb-4">
+					<input id="token_icon_url" type="text" value="<%= data.metadata.icon %>"/>
+				</p>
+	
+				<label class="mb-0">Description</label>
+				<p class="mb-0">
+					<textarea id="token_desc"><%= data.metadata.desc %></textarea>
+				</p>
+			</div>
+			<div id="precisionWrapper" style="display: none;">
+				<label class="mb-0">Precision</label>
+				<div class="input-group mb-4">
+					<input id="token_precision" type="text" data-old-precision="<%= data.precision %>" value="<%= data.precision %>"/>
+					<div class="invalid-tooltip" id="precisionError" style="left: 0;">
+						You can only increase decimal precision. The new value must be higher.
+					</div>    
+				</div>
+			</div>
 		</div>
 
 		<div class="modal-footer">
-			<button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="updateTokenData();">UPDATE</button>
+			<button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="handleUpdateClick();">UPDATE</button>
 		</div>
 	</div>
 </div>
 
 <script>
+	var $tokenPrecisionToggle = $('#tokenPrecisionToggle');
+	var $metadataWrapper = $('#metadataWrapper');
+	var $precisionWrapper = $('#precisionWrapper');
+	var $precisionError = $('#precisionError');
+
+	$tokenPrecisionToggle.click(() => {
+		if ($metadataWrapper.is(':visible')) {
+			$metadataWrapper.hide();
+			$precisionWrapper.show();
+			$tokenPrecisionToggle.text($tokenPrecisionToggle.data('metadata'));
+		} else {
+			$metadataWrapper.show();
+			$precisionWrapper.hide();
+			$tokenPrecisionToggle.text($tokenPrecisionToggle.data('precision'));
+		}
+	});
+
+	function handleUpdateClick() {
+		if ($metadataWrapper.is(':visible')) {
+			updateTokenData();
+		} else {
+			updateTokenPrecision();
+		}
+	}
+
 	function updateTokenData() {
 		var metadata = <%= JSON.stringify(data.metadata) %>;
 
@@ -45,6 +85,53 @@
 		metadata.desc = $('#token_desc').val();
 
 		SE.UpdateTokenMetadata('<%= data.symbol %>', metadata);
+	}
+
+	function updateTokenPrecision() {
+		var $tokenPrecision = $('#token_precision');
+		var oldPrecision = parseInt($tokenPrecision.data('old-precision'));
+		var precision = parseInt($tokenPrecision.val());
+		var hasError = false;
+
+		// Only numeric values
+		if (isNaN(precision) && !hasError) {
+			$precisionError.text(`Please only enter valid numeric values between 0 and 8.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// Value must be higher than 0
+		if (precision < 0 && !hasError) {
+			$precisionError.text(`Please enter a value between 0 and 8.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// Token already at max precision
+		if (precision === 8 && !hasError) {
+			$precisionError.text(`Your token is already the maximum allowed precision value of 8. You cannot increase it further.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// New precision is not higher than the old precision
+		if (!(precision > oldPrecision) && !hasError) {
+			$precisionError.text(`You can only increase the precision. Please enter a precision value higher than ${oldPrecision}`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		// The entered precision is greater than 8
+		if (precision > 8 && !hasError) {
+			$precisionError.text(`The maximum allowed precision is 8.`);
+			$tokenPrecision.addClass('is-invalid');
+			hasError = true;
+		}
+
+		if (!hasError) {
+			$tokenPrecision.removeClass('is-invalid');
+			SE.UpdateTokenPrecision('<%= data.symbol %>', precision);
+		}
 	}
 </script>
 

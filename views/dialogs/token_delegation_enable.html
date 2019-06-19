@@ -1,0 +1,58 @@
+
+<div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content blue">
+      <div class="modal-header">
+        <h1 class="modal-title">TOKEN DELEGATION</h1>    
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">X</span>
+        </button>  
+      </div>
+  
+      <div class="modal-body">			
+        
+        <label>UNDELEGATION COOLDOWN (days)</label>
+        <p class="text-small">Number of days that a user will have to wait until the delegated tokens are added to their balance (between 1 and 365 days)</p>
+        <div class="input-group justify-content-center align-items-center mb-4">
+          <input type="text" placeholder="0" id="undelegationCooldown">
+          <div class="input-group-append">days</div>
+          <div class="invalid-tooltip">
+            Please enter an amount greater than 0
+          </div>        
+        </div>
+        
+      </div>
+      
+      <div class="modal-footer">
+        <button id="btnSend" type="button" class="btn btn-primary btn-lg w-100" onclick="onEnableClick()">ENABLE</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    var isValid = true;
+    var symbol = "<%= data.symbol %>";
+  
+    var $undelegationCooldown = $('#undelegationCooldown');
+  
+    function onEnableClick() {
+  
+      const undelegationCooldown = parseInt($undelegationCooldown.val());
+  
+      if (isNaN(undelegationCooldown)) {
+        $undelegationCooldown.addClass("is-invalid");
+        isValid = false;
+      }
+  
+      if (undelegationCooldown <= 0 || undelegationCooldown > 365) {
+        $unstakingCooldown.addClass("is-invalid");
+        isValid = false;
+      }
+      
+      if (isValid) {
+        $('.modal-body input').removeClass("is-invalid");
+        SE.EnableDelegation(symbol, undelegationCooldown);
+      }
+    }
+  </script>
+  
+  
