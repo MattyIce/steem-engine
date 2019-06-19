@@ -229,6 +229,10 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   padding: 5px 30px;
 }
 
+.btn-sm {
+  padding: 2px 20px;
+}
+
 .btn-primary {
 	color: #FFF;
   background-color: #8E4A2C;
@@ -959,11 +963,11 @@ table.tokensTable .fooicon-sort-desc:before {
   max-width: 100%;
 }
 
-.claimsTable {
+.rewardsTable {
   margin-top: 30px;
 }
 
-.claimsTable th,
-.claimsTable td {
+.rewardsTable th,
+.rewardsTable td {
   color: #000;
 }

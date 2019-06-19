@@ -66,8 +66,8 @@ SE = {
 			case 'balances':
 				SE.ShowBalances(parts.a ? parts.a : SE.User.name);
 				break;
-			case 'claims':
-				SE.ShowClaims(parts.a ? parts.a : SE.User.name);
+			case 'rewards':
+				SE.ShowRewards(parts.a ? parts.a : SE.User.name);
 				break;
 			case 'tokens':
 				SE.ShowTokens();
@@ -447,13 +447,13 @@ SE = {
 		});
 	},
 
-	ShowClaims: function(account) {
+	ShowRewards: function(account) {
 		if (!account && SE.User) {
 			account = SE.User.name;
 		}
 
 		SE.GetScotUserTokens(account, scotTokens => {
-			SE.ShowHomeView('claims', { scotTokens: scotTokens, account: account }, { a: account });
+			SE.ShowHomeView('rewards', { scotTokens: scotTokens, account: account }, { a: account });
 		});
 	},
 
@@ -549,7 +549,7 @@ SE = {
         if (response.success && response.result) {
 					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
 					SE.HideLoading();
-					SE.ShowClaims();
+					SE.ShowRewards();
         } else {
 					SE.HideLoading();
 				}
@@ -557,7 +557,7 @@ SE = {
     } else {
 			SE.SteemConnectJsonId('posting', 'scot_claim_token', claimData, () => {
 				SE.HideLoading();
-				SE.ShowClaims();
+				SE.ShowRewards();
 			});
 		}
 	},
