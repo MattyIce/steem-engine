@@ -584,7 +584,7 @@ table.tokensTable {
 }
 
 .tokensTable tbody tr td:last-child {
-	max-width: 300px;
+	max-width: 350px;
 	overflow: hidden;
 	white-space: nowrap;
 }
