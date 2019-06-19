@@ -248,7 +248,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 header {
   background: linear-gradient(263deg, #27475E, #080E13);
-  height: 220px;
+  height: 164px;
   padding-left: 130px;
   padding-right: 130px;
   position: relative;
@@ -940,25 +940,6 @@ table.tokensTable .fooicon-sort-desc:before {
   font-size: 12px !important;
 }
 
-.token-claims-wrapper {
-  color: #FFF;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.token-claims-wrapper p {
-  font-size: 16px;
-  text-align: center;
-}
-
-.claim-btn {
-  background: none;
-  border: none;
-  color: #FFF;
-  font-weight: bold;
-  padding: 0;
-}
-
 .claimdrop-btn {
   background: none;
   border: none;
@@ -976,4 +957,13 @@ table.tokensTable .fooicon-sort-desc:before {
   display: block;
   height: auto;
   max-width: 100%;
+}
+
+.claimsTable {
+  margin-top: 30px;
+}
+
+.claimsTable th,
+.claimsTable td {
+  color: #000;
 }
