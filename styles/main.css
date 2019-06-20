@@ -229,6 +229,10 @@ tr:nth-child(even) {background-color: #E9EEF2;}
   padding: 5px 30px;
 }
 
+.btn-sm {
+  padding: 2px 20px;
+}
+
 .btn-primary {
 	color: #FFF;
   background-color: #8E4A2C;
@@ -248,7 +252,7 @@ tr:nth-child(even) {background-color: #E9EEF2;}
 
 header {
   background: linear-gradient(263deg, #27475E, #080E13);
-  height: 220px;
+  height: 164px;
   padding-left: 130px;
   padding-right: 130px;
   position: relative;
@@ -584,7 +588,7 @@ table.tokensTable {
 }
 
 .tokensTable tbody tr td:last-child {
-	max-width: 300px;
+	max-width: 350px;
 	overflow: hidden;
 	white-space: nowrap;
 }
@@ -940,25 +944,6 @@ table.tokensTable .fooicon-sort-desc:before {
   font-size: 12px !important;
 }
 
-.token-claims-wrapper {
-  color: #FFF;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.token-claims-wrapper p {
-  font-size: 16px;
-  text-align: center;
-}
-
-.claim-btn {
-  background: none;
-  border: none;
-  color: #FFF;
-  font-weight: bold;
-  padding: 0;
-}
-
 .claimdrop-btn {
   background: none;
   border: none;
@@ -976,4 +961,22 @@ table.tokensTable .fooicon-sort-desc:before {
   display: block;
   height: auto;
   max-width: 100%;
+}
+
+.rewardsTable {
+  margin-top: 30px;
+}
+
+.rewardsTable th,
+.rewardsTable td {
+  color: #000;
+}
+
+.badge.rewards {
+  background: #c71e1e;
+  border-radius: 50%;
+  font-size: 14px;
+  top: -2px;
+  position: relative;
+  line-height: 1;
 }

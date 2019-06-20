@@ -16,22 +16,6 @@
 				<% } %>
 			</div>
 		</div>
-
-		<% if (data.scotTokens) { %>
-			<div class="col-md-12 token-claims-wrapper">
-				<% for (const [symbol, config] of data.scotTokens) { %>
-					<% if (config.pending_token > 0) { %>
-						<% 
-							var token = SE.Tokens.find(t => t.symbol === symbol); 
-
-							if(!token)
-								continue;
-						%>
-						<p>You have <%= config.pending_token / Math.pow(10, token.precision) %> <%= symbol %> to claim <button class="claim-btn" onclick="SE.ClaimToken('<%= symbol %>')" title="Claim <%= config.pending_token / Math.pow(10, token.precision) %> <%= symbol %> tokens">click here</button></p>
-					<% } %>
-				<% } %>
-			</div>
-		<% } %>
 	</div>
 </header>
 
@@ -44,6 +28,14 @@
 	function IconColumn(value, options, rowdata) { 
 		const token = SE.GetToken(value);
 		const scotConfig = (Object.keys(SE.User.ScotTokens).length && typeof SE.User.ScotTokens[value] !== 'undefined') ? SE.User.ScotTokens[value] : null;
+		const delegationEnabled = token.delegationEnabled ? token.delegationEnabled : false;
+		const stakingEnabled = token.stakingEnabled ? token.stakingEnabled : false;
+		const userToken = SE.User.balances.find(t => t.symbol === value);
+
+		const delegationsIn = userToken && userToken.delegationsIn ? parseFloat(userToken.delegationsIn).toFixed(token.precision) : 0;
+		const delegationsOut = userToken && userToken.delegationsOut ? parseFloat(userToken.delegationsOut).toFixed(token.precision) : 0;
+		const pendingUnstake = userToken && userToken.pendingUnstake ? parseFloat(userToken.pendingUnstake).toFixed(token.precision) : 0;
+		const pendingUndelegations = userToken && userToken.pendingUndelegations ? parseFloat(userToken.pendingUndelegations).toFixed(token.precision) : 0;
 
 		return `<i class="fas fa-info-circle" title="Token information" onclick="SE.ShowDialog('token_info', SE.GetToken('${value}'));"></i>&nbsp;&nbsp;&nbsp;
 			<i class="fas fa-exchange-alt" title="Token market" onclick="SE.ShowMarket('${value}');"></i>&nbsp;&nbsp;&nbsp;
@@ -51,9 +43,13 @@
 			<i class="fas fa-list-ul" title="Show token history" onclick="SE.ShowHistory('${value}', '${rowdata.name}')"></i>
 			${token.stakingEnabled && rowdata.balance > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-lock" title="Stake Tokens" onclick="SE.ShowStakeDialog('${value}', ${rowdata.balance})"></i>` : ``}
 			${token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-unlock" title="Unstake Tokens" onclick="SE.ShowUnstakeDialog('${value}', ${rowdata.stake})"></i>` : ``}
-			${token.issuer === SE.User.name && !token.stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
-			${rowdata.pendingUnstake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-eye" onclick="SE.ShowHomeView('pending_unstakes')"></i>` : ``}
+			${token.issuer === SE.User.name && !stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gem" title="Enable Staking" onclick="SE.ShowEnableStakeDialog('${value}')"></i>` : ''}
+			${pendingUnstake > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-eye" title="View pending unstakes" onclick="SE.ShowHomeView('pending_unstakes')"></i>` : ``}
+			${pendingUndelegations > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-divide" title="View pending undelegations" onclick="SE.ShowHomeView('pending_undelegations')"></i>` : ``}
 			${scotConfig && scotConfig.pending_token > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-hand-holding-usd" onclick="SE.ClaimToken('${value}')" title="Claim ${value} tokens"></i>` : ``}
+			${delegationEnabled && token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gift" onclick="SE.ShowDelegateDialog('${value}', ${rowdata.stake})" title="Delegate ${rowdata.stake} tokens"></i>` : ``}
+			${token.issuer === SE.User.name && !delegationEnabled && stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-dolly" title="Enable Delegation" onclick="SE.ShowEnableDelegationDialog('${value}')"></i>` : ''}
+			${delegationEnabled && delegationsOut > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-folder-minus" title="Undelegate Tokens" onclick="SE.ShowUndelegateDialog('${value}', ${delegationsOut})"></i>` : ``}
 			`; 
 	}
 
