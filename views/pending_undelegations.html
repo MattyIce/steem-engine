@@ -1,0 +1,33 @@
+<header>
+	<div class="row header-row">
+		<div class="col-md-6">
+			<h1>PENDING UNDELEGATIONS</h1>
+		</div>
+	</div>
+</header>
+
+<div class="container">
+  <table id="unstakes_table" class="tokensTable" data-sorting="true"></table>
+</div>
+
+<script>
+
+	$(function() {
+		let pendingUndelegations = SE.User.pendingUndelegations;
+	
+		$('#unstakes_table').footable({
+			"columns": [
+				{ "name": "symbol", "title": "Symbol" },
+				{ "name": "txID", "title": "Transaction ID" },
+				{ "name": "quantity", "title": "Quantity" },
+				{ "name": "completeTimestamp", "title": "Complete", "formatter": timestampColumn }
+			],
+			"rows": pendingUndelegations
+		});
+
+		function timestampColumn(value, options, rowdata) {
+			const date = parseInt(value);
+			return moment(date).format('MM-DD-YYYY HH:mm');
+		}
+	});
+</script>

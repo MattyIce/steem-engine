@@ -1,0 +1,45 @@
+<header>
+	<div class="row header-row">
+		<div class="col-md-6">
+			<h1>TOKEN REWARDS</h1>
+		</div>
+	</div>
+</header>
+
+<div class="container">
+    <% if (data.scotTokens.length) { %>
+        <table class="table rewardsTable">
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let config of data.scotTokens) { %>
+                    <% if (config.pending_token > 0) { %>
+                        <% 
+                            var token = SE.Tokens.find(t => t.symbol === config.symbol); 
+
+                            if (!token) {
+                                continue;
+                            }
+                        %>
+                        <tr>
+                            <td><%= config.symbol %></td>
+                            <td><%= config.pending_token / Math.pow(10, token.precision) %> <%= config.symbol %></td>
+                            <td class="text-right"><button class="btn btn-primary btn-sm" onclick="SE.ClaimToken('<%= config.symbol %>', '<%= config.pending_token %>')" title="Claim <%= config.pending_token / Math.pow(10, token.precision) %> <%= config.symbol %> tokens">Claim</button></td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p>
+    <% } %>
+</div>
+
+<script>
+
+</script>

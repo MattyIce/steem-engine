@@ -25,11 +25,16 @@
 				{ "name": "txID", "title": "Transaction ID" },
 				{ "name": "quantity", "title": "Quantity" },
 				{ "name": "quantityLeft", "title": "Quantity Left" },
-				{ "name": "nextTransactionTimestamp", "title": "Next Transaction", "type": "number" },
+				{ "name": "nextTransactionTimestamp", "title": "Next Transaction", "formatter": timestampColumn },
 				{ "name": "numberTransactionsLeft", "title": "Transactions Left", "type": "number" },
 				{ "name": "symbol", "title": "", "classes": "icons", "formatter": IconColumn }
 			],
 			"rows": pendingUnstakes
 		});
+
+		function timestampColumn(value, options, rowdata) {
+			const date = parseInt(value);
+			return moment(date).format('MM-DD-YYYY HH:mm');
+		}
 	});
 </script>
