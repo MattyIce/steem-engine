@@ -494,24 +494,41 @@ SE = {
 
 	ClaimPalCoin: function() {
 		const username = SE.User.name;
+		const $claimdropBtn = $('#claimdropBtn');
 
-    const transaction_data = {
-      "symbol": "PAL"
-    };
+		const transaction_data = {
+			"symbol": "PAL"
+		};
 
-    if (useKeychain()) {
-      steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
+				if (response.success && response.result) {
+					if ($claimdropBtn) {
+						$claimdropBtn.remove();
+					}
+
+					localStorage.setItem('noUiClaimDrop', 'true');
+
+					setTimeout(() => {
 						SE.HideLoading();
 						SE.ShowBalances(SE.User.name);
-        } else {
+					}, 3000);
+				} else {
 					SE.HideLoading();
 				}
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJsonId('active', 'ssc-claimdrop', transaction_data, () => {
-				SE.HideLoading();
-				SE.ShowBalances(SE.User.name);
+				if ($claimdropBtn) {
+					$claimdropBtn.remove();
+				}
+
+				localStorage.setItem('noUiClaimDrop', 'true');
+
+				setTimeout(() => {
+					SE.HideLoading();
+					SE.ShowBalances(SE.User.name);
+				}, 3000);
 			});
 		}
 	},

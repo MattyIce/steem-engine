@@ -24,9 +24,9 @@
 
 	<script src="scripts/Config.js?v=23062019"></script>
   <script src="scripts/utils.js?v=23062019"></script>
-  <script src="scripts/SE.js?v=23062019"></script>    
-  <link rel="stylesheet" href="styles/main.css?v=19062019-3" />
-  <link rel="stylesheet" href="styles/mobile.css?v=19062019" />
+  <script src="scripts/SE.js?v=23062019-1"></script>    
+  <link rel="stylesheet" href="styles/main.css?v=23062019" />
+  <link rel="stylesheet" href="styles/mobile.css?v=23062019" />
 	<title>Steem Engine - Smart Contracts on the STEEM blockchain</title>
 
 	<script type="text/javascript">
@@ -50,7 +50,12 @@
 					else
 						SE.ShowHome();
 				});
-			});
+      });
+      
+      var $claimdropBtn = $('#claimdropBtn');
+      if ($claimdropBtn && localStorage.getItem('noUiClaimDrop')) {
+        $claimdropBtn.remove();
+      }
 
 			window.onpopstate = function(e) {
 				if(e && e.state)
