@@ -30,6 +30,22 @@
     padding-right: 0;
     width: 100%;
   }
+  header .buttons {
+    display: block !important; 
+  }
+  header .buttons .btn {
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  header .header-row {
+    padding-top: 20px;
+  }
+  header h1 {
+    font-size: 24px;
+  }
+  header p {
+    font-size: 16px;
+  }
   .faq-section-title {
     margin-left: 0;
   }
