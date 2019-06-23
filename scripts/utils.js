@@ -133,6 +133,6 @@ function xss(text) {
 }
 
 function formatSteemAmount(num) {
-  return num.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0];
+  return num.toFixed(3).toString().match(/^-?\d+(?:\.\d{0,3})?/)[0];
 }
 
