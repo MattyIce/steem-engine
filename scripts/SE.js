@@ -600,26 +600,52 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+			steem_keychain.requestSendToken(username, 'null', '1000.000', 'Enable Staking', 'ENG', function(response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
-							SE.ShowToast(true, 'Token staking enabled!');
+							steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+								if (response.success && response.result) {
+									SE.CheckTransaction(response.result.id, 3, tx => {
+										if (tx.success) {
+											SE.ShowToast(true, 'Token staking enabled!');
+											window.location.reload();
+										} else {
+											SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+										}
+				
+										SE.HideLoading();
+										SE.HideDialog();
+									});
+								} else {
+									SE.HideLoading();
+								}
+							});
 						} else {
-							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+							SE.HideLoading();
 						}
-
-						SE.HideLoading();
-						SE.HideDialog();
 					});
 				} else {
 					SE.HideLoading();
 				}
 			});
 		} else {
-			SE.SteemConnectJson('active', transaction_data, () => {
-				SE.HideLoading();
-				SE.HideDialog();
+			const feeJson = {
+				"contractName": "tokens",
+				"contractAction": "transfer",
+				"contractPayload": {
+					"symbol": "ENG",
+					"account": "null",
+					"quantity": "1000.000",
+					"memo": "Enable staking"
+				}
+			};
+
+			SE.SteemConnectJson('active', feeJson, () => {
+				SE.SteemConnectJson('active', transaction_data, () => {
+					SE.HideLoading();
+					SE.HideDialog();
+				});
 			});
 		}
 	},
