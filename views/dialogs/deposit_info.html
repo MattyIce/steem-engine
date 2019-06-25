@@ -17,7 +17,7 @@
 				Please send any amount of <%= data.symbol %> to the following address and you will receive an equal amount of <%= data.pegged_token_symbol %> in the @<%= SE.User.name %> account once the transaction has received the required number of confirmations on the external chain.
 			</div>		
 
-			<% if (data.symbol !== 'EOS' && data.symbol !== 'PSO') { %>
+			<% if (data.address) { %>
 			<label>DEPOSIT ADDRESS</label>
 			<div class="deposit-address">
 				<%= data.address %>
