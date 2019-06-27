@@ -1584,6 +1584,7 @@ SE = {
 		if(auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
 			url += '&required_auths=' + encodeURI('["' + username + '"]');
+			url += '&authority=active';
 		} else
 			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
 
@@ -1604,6 +1605,7 @@ SE = {
 		if (auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
 			url += '&required_auths=' + encodeURI('["' + username + '"]');
+			url += '&authority=active';
 		} else {
 			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
 		}
