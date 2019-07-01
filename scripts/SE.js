@@ -494,24 +494,41 @@ SE = {
 
 	ClaimPalCoin: function() {
 		const username = SE.User.name;
+		const $claimdropBtn = $('#claimdropBtn');
 
-    const transaction_data = {
-      "symbol": "PAL"
-    };
+		const transaction_data = {
+			"symbol": "PAL"
+		};
 
-    if (useKeychain()) {
-      steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
+				if (response.success && response.result) {
+					if ($claimdropBtn) {
+						$claimdropBtn.remove();
+					}
+
+					localStorage.setItem('noUiClaimDrop', 'true');
+
+					setTimeout(() => {
 						SE.HideLoading();
 						SE.ShowBalances(SE.User.name);
-        } else {
+					}, 3000);
+				} else {
 					SE.HideLoading();
 				}
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJsonId('active', 'ssc-claimdrop', transaction_data, () => {
-				SE.HideLoading();
-				SE.ShowBalances(SE.User.name);
+				if ($claimdropBtn) {
+					$claimdropBtn.remove();
+				}
+
+				localStorage.setItem('noUiClaimDrop', 'true');
+
+				setTimeout(() => {
+					SE.HideLoading();
+					SE.ShowBalances(SE.User.name);
+				}, 3000);
 			});
 		}
 	},
@@ -583,26 +600,52 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+			steem_keychain.requestSendToken(username, 'null', '1000.000', 'Enable Staking', 'ENG', function(response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
-							SE.ShowToast(true, 'Token staking enabled!');
+							steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+								if (response.success && response.result) {
+									SE.CheckTransaction(response.result.id, 3, tx => {
+										if (tx.success) {
+											SE.ShowToast(true, 'Token staking enabled!');
+											window.location.reload();
+										} else {
+											SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+										}
+				
+										SE.HideLoading();
+										SE.HideDialog();
+									});
+								} else {
+									SE.HideLoading();
+								}
+							});
 						} else {
-							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
+							SE.HideLoading();
 						}
-
-						SE.HideLoading();
-						SE.HideDialog();
 					});
 				} else {
 					SE.HideLoading();
 				}
 			});
 		} else {
-			SE.SteemConnectJson('active', transaction_data, () => {
-				SE.HideLoading();
-				SE.HideDialog();
+			const feeJson = {
+				"contractName": "tokens",
+				"contractAction": "transfer",
+				"contractPayload": {
+					"symbol": "ENG",
+					"account": "null",
+					"quantity": "1000.000",
+					"memo": "Enable staking"
+				}
+			};
+
+			SE.SteemConnectJson('active', feeJson, () => {
+				SE.SteemConnectJson('active', transaction_data, () => {
+					SE.HideLoading();
+					SE.HideDialog();
+				});
 			});
 		}
 	},
@@ -1422,7 +1465,7 @@ SE = {
     };
 
     if(useKeychain()) {
-      steem_keychain.requestTransfer(SE.User.name, 'steemsc', amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
+      steem_keychain.requestTransfer(SE.User.name, 'steemsc', (amount).toFixedNoRounding(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if(tx.success) {
@@ -1439,7 +1482,7 @@ SE = {
       });
     } else {
 			SE.HideLoading();
-			SE.SteemConnectTransfer(SE.User.name, 'steemsc', amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
+			SE.SteemConnectTransfer(SE.User.name, 'steemsc', (amount).toFixedNoRounding(3) + ' STEEM', JSON.stringify(transaction_data), () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
 			});
 		}
@@ -1463,7 +1506,7 @@ SE = {
     };
 
     if(useKeychain()) {
-      steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
+      steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, (amount).toFixedNoRounding(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if(tx.success) {
@@ -1480,7 +1523,7 @@ SE = {
       });
     } else {
 			SE.HideLoading();
-			SE.SteemConnectTransfer(SE.User.name, Config.STEEMP_ACCOUNT, amount.toFixed(3) + ' STEEM', JSON.stringify(transaction_data), () => {
+			SE.SteemConnectTransfer(SE.User.name, Config.STEEMP_ACCOUNT, (amount).toFixedNoRounding(3) + ' STEEM', JSON.stringify(transaction_data), () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
 			});
 		}
@@ -1498,7 +1541,7 @@ SE = {
 			"contractName": "steempegged",
 			"contractAction": "withdraw",
 			"contractPayload": { 
-				"quantity": amount.toFixed(3)
+				"quantity": (amount).toFixedNoRounding(3)
 			}
 		};
 
@@ -1541,6 +1584,7 @@ SE = {
 		if(auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
 			url += '&required_auths=' + encodeURI('["' + username + '"]');
+			url += '&authority=active';
 		} else
 			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
 
@@ -1561,6 +1605,7 @@ SE = {
 		if (auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
 			url += '&required_auths=' + encodeURI('["' + username + '"]');
+			url += '&authority=active';
 		} else {
 			url += 'required_posting_auths=' + encodeURI('["' + username + '"]');
 		}

@@ -32,6 +32,11 @@ Config = {
 			pegged_token_symbol: 'PSOP'
 		},
 		{
+			name: 'ANX',
+			symbol: 'ANX',
+			pegged_token_symbol: 'ANXP'
+		},
+		{
 			name: 'Bitcoin Cash',
 			symbol: 'BCH',
 			pegged_token_symbol: 'BCHP'

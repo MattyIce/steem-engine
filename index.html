@@ -22,11 +22,11 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-	<script src="scripts/Config.js?v=19062019-3"></script>
-  <script src="scripts/utils.js?v=19062019-3"></script>
-  <script src="scripts/SE.js?v=19062019-3"></script>    
-  <link rel="stylesheet" href="styles/main.css?v=19062019-3" />
-  <link rel="stylesheet" href="styles/mobile.css?v=19062019" />
+	<script src="scripts/Config.js?v=25062019"></script>
+  <script src="scripts/utils.js?v=24062019"></script>
+  <script src="scripts/SE.js?v=25062019-1"></script>    
+  <link rel="stylesheet" href="styles/main.css?v=25062019" />
+  <link rel="stylesheet" href="styles/mobile.css?v=23062019" />
 	<title>Steem Engine - Smart Contracts on the STEEM blockchain</title>
 
 	<script type="text/javascript">
@@ -50,7 +50,12 @@
 					else
 						SE.ShowHome();
 				});
-			});
+      });
+      
+      var $claimdropBtn = $('#claimdropBtn');
+      if ($claimdropBtn && localStorage.getItem('noUiClaimDrop')) {
+        $claimdropBtn.remove();
+      }
 
 			window.onpopstate = function(e) {
 				if(e && e.state)

@@ -1,7 +1,7 @@
 <header>
 	<div class="row header-row">
 		<% if (SE.User.claimDrop && SE.User.claimDrop.hasClaimDrop) { %>
-			<button class="claimdrop-btn" onclick="SE.ClaimPalCoin()" title="Claim PALCoin"><img src="https://cdn.steemitimages.com/DQmXtBwx7kBvo68vbF3NpRV1jKBC2Ddbs667b7GPzovSxDp/image.png"></button>
+			<button id="claimdropBtn" class="claimdrop-btn" onclick="SE.ClaimPalCoin()" title="Claim PALCoin"><img src="https://cdn.steemitimages.com/DQmXtBwx7kBvo68vbF3NpRV1jKBC2Ddbs667b7GPzovSxDp/image.png"></button>
 		<% } %>
 		<div class="col-md-6">
 			<h1><%= data.account == SE.User.name ? 'MY' : '@' + filterXSS(data.account) + "'s" %> TOKEN WALLET</h1>
@@ -19,7 +19,7 @@
 	</div>
 </header>
 
-<div class="container">
+<div class="container" style="overflow-x: scroll;">
   <table id="balances_table" class="tokensTable <%= data.account == SE.User.name ? 'interactiveTable' : '' %>" data-sorting="true"></table>
 </div>
 
@@ -47,7 +47,7 @@
 			${pendingUnstake > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-eye" title="View pending unstakes" onclick="SE.ShowHomeView('pending_unstakes')"></i>` : ``}
 			${pendingUndelegations > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-divide" title="View pending undelegations" onclick="SE.ShowHomeView('pending_undelegations')"></i>` : ``}
 			${scotConfig && scotConfig.pending_token > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-hand-holding-usd" onclick="SE.ClaimToken('${value}')" title="Claim ${value} tokens"></i>` : ``}
-			${delegationEnabled && token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-gift" onclick="SE.ShowDelegateDialog('${value}', ${rowdata.stake})" title="Delegate ${rowdata.stake} tokens"></i>` : ``}
+			${delegationEnabled && token.stakingEnabled && rowdata.stake ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-arrows-alt-h" onclick="SE.ShowDelegateDialog('${value}', ${rowdata.stake})" title="Delegate ${rowdata.stake} tokens"></i>` : ``}
 			${token.issuer === SE.User.name && !delegationEnabled && stakingEnabled ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-dolly" title="Enable Delegation" onclick="SE.ShowEnableDelegationDialog('${value}')"></i>` : ''}
 			${delegationEnabled && delegationsOut > 0 ? `&nbsp;&nbsp;&nbsp;<i class="fas fa-folder-minus" title="Undelegate Tokens" onclick="SE.ShowUndelegateDialog('${value}', ${delegationsOut})"></i>` : ``}
 			`; 
