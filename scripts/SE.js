@@ -1370,31 +1370,31 @@ SE = {
   },
 
 	ShowSendTokenDialog: function(symbol, balance) {
-		SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
+		SE.ShowDialog('send_token', { symbol : filterXSS(symbol), balance: filterXSS(balance) });
 	},
 	
 	ShowStakeDialog: function(symbol, balance) {
-		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
+		SE.ShowDialog('stake_token', { symbol: filterXSS(symbol), balance: filterXSS(balance) });
 	},
 	
 	ShowUnstakeDialog: function(symbol, staked) {
-		SE.ShowDialog('unstake_token', { symbol: symbol, balance: staked });
+		SE.ShowDialog('unstake_token', { symbol: filterXSS(symbol), balance: filterXSS(staked) });
 	},
 
 	ShowEnableStakeDialog: function(symbol) {
-		SE.ShowDialog('stake_token_enable', { symbol: symbol });
+		SE.ShowDialog('stake_token_enable', { symbol: filterXSS(symbol) });
 	},
 
 	ShowDelegateDialog: function(symbol, balance) {
-		SE.ShowDialog('delegate_token', { symbol: symbol, balance: balance });
+		SE.ShowDialog('delegate_token', { symbol: symbol, balance: filterXSS(balance) });
 	},
 	
 	ShowUndelegateDialog: function(symbol, staked) {
-		SE.ShowDialog('undelegate_token', { symbol: symbol, balance: staked });
+		SE.ShowDialog('undelegate_token', { symbol: symbol, balance: filterXSS(staked) });
 	},
 
 	ShowEnableDelegationDialog: function(symbol) {
-		SE.ShowDialog('token_delegation_enable', { symbol: symbol });
+		SE.ShowDialog('token_delegation_enable', { symbol: filterXSS(symbol) });
 	},
 
   SendToken: function(symbol, to, quantity, memo) {
