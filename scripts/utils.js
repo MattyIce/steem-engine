@@ -132,7 +132,15 @@ function xss(text) {
   return text;
 }
 
-function formatSteemAmount(num) {
-  return num.toFixed(3).toString().match(/^-?\d+(?:\.\d{0,3})?/)[0];
-}
-
+// Ref: https://helloacm.com/javascripts-tofixed-implementation-without-rounding/
+// make 3 digits without rounding e.g. 3.1499 => 3.149 and 3.1 => 3.100
+Number.prototype.toFixedNoRounding = function(n) {
+    const reg = new RegExp("^-?\\d+(?:\\.\\d{0," + n + "})?", "g")
+    const a = this.toString().match(reg)[0];
+    const dot = a.indexOf(".");
+    if (dot === -1) { // integer, insert decimal dot and pad up zeros
+        return a + "." + "0".repeat(n);
+    }
+    const b = n - (a.length - dot) + 1;
+    return b > 0 ? (a + "0".repeat(b)) : a;
+ }
