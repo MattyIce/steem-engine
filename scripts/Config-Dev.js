@@ -27,6 +27,11 @@ Config = {
 			pegged_token_symbol: 'EOSP'
 		},
 		{
+			name: 'BTS',
+			symbol: 'BTS',
+			pegged_token_symbol: 'BTSP'
+		},
+		{
 			name: 'Crypto Peso',
 			symbol: 'PSO',
 			pegged_token_symbol: 'PSOP'
