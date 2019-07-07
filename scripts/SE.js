@@ -440,8 +440,6 @@ SE = {
 			account = SE.User.name;
 		}
 
-		SE.CheckPalClaimdrop();
-
 		SE.LoadBalances(account, r => {
 			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
 		});
@@ -489,63 +487,6 @@ SE = {
 		}).fail(() => {
 			if (callback)
 				callback([]);
-		});
-	},
-
-	ClaimPalCoin: function() {
-		const username = SE.User.name;
-		const $claimdropBtn = $('#claimdropBtn');
-
-		const transaction_data = {
-			"symbol": "PAL"
-		};
-
-		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
-				if (response.success && response.result) {
-					if ($claimdropBtn) {
-						$claimdropBtn.remove();
-					}
-
-					localStorage.setItem('noUiClaimDrop', 'true');
-
-					setTimeout(() => {
-						SE.HideLoading();
-						SE.ShowBalances(SE.User.name);
-					}, 3000);
-				} else {
-					SE.HideLoading();
-				}
-			});
-		} else {
-			SE.SteemConnectJsonId('active', 'ssc-claimdrop', transaction_data, () => {
-				if ($claimdropBtn) {
-					$claimdropBtn.remove();
-				}
-
-				localStorage.setItem('noUiClaimDrop', 'true');
-
-				setTimeout(() => {
-					SE.HideLoading();
-					SE.ShowBalances(SE.User.name);
-				}, 3000);
-			});
-		}
-	},
-
-	CheckPalClaimdrop: function(account, callback) {
-		if (!account && SE.User) {
-			account = SE.User.name;
-		}
-
-		$.getJSON(Config.NODE_API + `claimdrop/PAL/@${account}`, { v: new Date().getTime() }, result => {
-			if (result) {
-				SE.User.claimDrop = result;
-			}
-
-			if (callback) {
-				callback(result);
-			}
 		});
 	},
 
