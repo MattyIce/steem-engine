@@ -32,9 +32,24 @@ Config = {
 			pegged_token_symbol: 'EOSP'
 		}, 
 		{
-			name: 'BTS',
+			name: 'BitShares',
 			symbol: 'BTS',
 			pegged_token_symbol: 'BTSP'
+		},
+		{
+			name: 'BitShares USD',
+			symbol: 'BTSUSD',
+			pegged_token_symbol: 'BTSUSDP'
+		},
+		{
+			name: 'BitShares CNY',
+			symbol: 'BTSCNY',
+			pegged_token_symbol: 'BTSCNYP'
+		},
+		{
+			name: 'BitShares BTC Bridge',
+			symbol: 'BTSBRIDGE.BTC',
+			pegged_token_symbol: 'BRIDGEBTCP'
 		},
 		{
 			name: 'Crypto Peso',
