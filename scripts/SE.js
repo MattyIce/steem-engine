@@ -541,52 +541,27 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestSendToken(username, 'null', '1000.000', 'Enable Staking', 'ENG', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
-							steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
-								if (response.success && response.result) {
-									SE.CheckTransaction(response.result.id, 3, tx => {
-										if (tx.success) {
-											SE.ShowToast(true, 'Token staking enabled!');
-											window.location.reload();
-										} else {
-											SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
-										}
-				
-										SE.HideLoading();
-										SE.HideDialog();
-									});
-								} else {
-									SE.HideLoading();
-								}
-							});
+							SE.ShowToast(true, 'Token staking enabled!');
+							window.location.reload();
 						} else {
-							SE.HideLoading();
+							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
 						}
+
+						SE.HideLoading();
+						SE.HideDialog();
 					});
 				} else {
 					SE.HideLoading();
 				}
 			});
 		} else {
-			const feeJson = {
-				"contractName": "tokens",
-				"contractAction": "transfer",
-				"contractPayload": {
-					"symbol": "ENG",
-					"account": "null",
-					"quantity": "1000.000",
-					"memo": "Enable staking"
-				}
-			};
-
-			SE.SteemConnectJson('active', feeJson, () => {
-				SE.SteemConnectJson('active', transaction_data, () => {
-					SE.HideLoading();
-					SE.HideDialog();
-				});
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
 			});
 		}
 	},
@@ -745,52 +720,27 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestSendToken(username, 'null', '1000.000', 'Enable Delegation', 'ENG', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function(response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
-							steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function(response) {
-								if (response.success && response.result) {
-									SE.CheckTransaction(response.result.id, 3, tx => {
-										if (tx.success) {
-											SE.ShowToast(true, 'Token delegation enabled!');
-											window.location.reload();
-										} else {
-											SE.ShowToast(false, 'An error occurred attempting to enable delegation on your token: ' + tx.error);
-										}
-				
-										SE.HideLoading();
-										SE.HideDialog();
-									});
-								} else {
-									SE.HideLoading();
-								}
-							});
+							SE.ShowToast(true, 'Token delegation enabled!');
+							window.location.reload();
 						} else {
-							SE.HideLoading();
+							SE.ShowToast(false, 'An error occurred attempting to enable delegation on your token: ' + tx.error);
 						}
+
+						SE.HideLoading();
+						SE.HideDialog();
 					});
 				} else {
 					SE.HideLoading();
 				}
 			});
 		} else {
-			const delegationFeeJson = {
-				"contractName": "tokens",
-				"contractAction": "transfer",
-				"contractPayload": {
-					"symbol": "ENG",
-					"account": "null",
-					"quantity": "1000.000",
-					"memo": "Enable delegation"
-				}
-			};
-
-			SE.SteemConnectJson('active', delegationFeeJson, () => {
-				SE.SteemConnectJson('active', transaction_data, () => {
-					SE.HideLoading();
-					SE.HideDialog();
-				});
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
 			});
 		}
 	},
