@@ -32,6 +32,11 @@ Config = {
 			pegged_token_symbol: 'EOSP'
 		}, 
 		{
+			name: 'SWIFT',
+			symbol: 'SWIFT',
+			pegged_token_symbol: 'SWIFTP'
+		}, 
+		{
 			name: 'BitShares',
 			symbol: 'BTS',
 			pegged_token_symbol: 'BTSP'
