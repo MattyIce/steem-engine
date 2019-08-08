@@ -27,9 +27,14 @@ Config = {
 			pegged_token_symbol: 'EOSP'
 		},
 		{
-			name: 'SWIFT',
+			name: 'Swift Cash',
 			symbol: 'SWIFT',
 			pegged_token_symbol: 'SWIFTP'
+		}, 
+		{
+			name: 'Weku',
+			symbol: 'WEKU',
+			pegged_token_symbol: 'WEKUP'
 		}, 
 		{
 			name: 'BitShares',

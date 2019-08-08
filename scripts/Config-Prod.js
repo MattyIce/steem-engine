@@ -37,6 +37,11 @@ Config = {
 			pegged_token_symbol: 'SWIFTP'
 		}, 
 		{
+			name: 'Weku',
+			symbol: 'WEKU',
+			pegged_token_symbol: 'WEKUP'
+		}, 
+		{
 			name: 'BitShares',
 			symbol: 'BTS',
 			pegged_token_symbol: 'BTSP'
