@@ -108,7 +108,7 @@
 		}
 
 		// Token already at max precision
-		if (precision === 8 && !hasError) {
+		if (data.precision == 8 && !hasError) {
 			$precisionError.text(`Your token is already the maximum allowed precision value of 8. You cannot increase it further.`);
 			$tokenPrecision.addClass('is-invalid');
 			hasError = true;
