@@ -8,7 +8,7 @@ Config = {
 	NODE_API: 'https://node-api.steem-engine.com/v1/',
 	NATIVE_TOKEN: 'SSC',
 	STEEMP_ACCOUNT: 'steemsc',
-	DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'VRT'],
+	DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS'],
 	PEGGED_TOKEN: 'STEEMP',
 	PEGGED_TOKENS: [
 		{
@@ -27,9 +27,29 @@ Config = {
 			pegged_token_symbol: 'EOSP'
 		},
 		{
-			name: 'BTS',
+			name: 'SWIFT',
+			symbol: 'SWIFT',
+			pegged_token_symbol: 'SWIFTP'
+		}, 
+		{
+			name: 'BitShares',
 			symbol: 'BTS',
 			pegged_token_symbol: 'BTSP'
+		},
+		{
+			name: 'BitShares USD',
+			symbol: 'BTSUSD',
+			pegged_token_symbol: 'BTSUSDP'
+		},
+		{
+			name: 'BitShares CNY',
+			symbol: 'BTSCNY',
+			pegged_token_symbol: 'BTSCNYP'
+		},
+		{
+			name: 'BitShares BTC Bridge',
+			symbol: 'BTSBRIDGE.BTC',
+			pegged_token_symbol: 'BRIDGEBTCP'
 		},
 		{
 			name: 'Crypto Peso',
