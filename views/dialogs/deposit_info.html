@@ -13,9 +13,13 @@
 		</div>
 
 		<div class="modal-body">	
-			<div class="note" style="text-align: left; margin-bottom: 20px;">
-				Please send any amount of <%= data.symbol %> to the following address and you will receive an equal amount of <%= data.pegged_token_symbol %> in the @<%= SE.User.name %> account once the transaction has received the required number of confirmations on the external chain.
-			</div>		
+            <div class="note" style="text-align: left; margin-bottom: 20px;">
+                <% if (data.symbol == 'WEKU') { %>
+                Please send any amount of <%= data.symbol %> <strong>from Bitshares</strong> to the <strong>steem-engine address on Bitshares</strong> and you will receive an equal amount of <%= data.pegged_token_symbol %> in the @<%= SE.User.name %> <strong>account on Steem</strong> (it will show in your steem-engine wallet) once the transaction has received the required number of confirmations on the <strong>Bitshares</strong> chain.
+                <% } else { %>
+                Please send any amount of <%= data.symbol %> to the following address and you will receive an equal amount of <%= data.pegged_token_symbol %> in the @<%= SE.User.name %> account once the transaction has received the required number of confirmations on the external chain.
+                <% } %>
+            </div>		
 
 			<% if (data.address) { %>
 			<label>DEPOSIT ADDRESS</label>
@@ -23,9 +27,14 @@
 				<%= data.address %>
 			</div>
 			<% } else { %>
-				<div class="note" style="text-align: left; margin-bottom: 20px;">
-					Please ensure that you transfer to the following account and use the following memo. Refunds will not be given, so double check the details before transferring.
-				</div>
+            <div class="note" style="text-align: left; margin-bottom: 20px;">
+                <% if (data.symbol == 'WEKU') { %>
+                Please ensure that you transfer to the following account and use the following memo. Refunds will not be given, so double check the details before transferring.  Failure to use this form may result in you losing tokens which are non-refundable.<br /><br />
+                Please note there is a scam account on the <%= data.symbol %> platform called steem-engine. We don't own it. If you transfer tokens to <strong>steem-engine on <%= data.symbol %></strong> as opposed to <strong>steem-engine on Bitshares</strong> then your tokens will be lost and effectively stolen by a scammer. We encourage you to use this deposit form to ensure your tokens are transferred correctly.
+                <% } else { %>
+                Please ensure that you transfer to the following account and use the following memo. Refunds will not be given, so double check the details before transferring.
+                <% } %>
+            </div>
 				
 				<label>ACCOUNT</label>
 				<div class="deposit-address"><%= data.account %></div>
