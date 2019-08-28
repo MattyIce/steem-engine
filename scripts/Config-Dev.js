@@ -75,6 +75,11 @@ Config = {
 			name: 'Dogecoin',
 			symbol: 'DOGE',
 			pegged_token_symbol: 'DOGEP'
+		},
+		{
+			name: 'Sand',
+			symbol: 'SAND',
+			pegged_token_symbol: 'EOSSAND'
 		}
 	]
 }
