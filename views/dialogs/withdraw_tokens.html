@@ -71,19 +71,21 @@
 	</div>
 	
 	<script>
-	function onWithdrawClick() {  
+	function onWithdrawClick() {
+
 		var token = Config.PEGGED_TOKENS.find(p => p.symbol == $('#withdrawal_token').val());
 
 		if(!token)
 			return;
 
-		var amount = parseFloat($('#withdraw_amount').val());
+		var amount = parseFloat($('#withdraw_amount').val()),
+			memo = $('#withdraw_memo').val();
 	
 		if(isNaN(amount) || amount <= 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
 			$('#withdraw_amount').addClass("is-invalid");    
 		} else {
 			if(token.symbol == 'STEEM')
-				SE.WithdrawSteem(amount);
+				SE.WithdrawSteem(amount, memo);
 			else {
 				$('#error_response').text('');
 				SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), (err, result) => {
@@ -93,8 +95,9 @@
 						return;
 					}
 
-					if (result && result.memo) {
-						SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
+					console.log(result.memo)
+					if (result && memo) {
+						SE.SendToken(token.pegged_token_symbol, result.account, amount, memo);
 					}
 				});
 			}
