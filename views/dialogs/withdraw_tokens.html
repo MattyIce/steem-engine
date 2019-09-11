@@ -78,8 +78,8 @@
 		if(!token)
 			return;
 
-		var amount = parseFloat($('#withdraw_amount').val()),
-			memo = $('#withdraw_memo').val();
+		var amount = parseFloat($('#withdraw_amount').val());
+		var memo = $('#withdraw_memo').val() || '';
 	
 		if(isNaN(amount) || amount <= 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
 			$('#withdraw_amount').addClass("is-invalid");    
@@ -95,7 +95,6 @@
 						return;
 					}
 
-					console.log(result.memo)
 					if (result && memo) {
 						SE.SendToken(token.pegged_token_symbol, result.account, amount, memo);
 					}
