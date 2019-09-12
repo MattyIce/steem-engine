@@ -440,8 +440,6 @@ SE = {
 			account = SE.User.name;
 		}
 
-		SE.CheckPalClaimdrop();
-
 		SE.LoadBalances(account, r => {
 			SE.ShowHomeView('balances', { balances: r, account: account }, { a: account });
 		});
@@ -489,63 +487,6 @@ SE = {
 		}).fail(() => {
 			if (callback)
 				callback([]);
-		});
-	},
-
-	ClaimPalCoin: function() {
-		const username = SE.User.name;
-		const $claimdropBtn = $('#claimdropBtn');
-
-		const transaction_data = {
-			"symbol": "PAL"
-		};
-
-		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, 'ssc-claimdrop', 'Active', JSON.stringify(transaction_data), 'Claim PalCoin', function(response) {
-				if (response.success && response.result) {
-					if ($claimdropBtn) {
-						$claimdropBtn.remove();
-					}
-
-					localStorage.setItem('noUiClaimDrop', 'true');
-
-					setTimeout(() => {
-						SE.HideLoading();
-						SE.ShowBalances(SE.User.name);
-					}, 3000);
-				} else {
-					SE.HideLoading();
-				}
-			});
-		} else {
-			SE.SteemConnectJsonId('active', 'ssc-claimdrop', transaction_data, () => {
-				if ($claimdropBtn) {
-					$claimdropBtn.remove();
-				}
-
-				localStorage.setItem('noUiClaimDrop', 'true');
-
-				setTimeout(() => {
-					SE.HideLoading();
-					SE.ShowBalances(SE.User.name);
-				}, 3000);
-			});
-		}
-	},
-
-	CheckPalClaimdrop: function(account, callback) {
-		if (!account && SE.User) {
-			account = SE.User.name;
-		}
-
-		$.getJSON(Config.NODE_API + `claimdrop/PAL/@${account}`, { v: new Date().getTime() }, result => {
-			if (result) {
-				SE.User.claimDrop = result;
-			}
-
-			if (callback) {
-				callback(result);
-			}
 		});
 	},
 
@@ -600,52 +541,27 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestSendToken(username, 'null', '1000.000', 'Enable Staking', 'ENG', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
-							steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
-								if (response.success && response.result) {
-									SE.CheckTransaction(response.result.id, 3, tx => {
-										if (tx.success) {
-											SE.ShowToast(true, 'Token staking enabled!');
-											window.location.reload();
-										} else {
-											SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
-										}
-				
-										SE.HideLoading();
-										SE.HideDialog();
-									});
-								} else {
-									SE.HideLoading();
-								}
-							});
+							SE.ShowToast(true, 'Token staking enabled!');
+							window.location.reload();
 						} else {
-							SE.HideLoading();
+							SE.ShowToast(false, 'An error occurred attempting to enable staking on your token: ' + tx.error);
 						}
+
+						SE.HideLoading();
+						SE.HideDialog();
 					});
 				} else {
 					SE.HideLoading();
 				}
 			});
 		} else {
-			const feeJson = {
-				"contractName": "tokens",
-				"contractAction": "transfer",
-				"contractPayload": {
-					"symbol": "ENG",
-					"account": "null",
-					"quantity": "1000.000",
-					"memo": "Enable staking"
-				}
-			};
-
-			SE.SteemConnectJson('active', feeJson, () => {
-				SE.SteemConnectJson('active', transaction_data, () => {
-					SE.HideLoading();
-					SE.HideDialog();
-				});
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
 			});
 		}
 	},
@@ -804,52 +720,27 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestSendToken(username, 'null', '1000.000', 'Enable Delegation', 'ENG', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function(response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
-							steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function(response) {
-								if (response.success && response.result) {
-									SE.CheckTransaction(response.result.id, 3, tx => {
-										if (tx.success) {
-											SE.ShowToast(true, 'Token delegation enabled!');
-											window.location.reload();
-										} else {
-											SE.ShowToast(false, 'An error occurred attempting to enable delegation on your token: ' + tx.error);
-										}
-				
-										SE.HideLoading();
-										SE.HideDialog();
-									});
-								} else {
-									SE.HideLoading();
-								}
-							});
+							SE.ShowToast(true, 'Token delegation enabled!');
+							window.location.reload();
 						} else {
-							SE.HideLoading();
+							SE.ShowToast(false, 'An error occurred attempting to enable delegation on your token: ' + tx.error);
 						}
+
+						SE.HideLoading();
+						SE.HideDialog();
 					});
 				} else {
 					SE.HideLoading();
 				}
 			});
 		} else {
-			const delegationFeeJson = {
-				"contractName": "tokens",
-				"contractAction": "transfer",
-				"contractPayload": {
-					"symbol": "ENG",
-					"account": "null",
-					"quantity": "1000.000",
-					"memo": "Enable delegation"
-				}
-			};
-
-			SE.SteemConnectJson('active', delegationFeeJson, () => {
-				SE.SteemConnectJson('active', transaction_data, () => {
-					SE.HideLoading();
-					SE.HideDialog();
-				});
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.HideLoading();
+				SE.HideDialog();
 			});
 		}
 	},
@@ -1370,31 +1261,31 @@ SE = {
   },
 
 	ShowSendTokenDialog: function(symbol, balance) {
-		SE.ShowDialog('send_token', { symbol : symbol, balance : balance });
+		SE.ShowDialog('send_token', { symbol : filterXSS(symbol), balance: filterXSS(balance) });
 	},
 	
 	ShowStakeDialog: function(symbol, balance) {
-		SE.ShowDialog('stake_token', { symbol: symbol, balance: balance });
+		SE.ShowDialog('stake_token', { symbol: filterXSS(symbol), balance: filterXSS(balance) });
 	},
 	
 	ShowUnstakeDialog: function(symbol, staked) {
-		SE.ShowDialog('unstake_token', { symbol: symbol, balance: staked });
+		SE.ShowDialog('unstake_token', { symbol: filterXSS(symbol), balance: filterXSS(staked) });
 	},
 
 	ShowEnableStakeDialog: function(symbol) {
-		SE.ShowDialog('stake_token_enable', { symbol: symbol });
+		SE.ShowDialog('stake_token_enable', { symbol: filterXSS(symbol) });
 	},
 
 	ShowDelegateDialog: function(symbol, balance) {
-		SE.ShowDialog('delegate_token', { symbol: symbol, balance: balance });
+		SE.ShowDialog('delegate_token', { symbol: symbol, balance: filterXSS(balance) });
 	},
 	
 	ShowUndelegateDialog: function(symbol, staked) {
-		SE.ShowDialog('undelegate_token', { symbol: symbol, balance: staked });
+		SE.ShowDialog('undelegate_token', { symbol: symbol, balance: filterXSS(staked) });
 	},
 
 	ShowEnableDelegationDialog: function(symbol) {
-		SE.ShowDialog('token_delegation_enable', { symbol: symbol });
+		SE.ShowDialog('token_delegation_enable', { symbol: filterXSS(symbol) });
 	},
 
   SendToken: function(symbol, to, quantity, memo) {
@@ -1412,8 +1303,8 @@ SE = {
       "contractPayload": {
         "symbol": symbol,
         "to": to,
-				"quantity": quantity + '',
-				"memo": memo
+		"quantity": quantity + '',
+		"memo": memo
       }
     };
 
@@ -1424,7 +1315,7 @@ SE = {
         if(response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
             if(tx.success)
-              SE.ShowToast(true, quantity + ' ' + symbol + ' Tokens sent to @' + to )
+              SE.ShowToast(true, quantity + ' ' + symbol + ' Tokens sent to @' + to)
             else
               SE.ShowToast(false, 'An error occurred submitting the transfer: ' + tx.error)
 
@@ -1529,7 +1420,7 @@ SE = {
 		}
 	},
 
-	WithdrawSteem: function(amount) {
+	WithdrawSteem: function(amount, memo) {
 		SE.ShowLoading();
 
     if(!SE.User) {
@@ -1541,7 +1432,9 @@ SE = {
 			"contractName": "steempegged",
 			"contractAction": "withdraw",
 			"contractPayload": { 
-				"quantity": (amount).toFixedNoRounding(3)
+				"quantity": (amount).toFixedNoRounding(3),
+				"memo": memo
+
 			}
 		};
 

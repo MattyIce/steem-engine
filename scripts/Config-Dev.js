@@ -8,7 +8,7 @@ Config = {
 	NODE_API: 'https://node-api.steem-engine.com/v1/',
 	NATIVE_TOKEN: 'SSC',
 	STEEMP_ACCOUNT: 'steemsc',
-	DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'VRT'],
+	DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'TIME'],
 	PEGGED_TOKEN: 'STEEMP',
 	PEGGED_TOKENS: [
 		{
@@ -25,6 +25,36 @@ Config = {
 			name: 'EOS',
 			symbol: 'EOS',
 			pegged_token_symbol: 'EOSP'
+		},
+		{
+			name: 'Swift Cash',
+			symbol: 'SWIFT',
+			pegged_token_symbol: 'SWIFTP'
+		}, 
+		{
+			name: 'Weku',
+			symbol: 'WEKU',
+			pegged_token_symbol: 'WEKUP'
+		}, 
+		{
+			name: 'BitShares',
+			symbol: 'BTS',
+			pegged_token_symbol: 'BTSP'
+		},
+		{
+			name: 'BitShares USD',
+			symbol: 'BTSUSD',
+			pegged_token_symbol: 'BTSUSDP'
+		},
+		{
+			name: 'BitShares CNY',
+			symbol: 'BTSCNY',
+			pegged_token_symbol: 'BTSCNYP'
+		},
+		{
+			name: 'BitShares BTC Bridge',
+			symbol: 'BTSBRIDGE.BTC',
+			pegged_token_symbol: 'BRIDGEBTCP'
 		},
 		{
 			name: 'Crypto Peso',
@@ -45,6 +75,11 @@ Config = {
 			name: 'Dogecoin',
 			symbol: 'DOGE',
 			pegged_token_symbol: 'DOGEP'
+		},
+		{
+			name: 'Sand',
+			symbol: 'SAND',
+			pegged_token_symbol: 'EOSSAND'
 		}
 	]
 }
