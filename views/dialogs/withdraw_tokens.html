@@ -50,12 +50,7 @@
                     <div class="invalid-tooltip" id="error_response"></div>
                 </div>
 				<div class="ssc-cost">Please ensure this address is correct.<br/>We cannot refund incorrect withdrawals.</div>
-				
-				<br/>
-                <label>WITHDRAW MEMO</label>
-                <div class="input-group justify-content-center align-items-center">
-                    <input type="text" id="withdraw_memo" value="" placeholder="Optional"/>
-                </div>
+		
             </div>
 			
 			<div class="modal-footer" style="padding-bottom: 0;">
@@ -79,7 +74,6 @@
 			return;
 
 		var amount = parseFloat($('#withdraw_amount').val());
-		var memo = $('#withdraw_memo').val() || '';
 	
 		if(isNaN(amount) || amount <= 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
 			$('#withdraw_amount').addClass("is-invalid");    
@@ -95,8 +89,8 @@
 						return;
 					}
 
-					if (result && memo) {
-						SE.SendToken(token.pegged_token_symbol, result.account, amount, memo);
+					if (result && result.memo) {
+						SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
 					}
 				});
 			}
