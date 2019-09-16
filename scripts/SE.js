@@ -1420,7 +1420,7 @@ SE = {
 		}
 	},
 
-	WithdrawSteem: function(amount, memo) {
+	WithdrawSteem: function(amount) {
 		SE.ShowLoading();
 
     if(!SE.User) {
@@ -1432,8 +1432,7 @@ SE = {
 			"contractName": "steempegged",
 			"contractAction": "withdraw",
 			"contractPayload": { 
-				"quantity": (amount).toFixedNoRounding(3),
-				"memo": memo
+				"quantity": (amount).toFixedNoRounding(3)
 
 			}
 		};

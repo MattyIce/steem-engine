@@ -79,7 +79,7 @@
 			$('#withdraw_amount').addClass("is-invalid");    
 		} else {
 			if(token.symbol == 'STEEM')
-				SE.WithdrawSteem(amount, memo);
+				SE.WithdrawSteem(amount);
 			else {
 				$('#error_response').text('');
 				SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), (err, result) => {
