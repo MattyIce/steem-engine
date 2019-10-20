@@ -179,12 +179,12 @@ SE = {
 		let precision = token.precision
 
 		let tasks = [];
-		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: true }], false));
-		tasks.push(ssc.find('market', 'sellBook', { symbol: symbol }, 200, 0, [{ index: 'price', descending: false }], false));
-		tasks.push(ssc.find('market', 'tradesHistory', { symbol: symbol }, 30, 0, [{ index: 'timestamp', descending: false }], false));
+		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'priceDesc', descending: true }], false));
+		tasks.push(ssc.find('market', 'sellBook', { symbol: symbol }, 200, 0, [{ index: 'priceDesc', descending: false }], false));
+		tasks.push(ssc.find('market', 'tradesHistory', { symbol: symbol }, 30, 0, [{ index: '_id', descending: false }], false));
 		if (account) {
-			tasks.push(ssc.find('market', 'buyBook', { symbol: symbol, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
-			tasks.push(ssc.find('market', 'sellBook', { symbol: symbol, account: account }, 100, 0, [{ index: 'timestamp', descending: true }], false));
+			tasks.push(ssc.find('market', 'buyBook', { symbol: symbol, account: account }, 100, 0, [{ index: '_id', descending: true }], false));
+			tasks.push(ssc.find('market', 'sellBook', { symbol: symbol, account: account }, 100, 0, [{ index: '_id', descending: true }], false));
 			tasks.push(ssc.find('tokens', 'balances', { account: account, symbol : { '$in' : [symbol, 'STEEMP'] } }, 2, 0, '', false));
 		}
 		Promise.all(tasks).then(results => {
@@ -408,7 +408,7 @@ SE = {
 						}
 
 						if(token.symbol == 'AFIT') {
-							var afit_data = await ssc.find('market', 'tradesHistory', { symbol: 'AFIT' }, 100, 0, [{ index: 'timestamp', descending: false }], false);
+							var afit_data = await ssc.find('market', 'tradesHistory', { symbol: 'AFIT' }, 100, 0, [{ index: '_id', descending: false }], false);
 							token.volume = afit_data.reduce((t, v) => t += parseFloat(v.price) * parseFloat(v.quantity), 0);
 						}
 					}
