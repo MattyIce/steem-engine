@@ -181,7 +181,7 @@ SE = {
 		let tasks = [];
 		tasks.push(ssc.find('market', 'buyBook', { symbol: symbol }, 200, 0, [{ index: 'priceDec', descending: true }], false));
 		tasks.push(ssc.find('market', 'sellBook', { symbol: symbol }, 200, 0, [{ index: 'priceDec', descending: false }], false));
-		tasks.push(ssc.find('market', 'tradesHistory', { symbol: symbol }, 30, 0, [{ index: '_id', descending: false }], false));
+		tasks.push(ssc.find('market', 'tradesHistory', { symbol: symbol }, 30, 0, [{ index: '_id', descending: true }], false));
 		if (account) {
 			tasks.push(ssc.find('market', 'buyBook', { symbol: symbol, account: account }, 100, 0, [{ index: '_id', descending: true }], false));
 			tasks.push(ssc.find('market', 'sellBook', { symbol: symbol, account: account }, 100, 0, [{ index: '_id', descending: true }], false));
