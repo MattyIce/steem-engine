@@ -363,8 +363,8 @@ SE = {
 		}
   	},
 
-	LoadTokens: function(callback) {
-		ssc.find('tokens', 'tokens', { }, 1000, 0, [], (err, result) => {
+	LoadTokens: function (callback) {		
+		ssc.find('tokens', 'tokens', {}, 1000, 0, [], (err, result) => {			
 			SE.Tokens = result.filter(t => !Config.DISABLED_TOKENS.includes(t.symbol));
 
 			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(async (metrics) => {
