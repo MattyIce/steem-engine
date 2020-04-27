@@ -8,7 +8,7 @@ Config = {
     NODE_API: 'https://node-api.steem-engine.com/v1/',
     NATIVE_TOKEN: 'SSC',
     STEEMP_ACCOUNT: 'steemsc',
-    DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'TIME', 'DONE', 'BNB'],
+    DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'TIME', 'DONE', 'BNB', 'CCC', 'CCCM', 'WEED', 'WEEDM', 'WEEDMM'],
     PEGGED_TOKEN: 'STEEMP',
     PEGGED_TOKENS: [{
             name: 'Bitcoin',
