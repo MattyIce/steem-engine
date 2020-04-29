@@ -1,7 +1,7 @@
 <div class="mt-3">
 	<div class="row">
 		<div class="col-md-12 text-center stats">
-			<h3 class="font-weight-bold mb-3">Market Depth (<%= data.token %>) <i class="fas fa-info-circle" style="cursor:pointer" onclick="SE.ShowDialog('token_info', SE.GetToken(data.token));"></i></h3>
+			<h3 class="font-weight-bold mb-3 chartTitle"><%= data.token %> Market <i class="fas fa-info-circle" style="cursor:pointer" onclick="SE.ShowDialog('token_info', SE.GetToken(data.token));"></i></h3>
 			<small class="m-1 label">Last: <span class="font-weight-bold text-dark"><%= data.trade_history && data.trade_history.length > 0 ? parseFloat(data.trade_history[0].price) + ' STEEM / ' + usdFormat(data.trade_history[0].price) : '--' %></span></small>
 			<small class="m-1 label">24h Vol: <span class="font-weight-bold text-dark"><%= addCommas(parseFloat(SE.Tokens.find(t => t.symbol == data.token).volume).toFixed()) + ' STEEM / ' + usdFormat(SE.Tokens.find(t => t.symbol == data.token).volume, 2) %></span></small>
 			<small class="m-1 label">Bid: <a id="highest-bid" class="font-weight-bold text-dark"><%= data.buy_orders && data.buy_orders.length > 0 ? parseFloat(data.buy_orders[0].price) + ' STEEM' : '--' %></a></small>
@@ -11,7 +11,25 @@
 	<div class="row mt-4">
 		<div class="col-md-12 text-center">
 			<div class="chart-container">
-				<canvas id="market_depth_chart"></canvas>
+				<div class="chart-header">
+					<div class="chart-options">
+						<div class="chart-options-buttons text-center">
+							<button class="btn chart-icon set-chart-candle">
+								<img src="./../../images/candlestick-chart.svg"
+									 alt="cs-icon"
+									 width="20px" /><span>Candlestick</span>
+							</button>
+							<button class="btn chart-icon set-chart-depth">
+								<img src="./../../images/area-chart.svg"
+									 alt="ac-icon"
+									 width="20px" /><span>Depth</span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<canvas id="candlestick_chart"></canvas>
+				<canvas id="market_depth_chart" style="display: none;"></canvas>
 			</div>
 		</div>
 	</div>
@@ -347,6 +365,23 @@
 		}
 	});
 
+    var chart_ctx_candle = $("#candlestick_chart");
+    var candle_chart = new Chart(chart_ctx_candle, {
+        type: 'candlestick',
+        legend: {
+            display: false
+        },
+        data: {
+            datasets: [{
+                label: data.token,
+                data: data.market_history
+            }]
+        },
+        options: {
+            steppedLine: true
+        }
+    });
+
 	function btnSubmitOrder(type) {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
@@ -398,4 +433,15 @@
 
 		SE.ShowMarketCancelDialog(type, orderId, data.token);
 	}
+
+
+    $(document).on("click", ".set-chart-depth", function () {
+        $("#candlestick_chart").hide();
+		$("#market_depth_chart").show();
+    });
+
+    $(document).on("click", ".set-chart-candle", function () {
+        $("#candlestick_chart").show();
+		$("#market_depth_chart").hide();
+    });
 </script>

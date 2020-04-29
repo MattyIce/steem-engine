@@ -6,6 +6,7 @@ Config = {
     CONVERTER_API: 'https://converter-api.steem-engine.com/api',
     SCOT_API: 'https://scot-api.steem-engine.com/',
     NODE_API: 'https://node-api.steem-engine.com/v1/',
+    HISTORY_API: 'https://history.steem-engine.com/',
     NATIVE_TOKEN: 'ENG',
     STEEMP_ACCOUNT: 'steem-peg',
     DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'TIME', 'DONE', 'BNB', 'CCC', 'CCCM', 'WEED', 'WEEDM', 'WEEDMM'],
