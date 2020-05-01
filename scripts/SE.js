@@ -560,7 +560,7 @@ SE = {
 
 			if (claimData.length > 0) {
 				if (useKeychain()) {
-					hive_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim All Tokens`, function (response) {
+					steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim All Tokens`, function (response) {
 						if (response.success && response.result) {
 							SE.ShowToast(true, `All tokens claimed`);
 							SE.HideLoading();
@@ -570,7 +570,7 @@ SE = {
 						}
 					});
 				} else {
-					SE.HiveSignerJsonId('posting', 'scot_claim_token', claimData, () => {
+					SE.SteemConnectJsonId('posting', 'scot_claim_token', claimData, () => {
 						SE.HideLoading();
 						SE.ShowRewards();
 					});
