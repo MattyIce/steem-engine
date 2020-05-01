@@ -7,50 +7,54 @@
 </header>
 
 <div class="container">
+    <div class="alert alert-warning alert-dismissible fade show rewardWarning" role="alert">
+        You can only claim a token once a day, including manual and auto.
+    </div>
+
     <% if (data.scotTokens.length) { %>
     <%      let hasPendingRewards = false; %>
-        <table class="table rewardsTable">
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>Amount</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (let config of data.scotTokens) { %>
-                    <% if (config.pending_token > 0) { %>
-                        <% 
-                            var token = SE.Tokens.find(t => t.symbol === config.symbol); 
+    <table class="table rewardsTable">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let config of data.scotTokens) { %>
+            <% if (config.pending_token > 0) { %>
+            <%
+            var token = SE.Tokens.find(t => t.symbol === config.symbol);
 
-                            if (!token) {
-                                continue;
-                            }
+            if (!token) {
+            continue;
+            }
 
-                            hasPendingRewards = true;
-                        %>
-                        <tr>
-                            <td><%= config.symbol %></td>
-                            <td><%= config.pending_token / Math.pow(10, token.precision) %> <%= config.symbol %></td>
-                            <td class="text-right"><button class="btn btn-primary btn-sm" onclick="SE.ClaimToken('<%= config.symbol %>', '<%= config.pending_token %>')" title="Claim <%= config.pending_token / Math.pow(10, token.precision) %> <%= config.symbol %> tokens">Claim</button></td>
-                        </tr>
-                    <% } %>
+            hasPendingRewards = true;
+            %>
+            <tr>
+                <td><%= config.symbol %></td>
+                <td><%= config.pending_token / Math.pow(10, token.precision) %> <%= config.symbol %></td>
+                <td class="text-right"><button class="btn btn-primary btn-sm" onclick="SE.ClaimToken('<%= config.symbol %>', '<%= config.pending_token %>')" title="Claim <%= config.pending_token / Math.pow(10, token.precision) %> <%= config.symbol %> tokens">Claim</button></td>
+            </tr>
+            <% } %>
+            <% } %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <% if (hasPendingRewards) { %>
+                <td class="text-right"><button class="btn btn-primary btn-sm" onclick="SE.ClaimAllTokens()" title="Claim all">Claim all</button></td>
+                <% } else { %>
+                <td><p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p></td>
                 <% } %>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <% if (hasPendingRewards) { %>
-                    <td class="text-right"><button class="btn btn-primary btn-sm" onclick="SE.ClaimAllTokens()" title="Claim all">Claim all</button></td>
-                    <% } else { %>
-                    <td><p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p></td>
-                    <% } %>
-                </tr>
-            </tfoot>   
-        </table>
+            </tr>
+        </tfoot>
+    </table>
     <% } else { %>
-        <p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p>
+    <p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p>
     <% } %>
 </div>
 

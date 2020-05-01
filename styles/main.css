@@ -1005,9 +1005,15 @@ table.tokensTable .fooicon-sort-desc:before {
 .chart-icon span {
     padding: 10px 10px;
     padding-bottom: 0;
-    font-size: 18x;
+    font-size: 18px;
     transition: 0.3s all ease-out;
     -o-transition: 0.3s all ease-out;
     -moz-transition: 0.3s all ease-out;
     -webkit-transition: 0.3s all ease-out;
+}
+
+.rewardWarning {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 16px;
 }
