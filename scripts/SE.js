@@ -536,6 +536,51 @@ SE = {
 		}
 	},
 
+
+	ClaimAllTokens: function () {
+		SE.ShowLoading();
+
+		const username = SE.User.name;
+		const scotTokens = SE.User.ScotTokens;
+
+		if (scotTokens && scotTokens.length > 0) {
+			let claimData = [];
+
+			for (let st of scotTokens) {
+				var token = SE.Tokens.find(t => t.symbol === st.symbol);
+
+				if (!token) {
+					continue;
+				}
+
+				if (st.pending_token > 0) {
+					claimData.push({ "symbol": st.symbol });
+				}
+			}
+
+			if (claimData.length > 0) {
+				if (useKeychain()) {
+					hive_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim All Tokens`, function (response) {
+						if (response.success && response.result) {
+							SE.ShowToast(true, `All tokens claimed`);
+							SE.HideLoading();
+							SE.ShowRewards();
+						} else {
+							SE.HideLoading();
+						}
+					});
+				} else {
+					SE.HiveSignerJsonId('posting', 'scot_claim_token', claimData, () => {
+						SE.HideLoading();
+						SE.ShowRewards();
+					});
+				}
+			}
+		} else {
+			SE.HideLoading();
+		}
+	},
+
 	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
 		SE.ShowLoading();
 
@@ -1013,7 +1058,17 @@ SE = {
 
 		SE.GetScotUserTokens(username, scotTokens => {
 			if (scotTokens.length) {
-				$("#lnkUsername").html(`@${username} <span class="badge rewards">${scotTokens.length}</span>`);
+				var rewardCount = scotTokens.length;
+				for (let st of scotTokens) {
+					var token = SE.Tokens.find(t => t.symbol === st.symbol);
+
+					if (!token) {
+						rewardCount--;
+					}
+				}
+
+				if (rewardCount > 0)
+					$("#lnkUsername").html(`@${username} <span class="badge rewards">${rewardCount}</span>`);
 			}
 		});
 

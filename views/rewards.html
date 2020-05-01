@@ -8,6 +8,7 @@
 
 <div class="container">
     <% if (data.scotTokens.length) { %>
+    <%      let hasPendingRewards = false; %>
         <table class="table rewardsTable">
             <thead>
                 <tr>
@@ -25,6 +26,8 @@
                             if (!token) {
                                 continue;
                             }
+
+                            hasPendingRewards = true;
                         %>
                         <tr>
                             <td><%= config.symbol %></td>
@@ -34,6 +37,17 @@
                     <% } %>
                 <% } %>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <% if (hasPendingRewards) { %>
+                    <td class="text-right"><button class="btn btn-primary btn-sm" onclick="SE.ClaimAllTokens()" title="Claim all">Claim all</button></td>
+                    <% } else { %>
+                    <td><p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p></td>
+                    <% } %>
+                </tr>
+            </tfoot>   
         </table>
     <% } else { %>
         <p style="color: #000; margin-top: 30px;">You have no rewards to claim.</p>
