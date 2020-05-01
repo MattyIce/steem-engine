@@ -9,7 +9,7 @@ Config = {
     HISTORY_API: 'https://history.steem-engine.com/',
     NATIVE_TOKEN: 'ENG',
     STEEMP_ACCOUNT: 'steem-peg',
-    DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'LASSE', 'TIME', 'R', 'SCTR', 'ALLAH', 'DONE', 'BNB', 'ETHER', 'LTCPEG', 'SBC', 'LASSECASH', 'HIVE', 'TIX', 'TIXM', 'STEM', 'STEMM', 'LEO', 'LEOM', 'LEOMM', 'NEO', 'NEOX', 'PORN', 'SPORTS', 'BATTLE', 'SIM', 'CTP', 'CTPM', 'EMFOUR', 'CCC', 'CCCM', 'BEER', 'WEED', 'WEEDM', 'WEEDMM', 'SPACO', 'SPACOM', 'NEOXAG', 'NEOXAGM'],
+    DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'LASSE', 'TIME', 'R', 'SCTR', 'ALLAH', 'DONE', 'BNB', 'ETHER', 'LTCPEG', 'SBC', 'LASSECASH', 'HIVE', 'TIX', 'TIXM', 'STEM', 'STEMM', 'LEO', 'LEOM', 'LEOMM', 'NEO', 'NEOX', 'PORN', 'SPORTS', 'BATTLE', 'SIM', 'CTP', 'CTPM', 'EMFOUR', 'CCC', 'CCCM', 'BEER', 'WEED', 'WEEDM', 'WEEDMM', 'SPACO', 'SPACOM', 'NEOXAG', 'NEOXAGM', 'KANDA', 'SAND', 'INFOWARS'],
     PEGGED_TOKEN: 'STEEMP',
     PEGGED_TOKENS: [{
             name: 'STEEM',
@@ -111,19 +111,9 @@ Config = {
             pegged_token_symbol: 'CHLP'
         },
         {
-            name: 'EOS San Diego Coin',
-            symbol: 'EOSSAND',
-            pegged_token_symbol: 'SAND'
-        },
-        {
             name: "TELOS (TELOS Network)",
             symbol: "TLOS",
             pegged_token_symbol: "TLOSP"
-        },
-        {
-            name: "Telos Sandiegocoin",
-            symbol: "TELOSSAND",
-            pegged_token_symbol: "SAND"
         },
         {
             name: "EOS One Thousand Coin",

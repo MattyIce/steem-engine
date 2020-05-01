@@ -9,7 +9,7 @@ Config = {
     HISTORY_API: 'https://history.steem-engine.com/',
     NATIVE_TOKEN: 'SSC',
     STEEMP_ACCOUNT: 'steemsc',
-    DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'TIME', 'DONE', 'BNB', 'CCC', 'CCCM', 'WEED', 'WEEDM', 'WEEDMM'],
+    DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'LASSE', 'TIME', 'R', 'SCTR', 'ALLAH', 'DONE', 'BNB', 'ETHER', 'LTCPEG', 'SBC', 'LASSECASH', 'HIVE', 'TIX', 'TIXM', 'STEM', 'STEMM', 'LEO', 'LEOM', 'LEOMM', 'NEO', 'NEOX', 'PORN', 'SPORTS', 'BATTLE', 'SIM', 'CTP', 'CTPM', 'EMFOUR', 'CCC', 'CCCM', 'BEER', 'WEED', 'WEEDM', 'WEEDMM', 'SPACO', 'SPACOM', 'NEOXAG', 'NEOXAGM', 'KANDA', 'SAND', 'INFOWARS'],
     PEGGED_TOKEN: 'STEEMP',
     PEGGED_TOKENS: [{
             name: 'Bitcoin',
@@ -75,11 +75,6 @@ Config = {
             name: 'Dogecoin',
             symbol: 'DOGE',
             pegged_token_symbol: 'DOGEP'
-        },
-        {
-            name: 'Sand',
-            symbol: 'SAND',
-            pegged_token_symbol: 'EOSSAND'
         }
     ]
 }
