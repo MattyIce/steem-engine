@@ -6,7 +6,7 @@ Config = {
     CONVERTER_API: 'https://converter-api.steem-engine.com/api',
     SCOT_API: 'https://scot-api.steem-engine.com/',
     NODE_API: 'https://node-api.steem-engine.com/v1/',
-    HISTORY_API: 'https://history.steem-engine.com/',
+    HISTORY_API: 'https://api.steem-engine.com/history/',
     NATIVE_TOKEN: 'SSC',
     STEEMP_ACCOUNT: 'steemsc',
     DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'LASSE', 'TIME', 'R', 'SCTR', 'ALLAH', 'DONE', 'BNB', 'ETHER', 'LTCPEG', 'SBC', 'LASSECASH', 'HIVE', 'TIX', 'TIXM', 'STEM', 'STEMM', 'LEO', 'LEOM', 'LEOMM', 'NEO', 'NEOX', 'PORN', 'SPORTS', 'BATTLE', 'SIM', 'CTP', 'CTPM', 'EMFOUR', 'CCC', 'CCCM', 'BEER', 'WEED', 'WEEDM', 'WEEDMM', 'SPACO', 'SPACOM', 'NEOXAG', 'NEOXAGM', 'KANDA', 'SAND', 'INFOWARS'],
