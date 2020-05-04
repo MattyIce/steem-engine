@@ -353,7 +353,7 @@ input.search:focus {
 
 footer {
   background: url(https://s3.amazonaws.com/steem-engine/images/bg_footer.jpg) black repeat-x top right;
-  height: 200px;
+  height: 220px;
   padding: 7px 140px 40px 140px;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
@@ -367,7 +367,7 @@ footer img{
 }
 
 footer .copyright {
-  margin-top: 50px;
+  margin-top: 0px;
 }
 
 .loading {
@@ -1016,4 +1016,17 @@ table.tokensTable .fooicon-sort-desc:before {
     margin-top: 10px;
     text-align: left;
     font-size: 16px;
+}
+
+.supportIcon {
+    color: #8E4A2C;
+    width: 90px;
+    height: 90px;
+    padding: 0px 20px 0px 20px;
+}
+
+.supportLabel {
+    vertical-align: top;
+    margin: 0px;
+    padding: 0px;
 }
