@@ -24,14 +24,14 @@
 	function AmountColumn(value, options, rowdata) { return parseFloat(value).toFixed(8); }
 	function AddressColumn(value, options, rowdata) { return value; } //return value.substr(0, 5) + '...' + value.substr(-5, 5); }
 
-	function TxColumn(value, options, rowdata) { 
-		//return '<a href="https://steemd.com/tx/' + value + '" target="_blank">' + value + '</a>'; 
-
-		// Check if this is a Steem transaction
-		if(Config.PEGGED_TOKENS.find(p => p.symbol == rowdata.coin_symbol)) {
-			return '<a href="https://steemd.com/tx/' + value + '" target="_blank">' + value.substr(0, 5) + '...' + value.substr(-5, 5) + '</a>'; 
-		} else
-			return '<a href="https://live.blockcypher.com/ltc/tx/' + value + '" target="_blank">' + value.substr(0, 5) + '...' + value.substr(-5, 5) + '</a>'; ;
+    function TxColumn(value, options, rowdata) {
+        // Check if this is a Steem transaction
+        let peggedToken = Config.PEGGED_TOKENS.find(p => p.pegged_token_symbol == rowdata.coin_symbol);
+        if (peggedToken) {
+            return '<a href="https://live.blockcypher.com/' + peggedToken.symbol.toLowerCase() + '/tx/' + value + '" target="_blank">' + value.substr(0, 5) + '...' + value.substr(-5, 5) + '</a>';;
+        } else {
+            return '<a href="https://steemd.com/tx/' + value + '" target="_blank">' + value.substr(0, 5) + '...' + value.substr(-5, 5) + '</a>';
+        }
 	}
 
 	function TypeColumn(value, options, rowdata) { 
@@ -48,8 +48,8 @@
 		if(!token)
 			token = Config.PEGGED_TOKENS.find(p => p.symbol == value);
 
-		if(!token)
-			return '';
+        if (!token)
+            return rowdata.coin_symbol;
 		
 		return token.symbol;
 	}
