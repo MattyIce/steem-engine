@@ -277,7 +277,11 @@ SE = {
 
 	ShowMarketCancelDialog: function(type, orderId, symbol) {
     SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol });
-  },
+	},
+
+	ShowMarketCancelSelectedDialog: function (orders) {
+		SE.ShowDialogOpaque('confirm_market_cancel_selected', orders);
+	},
 
 	SendMarketOrder: function(type, symbol, quantity, price) {
 		if (type !== 'buy' && type !== 'sell') {
@@ -326,6 +330,82 @@ SE = {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadTokens(() => SE.ShowMarketView(symbol, SE.User.name));
 			});
+		}
+	},
+
+	SendCancelMarketOrderSelected: async function (orders) {
+		let successCount = 0;
+		let symbol = "";
+		if (orders && orders.length > 0) {
+			SE.ShowLoading();
+
+			for (var i = 0; i < orders.length; i++) {
+				let order = orders[i];
+				let type = order.txType;
+				let orderId = order.txId;
+				symbol = order.symbol;
+
+				let orderRes = await new Promise(function (resolve, reject) {
+					if (type !== 'buy' && type !== 'sell') {
+						console.error('Invalid order type: ', type)
+						return;
+					}
+
+					var username = localStorage.getItem('username');
+
+					if (!username) {
+						window.location.reload();
+						return;
+					}
+
+					var transaction_data = {
+						"contractName": "market",
+						"contractAction": "cancel",
+						"contractPayload": {
+							"type": type,
+							"id": orderId
+						}
+					};
+
+					console.log('Broadcasting cancel order: ', JSON.stringify(transaction_data));
+
+					// the function is executed automatically when the promise is constructed
+					if (useKeychain()) {
+						steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Cancel ' + type.toUpperCase() + ' Order', function (response) {
+							if (response.success && response.result) {
+								SE.ShowToast(true, 'Please wait until the transaction is verified.');
+
+								SE.CheckTransaction(response.result.id, 3, tx => {
+									if (tx.success) {
+										SE.ShowToast(true, 'Cancel order ' + orderId + ' completed');
+										resolve(true);
+									} else {
+										SE.ShowToast(false, 'An error occurred cancelling the order: ' + tx.error)
+										resolve(false);
+									}
+								});
+							} else {
+								resolve(false);
+							}
+						});
+					} else {
+						SE.ShowToast(false, 'Bulk cancellation is currently only supported in combination with Keychain.');
+						SE.HideLoading();
+						SE.HideDialog();
+					}
+				});
+
+				if (orderRes) {
+					successCount++;
+				}
+			}
+
+			SE.HideLoading();
+			SE.HideDialog();
+
+			if (successCount > 0) {
+				SE.ShowMarketView(symbol, SE.User.name);
+			}
 		}
 	},
 

@@ -170,6 +170,7 @@
 			<h4 class="font-weight-bold">My Open Orders</h4>
 			<div class="ordertable-container">
 				<table id="user_order_table" class="tokensTable interactiveTable" data-sorting="true"></table>
+				<button class="btn btn-danger btn-sm btnCancelSelected text-right float-right" style="display: none;"><span>Cancel selected orders</span></button>
 			</div>
 		</div>
 	</div>
@@ -250,6 +251,17 @@
 
 	$('#user_order_table').footable({
 		"columns": [
+            {
+                "name": "cbTxId",
+                "title": "",
+                "formatter": function (value, options, rowdata) {
+                    var actions = $('<div/>');
+                    var cbTxId = $('<input type="checkbox" class="cbTxId" value="' + rowdata.txId + '" />').appendTo(actions);
+                    var hfTxType = $('<input type="hidden" class="txType txType_' + rowdata.txId + '" value="' + rowdata.type + '" />').appendTo(actions);
+
+                    return actions;
+                }
+            },
 			{ "name": "timestamp_string", "title": "Date Created" },
 			{ "name": "txId", "title": "ID" },
 			{ "name": "type", "title": "Type", "formatter": OrderTypeColumn },
@@ -275,7 +287,7 @@
 
 	$('#user_order_table').on("click", 'tr', function() {
 		var selectedPrice = $(this).closest("tr")   	// Finds the closest row <tr>
-							.find("td:nth-child(4)")    // Finds the 'price' <td> element
+							.find("td:nth-child(5)")    // Finds the 'price' <td> element
 							.text();			        // Retrieves the price
 
 		$("#buyPrice").val(selectedPrice);
@@ -484,7 +496,7 @@
 		if(isValid) {
 			// show confim dialog
 			SE.ShowMarketOrderDialog(type, data.token, quantity, price);
-    }
+		}
 	}
 
 	function btnCancelOrder(type, orderId) {
@@ -496,6 +508,37 @@
 		SE.ShowMarketCancelDialog(type, orderId, data.token);
 	}
 
+    function btnCancelSelectedOrders() {
+        let selectedOrderData = [];
+        let selectedOrders = $(".cbTxId:checked");
+        if (selectedOrders.length > 0) {
+            for (var i = 0; i < selectedOrders.length; i++) {
+                let order = selectedOrders[i];
+                let txId = $(order).val();
+                let txType = $(".txType_" + txId).val();
+                let symbol = data.token;
+
+                selectedOrderData.push({ txId: txId, txType: txType, symbol: symbol });
+            }
+        }
+
+        if (selectedOrderData.length > 0) {
+            SE.ShowMarketCancelSelectedDialog(selectedOrderData);
+        }
+    }
+
+	$(document).on("click", ".btnCancelSelected", function () {
+		btnCancelSelectedOrders();
+	});
+
+    $(document).on("click", ".cbTxId", function () {
+        let numberChecked = $(".cbTxId:checked").length;
+        if (numberChecked > 0) {
+            $(".btnCancelSelected").show();
+        } else {
+            $(".btnCancelSelected").hide();
+        }
+    })
 
     $(document).on("click", ".set-chart-depth", function () {
         $("#candlestick_chart").hide();
