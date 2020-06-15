@@ -584,7 +584,7 @@ table.tokensTable {
 }
 
 .tokensTable tbody tr td {
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .tokensTable tbody tr td:last-child {
@@ -1029,4 +1029,11 @@ table.tokensTable .fooicon-sort-desc:before {
     vertical-align: top;
     margin: 0px;
     padding: 0px;
+}
+
+.btnCancelSelected {
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 3px 10px;
+    margin: 10px 10px 0px 0px;
 }
