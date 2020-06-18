@@ -9,13 +9,13 @@
         </div>
 
         <div class="modal-body" style="padding: 10px 0;">
-            <% if (data.length > 0) { %>
+            <% if (data.orders.length > 0) { %>
             <div class="d-flex">
-                <div>Type - OrderId:</div>
+                <div>Token - Type - OrderId:</div>
             </div>
-            <% for (var i = 0; i < data.length; i++) { %>
+            <% for (var i = 0; i < data.orders.length; i++) { %>
             <div class="d-flex">
-                <div><%= data[i].txType.toUpperCase() %> - <%= data[i].txId %> </div>
+                <div><%= data.orders[i].symbol %> - <%= data.orders[i].txType.toUpperCase() %> - <%= data.orders[i].txId %> </div>
             </div>
             <% } %>
             <p class="mt-5">
@@ -37,16 +37,17 @@
         var txId = '';
         var txType = '';
         var symbol = '';
+        var origin = '<%= data.origin %>';
 
-        '<% for (var i = 0; i < data.length; i++) { %>';
-        txId = '<%= data[i].txId %>';
-        txType = '<%= data[i].txType %>';
-        symbol = '<%= data[i].symbol %>';
+        '<% for (var i = 0; i < data.orders.length; i++) { %>';
+        txId = '<%= data.orders[i].txId %>';
+        txType = '<%= data.orders[i].txType %>';
+        symbol = '<%= data.orders[i].symbol %>';
 
         orders.push({ txId: txId, txType: txType, symbol: symbol });
         '<% } %>';
 
-        SE.SendCancelMarketOrderSelected(orders);
+        SE.SendCancelMarketOrderSelected(orders, origin);
     }
 
 </script>
