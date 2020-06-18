@@ -69,6 +69,9 @@ SE = {
 			case 'rewards':
 				SE.ShowRewards(parts.a ? parts.a : SE.User.name);
 				break;
+			case 'open_orders':
+				SE.ShowOpenOrders(parts.a ? parts.a : SE.User.name);
+				break;
 			case 'tokens':
 				SE.ShowTokens();
 				break;
@@ -275,12 +278,12 @@ SE = {
     SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
 	},
 
-	ShowMarketCancelDialog: function(type, orderId, symbol) {
-    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol });
+	ShowMarketCancelDialog: function(type, orderId, symbol, origin = 'market') {
+    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol, origin: origin });
 	},
 
-	ShowMarketCancelSelectedDialog: function (orders) {
-		SE.ShowDialogOpaque('confirm_market_cancel_selected', orders);
+	ShowMarketCancelSelectedDialog: function (orders, origin = 'market') {
+		SE.ShowDialogOpaque('confirm_market_cancel_selected', { orders: orders, origin: origin });
 	},
 
 	SendMarketOrder: function(type, symbol, quantity, price) {
@@ -333,7 +336,7 @@ SE = {
 		}
 	},
 
-	SendCancelMarketOrderSelected: async function (orders) {
+	SendCancelMarketOrderSelected: async function (orders, origin = 'market') {
 		let successCount = 0;
 		let symbol = "";
 		if (orders && orders.length > 0) {
@@ -404,12 +407,16 @@ SE = {
 			SE.HideDialog();
 
 			if (successCount > 0) {
-				SE.ShowMarketView(symbol, SE.User.name);
+				if (origin == 'open_orders') {
+					SE.ShowOpenOrders(SE.User.name);
+				} else {
+					SE.ShowMarketView(symbol, SE.User.name);
+				}
 			}
 		}
 	},
 
-	SendCancelMarketOrder: function(type, orderId, symbol) {
+	SendCancelMarketOrder: function(type, orderId, symbol, origin = 'market') {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
@@ -446,7 +453,12 @@ SE = {
               
 						SE.HideLoading();
 						SE.HideDialog();
-						SE.ShowMarketView(symbol, SE.User.name);
+
+						if (origin == 'open_orders') {
+							SE.ShowOpenOrders(SE.User.name);
+						} else {
+							SE.ShowMarketView(symbol, SE.User.name);
+						}
 					});
         		} else {
 					SE.HideLoading();
@@ -548,6 +560,45 @@ SE = {
 
 		SE.GetScotUserTokens(account, scotTokens => {
 			SE.ShowHomeView('rewards', { scotTokens: scotTokens, account: account }, { a: account });
+		});
+	},
+
+	ShowOpenOrders: function (account) {
+		if (!account && SE.User) {
+			account = SE.User.name;
+		}
+
+		let tasks = [];
+
+		if (account) {
+			tasks.push(ssc.find('market', 'buyBook', { account: account }, 100, 0, [{ index: '_id', descending: true }], false));
+			tasks.push(ssc.find('market', 'sellBook', { account: account }, 100, 0, [{ index: '_id', descending: true }], false));
+		}
+
+		Promise.all(tasks).then(results => {
+			let user_orders = [];
+			let user_token_balance = null;
+			let user_hive_balance = null;
+			if (account) {
+				// prepare user orders and balance
+				let user_buy_orders = results[0].map(o => {
+					o.type = 'buy';
+					o.total = o.price * o.quantity;
+					o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+					return o;
+				});
+				let user_sell_orders = results[1].map(o => {
+					o.type = 'sell';
+					o.total = o.price * o.quantity;
+					o.timestamp_string = moment.unix(o.timestamp).format('YYYY-M-DD HH:mm:ss');
+					return o;
+				});
+				user_orders = user_buy_orders.concat(user_sell_orders);
+				user_orders.sort((a, b) => b.timestamp - a.timestamp);
+
+				SE.ShowHomeView('open_orders', { orders: user_orders, account: account }, { a: account });
+				SE.HideLoading();
+			}
 		});
 	},
 

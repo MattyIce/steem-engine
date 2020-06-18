@@ -1,0 +1,113 @@
+﻿<header>
+    <div class="row header-row">
+        <div class="col-md-6">
+            <h1>OPEN ORDERS</h1>
+        </div>
+    </div>
+</header>
+
+<div class="market container">
+    <div class="alert alert-warning alert-dismissible fade show rewardWarning" role="alert">
+        You can use the checkbox on the left to cancel multiple orders. For each order you will sign a separate keychain transaction.
+    </div>
+
+    <% if (data.orders.length) { %>
+    <div class="row">
+        <div class="col-md-12 text-left p-3">
+            <h4 class="font-weight-bold">My Open Orders</h4>
+            <div class="ordertable-container">
+                <table id="user_order_table" class="tokensTable interactiveTable openOrdersTable" data-sorting="true">
+                    <thead>
+                        <tr class="footable-header">
+                            <th></th>
+                            <th>Date Created</th>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let o of data.orders) { %>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="cbTxId" class="cbTxId" value="<%= o.txId %>" />
+                                <input type="hidden" class="txType txType_<%= o.txId %>" value="<%= o.type %>" />
+                                <input type="hidden" class="txSymbol txSymbol_<%= o.txId %>" value="<%= o.symbol %>" />
+                            </td>
+                            <td><%= o.timestamp_string %></td>
+                            <td><%= o.txId %></td>
+                            <td><strong class="text-<%= o.type === 'buy' ? 'success' : 'danger' %>"><%= o.type.toUpperCase() %></strong></td>
+                            <td><strong><%= o.symbol %></strong></td>
+                            <td><%= parseFloat(o.price).toFixed(5) %></td>
+                            <td><%= parseFloat(o.quantity).toFixed(5) %></td>
+                            <td><%= (o.price * o.quantity).toFixed(5) %></td>
+                            <td class="text-right"><button class="btn btn-danger btn-sm btnCancelOrder" onclick="btnCancelOrder('<%= o.type %>', '<%= o.txId %>', '<%= o.symbol %>')" title="Cancel <%= o.symbol %> order">Cancel order</button></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7"></td>
+                            <td colspan="2" class="text-right"><button class="btn btn-danger btn-sm btnCancelSelected" style="display: none;" title="Cancel selected orders">Cancel selected orders</button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <% } else { %>
+    <p style="color: #000; margin-top: 30px;">You have no open orders.</p>
+    <% } %>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('.openOrdersTable').footable();
+    });
+
+    function btnCancelSelectedOrders() {
+        let selectedOrderData = [];
+        let selectedOrders = $(".cbTxId:checked");
+        if (selectedOrders.length > 0) {
+            for (var i = 0; i < selectedOrders.length; i++) {
+                let order = selectedOrders[i];
+                let txId = $(order).val();
+                let txType = $(".txType_" + txId).val();
+                let symbol = $(".txSymbol_" + txId).val();
+
+                selectedOrderData.push({ txId: txId, txType: txType, symbol: symbol });
+            }
+        }
+
+        if (selectedOrderData.length > 0) {
+            SE.ShowMarketCancelSelectedDialog(selectedOrderData, 'open_orders');
+        }
+    }
+
+    $(document).on("click", ".btnCancelSelected", function () {
+        btnCancelSelectedOrders();
+    })
+
+    $(document).on("click", ".cbTxId", function () {
+        let numberChecked = $(".cbTxId:checked").length;
+        if (numberChecked > 0) {
+            $(".btnCancelSelected").show();
+        } else {
+            $(".btnCancelSelected").hide();
+        }
+    })
+
+    function btnCancelOrder(type, orderId, symbol) {
+        if (type !== 'buy' && type !== 'sell') {
+            console.error('Invalid order type: ', type)
+            return;
+        }
+
+        SE.ShowMarketCancelDialog(type, orderId, symbol, 'open_orders');
+    }
+
+</script>
