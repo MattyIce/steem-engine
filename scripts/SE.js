@@ -1673,7 +1673,10 @@ SE = {
 	},
 
 	_sc_callback: null,
-	SteemConnectJson: function(auth_type, data, callback) {
+	SteemConnectJson: function (auth_type, data, callback) {
+		SE.ShowToast(false, 'SteemConnect is deprecated. Please use Keychain.');
+		SE.HideLoading();
+		return false;
 		SE.HideLoading();
 		SE.ShowDialog('steem_connect')
 
@@ -1694,7 +1697,10 @@ SE = {
 		SE._sc_callback = callback;
 	},
 
-	SteemConnectJsonId: function(auth_type, id, data, callback) {
+	SteemConnectJsonId: function (auth_type, id, data, callback) {
+		SE.ShowToast(false, 'SteemConnect is deprecated. Please use Keychain.');
+		SE.HideLoading();
+		return false;
 		SE.HideLoading();
 		SE.ShowDialog('steem_connect')
 
