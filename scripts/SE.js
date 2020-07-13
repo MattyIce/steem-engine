@@ -1674,7 +1674,7 @@ SE = {
 
 	_sc_callback: null,
 	SteemConnectJson: function (auth_type, data, callback) {
-		SE.ShowToast(false, 'SteemConnect is deprecated. Please use Keychain.');
+		SE.ShowToast(false, 'SteemConnect is deprecated. Please use <a href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm" target="_blank">Keychain</a>.');
 		SE.HideLoading();
 		return false;
 		SE.HideLoading();
@@ -1698,7 +1698,7 @@ SE = {
 	},
 
 	SteemConnectJsonId: function (auth_type, id, data, callback) {
-		SE.ShowToast(false, 'SteemConnect is deprecated. Please use Keychain.');
+		SE.ShowToast(false, 'SteemConnect is deprecated. Please use <a href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm" target="_blank">Keychain</a>.');
 		SE.HideLoading();
 		return false;
 		SE.HideLoading();
@@ -1722,7 +1722,10 @@ SE = {
 		SE._sc_callback = callback;
 	},
 
-	SteemConnectTransfer: function(from, to, amount, memo, callback) {
+	SteemConnectTransfer: function (from, to, amount, memo, callback) {
+		SE.ShowToast(false, 'SteemConnect is deprecated. Please use <a href="https://chrome.google.com/webstore/detail/steem-keychain/lkcjlnjfpbikmcmbachjpdbijejflpcm" target="_blank">Keychain</a>.');
+		SE.HideLoading();
+		return false;
 		SE.HideLoading();
 		SE.ShowDialog('steem_connect')
 
