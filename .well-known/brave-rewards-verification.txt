@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file. 
-
-Domain: steem-engine.com
-Token: 92fea98218e40ee238a2e1e040fbcc9ac55662b2ed062af9c385f5a018aa1235
