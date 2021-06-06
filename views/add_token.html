@@ -4,10 +4,10 @@
 </header>
 
 <div class="register container text-left">
-  <p>
-		<span class="font-weight-bold">NOTE: Token Creation costs <%= addCommas(SE.Params.tokenCreationFee) + ' ' + Config.NATIVE_TOKEN %> (Steem Engine Native Tokens)</span></br>
-		Your Current ENG Balance: <%= addCommas(SE.GetBalance(Config.NATIVE_TOKEN)) + ' ' + Config.NATIVE_TOKEN %> (<a href="javascript:void(0);" onclick="SE.ShowBuySSC();" style="color: #8E4A2C; font-weight: bold;">BUY ENG with STEEM</a>)
-  </p>  
+    <p>
+        <span class="font-weight-bold">NOTE: Token Creation costs </span><span class="font-weight-bold fee"></span> <span class="font-weight-bold"><%= Config.NATIVE_TOKEN %> (Steem Engine Native Tokens)</span></br>
+        Your Current ENG Balance: <%= addCommas(SE.GetBalance(Config.NATIVE_TOKEN)) + ' ' + Config.NATIVE_TOKEN %> (<a href="javascript:void(0);" onclick="SE.ShowBuySSC();" style="color: #8E4A2C; font-weight: bold;">BUY ENG with STEEM</a>)
+    </p>  
 </div>
 
 
@@ -62,6 +62,16 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        loadTokenCreationFee();
+    });
+
+    async function loadTokenCreationFee() {
+        SE.GetTokenCreationFee((err, result) => {
+            $(".fee").text(addCommas(result));
+        });
+    }
+
   function btnSubmitClick() {
     var tokenName = $("#txtTokenName").val();
     var symbol = $("#txtSymbol").val();
