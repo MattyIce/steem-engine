@@ -1,0 +1,114 @@
+<html>
+
+<head>  	
+	<link rel="icon" type="image/png" href="https://s3.amazonaws.com/steem-engine/images/steem_engine_logo_32.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js" integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.23.0/moment.js" integrity="sha256-l6SU+rVSlkyIcMsqjy0mb6ne/qPpYotdVSFd9vLmV1A=" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="scripts/ssc.min.js"></script>  
+  <script src="scripts/footable.min.js"></script>  
+  <link rel="stylesheet" href="styles/footable.bootstrap.min.css" />  
+  <script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<script src="scripts/Config.js"></script>
+  <script src="scripts/utils.js?v=2"></script>
+  <script src="scripts/SE.js?v=2"></script>    
+  <link rel="stylesheet" href="styles/main.css?v=190210" />  
+	<title>Steem Engine - Smart Contracts on the STEEM blockchain</title>
+	
+	<script type="text/javascript">		    
+    const ssc = new SSC(Config.RPC_URL);
+
+    $(function () {				
+			var username = localStorage.getItem('username');
+			SE.LoadParams(() => {
+				SE.LoadTokens(() => {
+					if(username) {
+						SE.OnLogin(username, () => {	
+							if(window.location.search)
+								SE.ShowUrlPage(window.location.search.substr(1));
+							else
+								SE.ShowBalances(username);
+
+							SE.HideLoading();
+						});
+					} else if(window.location.search)
+						SE.ShowUrlPage(window.location.search.substr(1));
+					else
+						SE.ShowHome();
+				});
+			});
+
+			window.onpopstate = function(e) {
+				if(e && e.state)
+					SE.ShowHomeView(e.state.view, e.state.data, e.state.params, true);
+			};
+    });
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-dark navbar-expand-lg navbar-steem-engine">
+    <a class="navbar-brand" href="#" onclick="SE.ShowHome()"><img src="images/steem-engine_logo-horizontal.svg" ></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="navbar-nav w-100 justify-content-end align-items-center">        
+				<a id="nav_wallet" class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowBalances();" style="display: none;">WALLET</a>
+        <a class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowTokens();">TOKENS</a>
+        <a class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowHomeView('market');">MARKET</a>
+        <a class="nav-item nav-link" href="javascript:void(0);" onclick="SE.ShowFAQ();">FAQ</a>
+        
+        <button id="btnSignIn" class="btn" onclick="SE.ShowSignIn();" style="margin-left: 50px;">SIGN IN</button>
+        
+        <div id="ddlLoggedIn" class="nav-item dropdown" style="display: none; margin-left: 80px;">
+          <a class="nav-link dropdown-toggle p-0" href="#" id="lnkUsername" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <div class="dropdown-menu" aria-labelledby="lnkUsername">
+            <a class="dropdown-item" onclick="SE.LogOut();">Log Out</a>
+          </div>
+        </div>
+      </div>      
+    </div>
+  </nav>
+
+  <div>
+    <div id="page_container" style="min-height: 600px;"></div>
+	</div>
+	
+	<footer>
+		<div>			
+      <div class="d-flex align-items-center justify-content-end">
+        <p class="text-right m-0">
+          Have a question?
+          <br />        
+          Chat with us on Discord:
+        </p>
+        <a href="https://discord.gg/xWRYB9s" target="_blank"><img src="images/social_discord.svg" /></a>
+      </div>
+			<p class="copyright">2019 Steem Engine, all rights reserved.</p>
+		</div>
+	</footer>
+  
+  <div id="dialog_container" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    
+  </div>
+
+  <div id="toast_container" style="position: fixed; top: 70; right: 20; z-index: 5000;">
+
+  </div>
+
+
+
+</body>
+
+</html>

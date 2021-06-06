@@ -4,65 +4,65 @@ SE = {
 	Tokens: [],
 	ScotTokens: {},
 
-  Api: function(url, data, callback, always) {
-    if (data == null || data == undefined) data = {};
+	Api: function (url, data, callback, always) {
+		if (data == null || data == undefined) data = {};
 
-    // Add a dummy timestamp parameter to prevent IE from caching the requests.
-    data.v = new Date().getTime();
+		// Add a dummy timestamp parameter to prevent IE from caching the requests.
+		data.v = new Date().getTime();
 
-    jQuery
-      .getJSON(Config.ACCOUNTS_API_URL + url, data, function(response) {
-        if (callback != null && callback != undefined) callback(response);
-      })
-      .always(function() {
-        if (always) always();
-      });
-  },
+		jQuery
+			.getJSON(Config.ACCOUNTS_API_URL + url, data, function (response) {
+				if (callback != null && callback != undefined) callback(response);
+			})
+			.always(function () {
+				if (always) always();
+			});
+	},
 
-  ShowHomeView: function(view, data, url_params) {
-		window.scrollTo(0,0);
+	ShowHomeView: function (view, data, url_params) {
+		window.scrollTo(0, 0);
 		$('body').css('overflow', 'auto');
 		$('body').css('padding-right', '0');
 
-		if(Config.MAINTENANCE_MODE)
+		if (Config.MAINTENANCE_MODE)
 			view = 'maintenance';
 
 		$('#page_container').html(render(view, { data: data }));
 
-    SE.LastView = SE.CurrentView;
-    SE.CurrentView = { view: view, data: data };
+		SE.LastView = SE.CurrentView;
+		SE.CurrentView = { view: view, data: data };
 
 		// Collapse the nav bar hamburger menu on mobile devices
-		if(window.innerWidth <= 990) {
+		if (window.innerWidth <= 990) {
 			var burger = $('.navbar-toggle');
-			if(!burger.hasClass('collapsed'))
+			if (!burger.hasClass('collapsed'))
 				burger.click();
 		}
 
-		if(view != 'home') {
+		if (view != 'home') {
 			var url = '?p=' + view + (url_params ? '&' + $.param(url_params) : '');
 
-			if(window.location.search == url)
+			if (window.location.search == url)
 				window.history.replaceState({ data: data, view: view, params: url_params }, 'Steem Engine - Smart Contracts on the STEEM blockchain', url);
 			else
 				window.history.pushState({ data: data, view: view, params: url_params }, 'Steem Engine - Smart Contracts on the STEEM blockchain', url);
 		}
-  },
+	},
 
-  ShowDialog: function(dialog, data) {
-    $('#dialog_container').html(renderDialog(dialog, data));
-    $('#dialog_container').modal('show');
+	ShowDialog: function (dialog, data) {
+		$('#dialog_container').html(renderDialog(dialog, data));
+		$('#dialog_container').modal('show');
 	},
 
 	ShowUrlPage(url) {
-		var parts = JSON.parse('{"' + decodeURI(url).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+		var parts = JSON.parse('{"' + decodeURI(url).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
 
-		if(!parts.p) {
+		if (!parts.p) {
 			SE.ShowHome();
 			return;
 		}
 
-		switch(parts.p) {
+		switch (parts.p) {
 			case 'balances':
 				SE.ShowBalances(parts.a ? parts.a : SE.User.name);
 				break;
@@ -76,9 +76,9 @@ SE = {
 				SE.ShowTokens();
 				break;
 			case 'history':
-				if(SE.User || parts.a) {
-					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {						
-						if(parts.t && SE.Tokens.find(t => t.symbol == parts.t))
+				if (SE.User || parts.a) {
+					SE.LoadBalances(parts.a ? parts.a : SE.User.name, () => {
+						if (parts.t && SE.Tokens.find(t => t.symbol == parts.t))
 							SE.ShowHistory(parts.t);
 						else
 							SE.ShowTokens();
@@ -90,15 +90,15 @@ SE = {
 				SE.LoadPendingUnstakes(SE.User.name, () => {
 					SE.ShowPendingUnstakes();
 				});
-			break;
+				break;
 			case 'pending_undelegations':
 				SE.LoadPendingUndelegations(SE.User.name, () => {
 					SE.ShowPendingUndelegations();
 				});
-			break;
+				break;
 			case 'add_token':
 				SE.ShowAddToken();
-				break;pending_unstakes
+				break; pending_unstakes
 			case 'faq':
 				SE.ShowFAQ();
 				break;
@@ -114,66 +114,66 @@ SE = {
 		}
 	},
 
-  HideDialog: function(viewToShowAfter, data) {
-    $('#dialog_container').modal('hide');
-    if(viewToShowAfter)
-      SE.ShowHomeView(viewToShowAfter, data);
-  },
+	HideDialog: function (viewToShowAfter, data) {
+		$('#dialog_container').modal('hide');
+		if (viewToShowAfter)
+			SE.ShowHomeView(viewToShowAfter, data);
+	},
 
-  ShowDialogOpaque: function(dialog, data) {
-    $('#dialog_container').html(renderDialog(dialog, data));
-    $('#dialog_container').modal('show');
-    $('.modal-backdrop').addClass('modal-backdrop-opaque');
-  },
+	ShowDialogOpaque: function (dialog, data) {
+		$('#dialog_container').html(renderDialog(dialog, data));
+		$('#dialog_container').modal('show');
+		$('.modal-backdrop').addClass('modal-backdrop-opaque');
+	},
 
-  ShowHome: function() {
-    SE.ShowHomeView('home');
-  },
+	ShowHome: function () {
+		SE.ShowHomeView('home');
+	},
 
-  _loading: null,
-  ShowLoading: function() {
-    SE._loading = $('<div class="modal-backdrop fade show loading-backdrop" />');
-    SE._loading.append(
-      $(
-        '<img src="https://s3.amazonaws.com/steemmonsters/website/loading.gif" class="loading" />'
-      )
-    );
-    SE._loading.appendTo('body');
-  },
+	_loading: null,
+	ShowLoading: function () {
+		SE._loading = $('<div class="modal-backdrop fade show loading-backdrop" />');
+		SE._loading.append(
+			$(
+				'<img src="https://s3.amazonaws.com/steemmonsters/website/loading.gif" class="loading" />'
+			)
+		);
+		SE._loading.appendTo('body');
+	},
 
-  HideLoading: function() {
-    SE._loading.remove();
-  },
+	HideLoading: function () {
+		SE._loading.remove();
+	},
 
-  ShowToast: function(isSuccess, message) {
-    var toast = $(renderComponent("toast", {isSuccess : isSuccess, message : message}));
-    $('#toast_container').append(toast);
-    toast.toast('show');
-  },
+	ShowToast: function (isSuccess, message) {
+		var toast = $(renderComponent("toast", { isSuccess: isSuccess, message: message }));
+		$('#toast_container').append(toast);
+		toast.toast('show');
+	},
 
-  ShowTokens: function() {
+	ShowTokens: function () {
 		SE.LoadTokens(r => SE.ShowHomeView('tokens', r));
 	},
 
-	ShowMarket: function(token) {
-		if(!token)
+	ShowMarket: function (token) {
+		if (!token)
 			token = Config.NATIVE_TOKEN;
 
 		SE.LoadTokens(r => SE.ShowHomeView('market', { selected: token }, { t: token }));
 	},
 
-	ShowMarketView: function(symbol, account) {
+	ShowMarketView: function (symbol, account) {
 		SE.ShowLoading();
 
-		if(symbol == Config.PEGGED_TOKEN)
+		if (symbol == Config.PEGGED_TOKEN)
 			symbol = Config.NATIVE_TOKEN;
 
-		if(!account && SE.User)
+		if (!account && SE.User)
 			account = SE.User.name;
 
 		var token = SE.GetToken(symbol);
 
-		if(token.metadata && token.metadata.hide_in_market) {
+		if (token.metadata && token.metadata.hide_in_market) {
 			SE.HideLoading();
 			$('#market_view').html(render('components/not_available'));
 			return;
@@ -192,7 +192,7 @@ SE = {
 		if (account) {
 			tasks.push(ssc.find('market', 'buyBook', { symbol: symbol, account: account }, 100, 0, [{ index: '_id', descending: true }], false));
 			tasks.push(ssc.find('market', 'sellBook', { symbol: symbol, account: account }, 100, 0, [{ index: '_id', descending: true }], false));
-			tasks.push(ssc.find('tokens', 'balances', { account: account, symbol : { '$in' : [symbol, 'STEEMP'] } }, 2, 0, '', false));
+			tasks.push(ssc.find('tokens', 'balances', { account: account, symbol: { '$in': [symbol, 'STEEMP'] } }, 2, 0, '', false));
 		}
 		Promise.all(tasks).then(results => {
 			// prepare buy orders
@@ -264,72 +264,72 @@ SE = {
 					user_orders: user_orders,
 					user_token_balance: user_token_balance,
 					user_steemp_balance: user_steemp_balance
-			 	}
+				}
 			}));
 
 			SE.HideLoading();
-    }, error => {
+		}, error => {
 			SE.HideLoading();
-      SE.ShowToast(false, 'Error retrieving market data.');
+			SE.ShowToast(false, 'Error retrieving market data.');
 		});
 	},
 
-	ShowMarketOrderDialog: function(type, symbol, quantity, price) {
-    SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
+	ShowMarketOrderDialog: function (type, symbol, quantity, price) {
+		SE.ShowDialogOpaque('confirm_market_order', { type: type, symbol: symbol, quantity: quantity, price: price });
 	},
 
-	ShowMarketCancelDialog: function(type, orderId, symbol, origin = 'market') {
-    SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol, origin: origin });
+	ShowMarketCancelDialog: function (type, orderId, symbol, origin = 'market') {
+		SE.ShowDialogOpaque('confirm_market_cancel', { type: type, orderId: orderId, symbol: symbol, origin: origin });
 	},
 
 	ShowMarketCancelSelectedDialog: function (orders, origin = 'market') {
 		SE.ShowDialogOpaque('confirm_market_cancel_selected', { orders: orders, origin: origin });
 	},
 
-	SendMarketOrder: function(type, symbol, quantity, price) {
+	SendMarketOrder: function (type, symbol, quantity, price) {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
 		}
 
-    SE.ShowLoading();
-    var username = localStorage.getItem('username');
+		SE.ShowLoading();
+		var username = localStorage.getItem('username');
 
-    if(!username) {
-      window.location.reload();
-      return;
-    }
+		if (!username) {
+			window.location.reload();
+			return;
+		}
 
-    var transaction_data = {
-      "contractName": "market",
-      "contractAction": type,
-      "contractPayload": {
-        "symbol": symbol,
+		var transaction_data = {
+			"contractName": "market",
+			"contractAction": type,
+			"contractPayload": {
+				"symbol": symbol,
 				"quantity": quantity,
 				"price": price
-      }
-    };
+			}
+		};
 
 		console.log('Broadcasting ' + type + ' order: ', JSON.stringify(transaction_data));
 
-    if(useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), type.toUpperCase() + ' Order: ' + symbol, function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), type.toUpperCase() + ' Order: ' + symbol, function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success)
-              SE.ShowToast(true, type.toUpperCase() + ' order placed for ' + quantity + ' ' + symbol + ' at ' + price)
-            else
-              SE.ShowToast(false, 'An error occurred submitting the order: ' + tx.error)
+						if (tx.success)
+							SE.ShowToast(true, type.toUpperCase() + ' order placed for ' + quantity + ' ' + symbol + ' at ' + price)
+						else
+							SE.ShowToast(false, 'An error occurred submitting the order: ' + tx.error)
 
 						SE.HideLoading();
 						SE.HideDialog();
 						SE.LoadTokens(() => SE.ShowMarketView(symbol, SE.User.name));
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading();
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadTokens(() => SE.ShowMarketView(symbol, SE.User.name));
 			});
@@ -358,9 +358,9 @@ SE = {
 						"id": orderId
 					}
 				});
-			}   
+			}
 
-			let orderRes = await new Promise(function (resolve, reject) {					
+			let orderRes = await new Promise(function (resolve, reject) {
 				var username = localStorage.getItem('username');
 
 				if (!username) {
@@ -421,41 +421,41 @@ SE = {
 		}
 	},
 
-	SendCancelMarketOrder: function(type, orderId, symbol, origin = 'market') {
+	SendCancelMarketOrder: function (type, orderId, symbol, origin = 'market') {
 		if (type !== 'buy' && type !== 'sell') {
 			console.error('Invalid order type: ', type)
 			return;
 		}
 
-    	SE.ShowLoading();
-    	var username = localStorage.getItem('username');
+		SE.ShowLoading();
+		var username = localStorage.getItem('username');
 
 		if (!username) {
 			window.location.reload();
 			return;
 		}
 
-    	var transaction_data = {
-      		"contractName": "market",
-      		"contractAction": "cancel",
-      		"contractPayload": {
-        		"type": type,
+		var transaction_data = {
+			"contractName": "market",
+			"contractAction": "cancel",
+			"contractPayload": {
+				"type": type,
 				"id": orderId
-      		}
-    	};
+			}
+		};
 
 		console.log('Broadcasting cancel order: ', JSON.stringify(transaction_data));
 
-    	if (useKeychain()) {
-      		steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Cancel ' + type.toUpperCase() + ' Order', function(response) {
-        		if (response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Cancel ' + type.toUpperCase() + ' Order', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
 							SE.ShowToast(true, 'Cancel order ' + orderId + ' completed');
 						} else {
 							SE.ShowToast(false, 'An error occurred cancelling the order: ' + tx.error)
 						}
-              
+
 						SE.HideLoading();
 						SE.HideDialog();
 
@@ -465,25 +465,25 @@ SE = {
 							SE.ShowMarketView(symbol, SE.User.name);
 						}
 					});
-        		} else {
+				} else {
 					SE.HideLoading();
 				}
-      		});
-    	} else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.ShowMarketView(symbol, SE.User.name);
 			});
 		}
-  	},
+	},
 
-	LoadTokens: function (callback) {		
-		ssc.find('tokens', 'tokens', {}, 1000, 0, [], (err, result) => {			
+	LoadTokens: function (callback) {
+		ssc.find('tokens', 'tokens', {}, 1000, 0, [], (err, result) => {
 			SE.Tokens = result.filter(t => !Config.DISABLED_TOKENS.includes(t.symbol));
 
-			ssc.find('market', 'metrics', { }, 1000, 0, '', false).then(async (metrics) => {
-				for(var i = 0; i < SE.Tokens.length; i++) {
+			ssc.find('market', 'metrics', {}, 1000, 0, '', false).then(async (metrics) => {
+				for (var i = 0; i < SE.Tokens.length; i++) {
 					var token = SE.Tokens[i];
-				
+
 					token.highestBid = 0;
 					token.lastPrice = 0;
 					token.lowestAsk = 0;
@@ -511,22 +511,22 @@ SE = {
 						token.lastPrice = parseFloat(metric.lastPrice);
 						token.lowestAsk = parseFloat(metric.lowestAsk);
 						token.marketCap = token.lastPrice * token.circulatingSupply;
-						
-						if(Date.now() / 1000 < metric.volumeExpiration)
+
+						if (Date.now() / 1000 < metric.volumeExpiration)
 							token.volume = parseFloat(metric.volume);
 
-						if(Date.now() / 1000 < metric.lastDayPriceExpiration) {
+						if (Date.now() / 1000 < metric.lastDayPriceExpiration) {
 							token.priceChangePercent = parseFloat(metric.priceChangePercent);
 							token.priceChangeSteem = parseFloat(metric.priceChangeSteem);
 						}
 
-						if(token.symbol == 'AFIT') {
+						if (token.symbol == 'AFIT') {
 							var afit_data = await ssc.find('market', 'tradesHistory', { symbol: 'AFIT' }, 100, 0, [{ index: '_id', descending: false }], false);
 							token.volume = afit_data.reduce((t, v) => t += parseFloat(v.price) * parseFloat(v.quantity), 0);
 						}
 					}
 
-					if(token.symbol == 'STEEMP')
+					if (token.symbol == 'STEEMP')
 						token.lastPrice = 1;
 				}
 
@@ -536,19 +536,19 @@ SE = {
 
 				var steemp_balance = await ssc.findOne('tokens', 'balances', { account: 'steem-peg', symbol: 'STEEMP' });
 
-				if(steemp_balance && steemp_balance.balance) {
+				if (steemp_balance && steemp_balance.balance) {
 					var token = SE.GetToken('STEEMP');
 					token.supply -= parseFloat(steemp_balance.balance);
 					token.circulatingSupply -= parseFloat(steemp_balance.balance);
 				}
 
-				if(callback)
+				if (callback)
 					callback(SE.Tokens);
 			});
-    });
+		});
 	},
 
-  ShowBalances: function(account) {
+	ShowBalances: function (account) {
 		if (!account && SE.User) {
 			account = SE.User.name;
 		}
@@ -558,7 +558,7 @@ SE = {
 		});
 	},
 
-	ShowRewards: function(account) {
+	ShowRewards: function (account) {
 		if (!account && SE.User) {
 			account = SE.User.name;
 		}
@@ -607,7 +607,7 @@ SE = {
 		});
 	},
 
-	GetScotUserTokens: function(account, callback) {
+	GetScotUserTokens: function (account, callback) {
 		if (!account && SE.User) {
 			account = SE.User.name;
 		}
@@ -642,9 +642,9 @@ SE = {
 		});
 	},
 
-	ClaimToken: function(symbol, amount) {
+	ClaimToken: function (symbol, amount) {
 		SE.ShowLoading();
-		
+
 		const token = SE.Tokens.find(t => t.symbol === symbol);
 		const username = SE.User.name;
 		const factor = Math.pow(10, token.precision);
@@ -654,17 +654,17 @@ SE = {
 			symbol
 		};
 
-    if (useKeychain()) {
-      steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function(response) {
-        if (response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, 'scot_claim_token', 'Posting', JSON.stringify(claimData), `Claim ${calculated} ${symbol.toUpperCase()} Tokens`, function (response) {
+				if (response.success && response.result) {
 					SE.ShowToast(true, `${symbol.toUpperCase()} tokens claimed`);
 					SE.HideLoading();
 					SE.ShowRewards();
-        } else {
+				} else {
 					SE.HideLoading();
 				}
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJsonId('posting', 'scot_claim_token', claimData, () => {
 				SE.HideLoading();
 				SE.ShowRewards();
@@ -717,7 +717,7 @@ SE = {
 		}
 	},
 
-	EnableStaking: function(symbol, unstakingCooldown, numberTransactions) {
+	EnableStaking: function (symbol, unstakingCooldown, numberTransactions) {
 		SE.ShowLoading();
 
 		const username = localStorage.getItem('username');
@@ -738,7 +738,7 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Staking', function (response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
@@ -763,10 +763,10 @@ SE = {
 		}
 	},
 
-	Stake: function(symbol, quantity, to) {
+	Stake: function (symbol, quantity, to) {
 		SE.ShowLoading();
 
-    	const username = localStorage.getItem('username');
+		const username = localStorage.getItem('username');
 
 		if (!username) {
 			window.location.reload();
@@ -780,16 +780,16 @@ SE = {
 				"to": to,
 				"symbol": symbol,
 				"quantity": quantity
-		  	}
+			}
 		};
 
-    	if (useKeychain()) {
-      		steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
-        		if (response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            			if (tx.success) {
+						if (tx.success) {
 							SE.ShowToast(true, 'Token successfully staked');
-						SE.ShowBalances(SE.User.name);
+							SE.ShowBalances(SE.User.name);
 						} else {
 							SE.ShowToast(false, 'An error occurred attempting to enable stake token: ' + tx.error);
 						}
@@ -797,18 +797,18 @@ SE = {
 						SE.HideLoading();
 						SE.HideDialog();
 					});
-        		} else {
+				} else {
 					SE.HideLoading();
 				}
-      		});
-    	} else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.ShowBalances(SE.User.name);
 			});
 		}
 	},
 
-	Unstake: function(symbol, quantity) {
+	Unstake: function (symbol, quantity) {
 		SE.ShowLoading();
 
 		const username = localStorage.getItem('username');
@@ -828,7 +828,7 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function (response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
@@ -852,29 +852,29 @@ SE = {
 		}
 	},
 
-	CancelUnstake: function(txID) {
+	CancelUnstake: function (txID) {
 		SE.ShowLoading();
 
-    	const username = localStorage.getItem('username');
+		const username = localStorage.getItem('username');
 
-    	if (!username) {
-      		window.location.reload();
-      		return;
-    	}
+		if (!username) {
+			window.location.reload();
+			return;
+		}
 
-    	const transaction_data = {
-      		"contractName": "tokens",
-      		"contractAction": "cancelUnstake",
-      		"contractPayload": {
-        		"txID": txID
-    		}
-    	};
+		const transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "cancelUnstake",
+			"contractPayload": {
+				"txID": txID
+			}
+		};
 
-    	if (useKeychain()) {
-      		steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function(response) {
-        		if (response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Stake Token', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            			if (tx.success) {
+						if (tx.success) {
 							SE.ShowToast(true, 'Token unstaking successfully cancelled');
 							SE.ShowHomeView('pending_unstakes');
 						} else {
@@ -884,11 +884,11 @@ SE = {
 						SE.HideLoading();
 						SE.HideDialog();
 					});
-        		} else {
+				} else {
 					SE.HideLoading();
 				}
-      		});
-    	} else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.HideLoading();
 				SE.HideDialog();
@@ -897,7 +897,7 @@ SE = {
 		}
 	},
 
-	EnableDelegation: function(symbol, undelegationCooldown) {
+	EnableDelegation: function (symbol, undelegationCooldown) {
 		SE.ShowLoading();
 
 		const username = localStorage.getItem('username');
@@ -917,7 +917,7 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Enable Token Delegation', function (response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
@@ -942,10 +942,10 @@ SE = {
 		}
 	},
 
-	Delegate: function(symbol, quantity, to) {
+	Delegate: function (symbol, quantity, to) {
 		SE.ShowLoading();
 
-    	const username = localStorage.getItem('username');
+		const username = localStorage.getItem('username');
 
 		if (!username) {
 			window.location.reload();
@@ -959,16 +959,16 @@ SE = {
 				"to": to,
 				"symbol": symbol,
 				"quantity": quantity
-		  	}
+			}
 		};
 
-    	if (useKeychain()) {
-      		steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Delegate Token', function(response) {
-        		if (response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Delegate Token', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            			if (tx.success) {
+						if (tx.success) {
 							SE.ShowToast(true, 'Token successfully delegated');
-						SE.ShowBalances(SE.User.name);
+							SE.ShowBalances(SE.User.name);
 						} else {
 							SE.ShowToast(false, 'An error occurred attempting to delegate token: ' + tx.error);
 						}
@@ -976,18 +976,18 @@ SE = {
 						SE.HideLoading();
 						SE.HideDialog();
 					});
-        		} else {
+				} else {
 					SE.HideLoading();
 				}
-      		});
-    	} else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.ShowBalances(SE.User.name);
 			});
 		}
 	},
 
-	Undelegate: function(symbol, quantity, from) {
+	Undelegate: function (symbol, quantity, from) {
 		SE.ShowLoading();
 
 		const username = localStorage.getItem('username');
@@ -1008,7 +1008,7 @@ SE = {
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Undelegate Tokens', function(response) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Undelegate Tokens', function (response) {
 				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
@@ -1032,32 +1032,32 @@ SE = {
 		}
 	},
 
-	LoadParams: function(callback) {
+	LoadParams: function (callback) {
 		var loaded = 0;
 
-		ssc.findOne('sscstore', 'params', {  }, (err, result) => {
-			if(result && !err)
+		ssc.findOne('sscstore', 'params', {}, (err, result) => {
+			if (result && !err)
 				Object.assign(SE.Params, result);
 
-			if(++loaded >= 3 && callback)
+			if (++loaded >= 3 && callback)
 				callback();
 		});
 
-		ssc.findOne('tokens', 'params', {  }, (err, result) => {
-			if(result && !err)
+		ssc.findOne('tokens', 'params', {}, (err, result) => {
+			if (result && !err)
 				Object.assign(SE.Params, result);
 
-			if(++loaded >= 3 && callback)
+			if (++loaded >= 3 && callback)
 				callback();
 		});
 
 		loadSteemPrice(() => {
-			if(++loaded >= 3 && callback)
+			if (++loaded >= 3 && callback)
 				callback();
 		});
 	},
 
-	LoadPendingUnstakes: function(account, callback) {
+	LoadPendingUnstakes: function (account, callback) {
 		ssc.find('tokens', 'pendingUnstakes', { account: account }, 1000, 0, '', false).then(r => {
 			if (SE.User && account == SE.User.name) {
 				SE.User.pendingUnstakes = r;
@@ -1069,7 +1069,7 @@ SE = {
 		});
 	},
 
-	LoadPendingUndelegations : function(account, callback) {
+	LoadPendingUndelegations: function (account, callback) {
 		ssc.find('tokens', 'pendingUndelegations', { account: account }, 1000, 0, '', false).then(r => {
 			if (SE.User && account == SE.User.name) {
 				SE.User.pendingUndelegations = r;
@@ -1081,44 +1081,44 @@ SE = {
 		});
 	},
 
-	LoadBalances: function(account, callback) {
+	LoadBalances: function (account, callback) {
 		ssc.find('tokens', 'balances', { account: account }, 1000, 0, '', false).then(r => {
-			if(SE.User && account == SE.User.name)
+			if (SE.User && account == SE.User.name)
 				SE.User.balances = r;
 
-			if(callback)
+			if (callback)
 				callback(r);
-    });
+		});
 	},
 
-	GetBalance: function(token) {
-		if(SE.User && SE.User.balances) {
+	GetBalance: function (token) {
+		if (SE.User && SE.User.balances) {
 			var token = SE.User.balances.find(b => b.symbol == token);
 			return token ? parseFloat(token.balance) : 0;
 		} else
 			return 0;
-  },
+	},
 
-	ShowHistory: function(symbol, name) {
-		var token =  SE.GetToken(symbol);
+	ShowHistory: function (symbol, name) {
+		var token = SE.GetToken(symbol);
 		SE.ShowHomeView('history', token, { t: symbol });
 	},
 
-	ShowPendingUnstakes: function() {
+	ShowPendingUnstakes: function () {
 		SE.ShowHomeView('pending_unstakes');
 	},
 
-	ShowPendingUndelegations: function() {
+	ShowPendingUndelegations: function () {
 		SE.ShowHomeView('pending_undelegations');
 	},
 
-  ShowAbout: function() {
-    SE.ShowHomeView('about');
+	ShowAbout: function () {
+		SE.ShowHomeView('about');
 	},
-	
-	ShowConversionHistory: function() {
-		$.get('https://converter-api.steem-engine.com/api/conversions/', { limit: 20, offset: 0, deposit__from_account: SE.User.name }, from_result => {
-			$.get('https://converter-api.steem-engine.com/api/conversions/', { limit: 20, offset: 0, to_address: SE.User.name }, to_result => {
+
+	ShowConversionHistory: function () {
+		$.get('https://converter-api.steem-engine.net/api/conversions/', { limit: 20, offset: 0, deposit__from_account: SE.User.name }, from_result => {
+			$.get('https://converter-api.steem-engine.net/api/conversions/', { limit: 20, offset: 0, to_address: SE.User.name }, to_result => {
 				var to_results = to_result.results.map(r => {
 					return {
 						coin_symbol: r.from_coin_symbol,
@@ -1146,35 +1146,35 @@ SE = {
 				SE.ShowHomeView('conversion_history', list);
 			});
 		});
-  },
-
-  ShowFAQ: function() {
-    SE.ShowHomeView('faq');
-  },
-
-  ShowRegister: function() {
-    SE.ShowHomeView('register', localStorage.getItem('username'));
-  },
-
-  ShowSignIn: function() {
-    SE.ShowHomeView('sign_in');
-  },
-
-  ShowAddToken: function() {
-    SE.ShowHomeView('add_token');
-  },
-
-  ShowConfirmAddToken: function(name, symbol, precision, maxSupply, url) {
-    SE.ShowDialogOpaque('confirm_add_token', {
-      "name" : name,
-      "symbol" : symbol,
-      "precision" : precision,
-      "maxSupply" : maxSupply,
-      "url" : url,
-    });
 	},
 
-	OnLogin: function(username, callback) {
+	ShowFAQ: function () {
+		SE.ShowHomeView('faq');
+	},
+
+	ShowRegister: function () {
+		SE.ShowHomeView('register', localStorage.getItem('username'));
+	},
+
+	ShowSignIn: function () {
+		SE.ShowHomeView('sign_in');
+	},
+
+	ShowAddToken: function () {
+		SE.ShowHomeView('add_token');
+	},
+
+	ShowConfirmAddToken: function (name, symbol, precision, maxSupply, url) {
+		SE.ShowDialogOpaque('confirm_add_token', {
+			"name": name,
+			"symbol": symbol,
+			"precision": precision,
+			"maxSupply": maxSupply,
+			"url": url,
+		});
+	},
+
+	OnLogin: function (username, callback) {
 		SE.ShowLoading();
 		SE.User = { name: username };
 		$("#btnSignIn").hide();
@@ -1184,7 +1184,7 @@ SE = {
 
 		// Load the steem account info
 		steem.api.getAccounts([username], (e, r) => {
-			if(r && !e && r.length > 0)
+			if (r && !e && r.length > 0)
 				SE.User.account = r[0];
 		});
 
@@ -1213,127 +1213,84 @@ SE = {
 		}
 	},
 
-  LogIn: function(username, key) {
+	LogIn: function (username, key) {
 		SE.ShowLoading();
 
-		if(window.steem_keychain && !key) {
-			steem_keychain.requestSignBuffer(username, 'Log In', 'Posting', function(response) {
-				if(response.error) {
-          SE.HideLoading();
-          SE.ShowToast(false, 'Unable to log in with the @' + username + ' account.');
+		if (window.steem_keychain && !key) {
+			steem_keychain.requestSignBuffer(username, 'Log In', 'Posting', function (response) {
+				if (response.error) {
+					SE.HideLoading();
+					SE.ShowToast(false, 'Unable to log in with the @' + username + ' account.');
 				} else {
 					localStorage.setItem('username', username);
 					window.location.reload();
 				}
 			});
-		}	else {
+		} else {
 			try {
 				if (key && !steem.auth.isWif(key)) {
 					key = steem.auth.getPrivateKeys(username, key, ['posting']).posting;
 				}
-			} catch(err) {
-        SE.ShowToast(false, 'Invalid private key or master password.');
+			} catch (err) {
+				SE.ShowToast(false, 'Invalid private key or master password.');
 				return;
 			}
 
-			steem.api.getAccounts([username], function(e, r) {
-				if(r && r.length > 0) {
+			steem.api.getAccounts([username], function (e, r) {
+				if (r && r.length > 0) {
 					try {
-						if(steem.auth.wifToPublic(key) == r[0].memo_key || steem.auth.wifToPublic(key) == r[0].posting.key_auths[0][0]) {
+						if (steem.auth.wifToPublic(key) == r[0].memo_key || steem.auth.wifToPublic(key) == r[0].posting.key_auths[0][0]) {
 							localStorage.setItem('username', username);
 							window.location.reload();
 						} else {
-              SE.HideLoading();
-              SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');
+							SE.HideLoading();
+							SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');
 						}
-					} catch(err) {
-            SE.HideLoading();
-            SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');
+					} catch (err) {
+						SE.HideLoading();
+						SE.ShowToast(false, 'Unable to log in with the @' + username + ' account. Invalid private key or password.');
 					}
 				} else {
-          SE.ShowToast(false, 'There was an error loading the @' + username + ' account.');
+					SE.ShowToast(false, 'There was an error loading the @' + username + ' account.');
 				}
 			});
 		}
-  },
-
-  LogOut: function() {
-		localStorage.clear();
-		SE.User = null;
-    window.location.href = window.location.origin;
 	},
 
-	CheckRegistration: function(username, callback) {
+	LogOut: function () {
+		localStorage.clear();
+		SE.User = null;
+		window.location.href = window.location.origin;
+	},
+
+	CheckRegistration: function (username, callback) {
 		ssc.findOne('accounts', 'accounts', { id: username }, (err, result) => { if (callback) callback(result); });
 	},
 
-  CheckRegistrationStatus: function(interval = 5, retries = 5, callback) {
-    var username = localStorage.getItem('username');
+	CheckRegistrationStatus: function (interval = 5, retries = 5, callback) {
+		var username = localStorage.getItem('username');
 		console.log('Checking registration status: ' + username);
 
 		SE.CheckRegistration(username, r => {
-			if(r) {
-				if(callback) callback(r);
+			if (r) {
+				if (callback) callback(r);
 			} else {
 				if (retries > 0) {
-          console.log("Retrying...");
-          setTimeout(function() {
-            SE.CheckRegistrationStatus(interval, retries - 1, callback);
-          }, interval * 1000);
-        }
-        else {
-          //alert("Registration not found for @" + username + "\nPlease check again later.");
-        }
+					console.log("Retrying...");
+					setTimeout(function () {
+						SE.CheckRegistrationStatus(interval, retries - 1, callback);
+					}, interval * 1000);
+				}
+				else {
+					//alert("Registration not found for @" + username + "\nPlease check again later.");
+				}
 			}
 		});
 	},
-	
-	UpdateTokenMetadata: function(symbol, metadata) {
+
+	UpdateTokenMetadata: function (symbol, metadata) {
 		SE.ShowLoading();
-    var username = localStorage.getItem('username');
-
-    if(!username) {
-      window.location.reload();
-      return;
-    }
-
-    var transaction_data = {
-      "contractName": "tokens",
-      "contractAction": "updateMetadata",
-      "contractPayload": {
-        "symbol": symbol,
-        "metadata": metadata
-    	}
-    };
-
-    if(useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Update Token Metadata', function(response) {
-        if(response.success && response.result) {
-					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success)
-              SE.ShowToast(true, 'Token updated successfully!');
-            else
-              SE.ShowToast(false, 'An error occurred updating your token: ' + tx.error);
-
-						SE.HideLoading();
-						SE.HideDialog();
-						SE.LoadTokens(() => SE.ShowHistory(symbol));
-					});
-        }
-        else
-					SE.HideLoading()
-      });
-    } else {
-			SE.SteemConnectJson('active', transaction_data, () => {
-				SE.LoadTokens(() => SE.ShowHistory(symbol));
-			});
-		}
-	},
-
-	UpdateTokenPrecision: function(symbol, precision) {
-		SE.ShowLoading();
-
-    	const username = localStorage.getItem('username');
+		var username = localStorage.getItem('username');
 
 		if (!username) {
 			window.location.reload();
@@ -1341,17 +1298,60 @@ SE = {
 		}
 
 		var transaction_data = {
-		"contractName": "tokens",
-		"contractAction": "updatePrecision",
-		"contractPayload": {
-			"symbol": symbol,
-			"precision": precision
+			"contractName": "tokens",
+			"contractAction": "updateMetadata",
+			"contractPayload": {
+				"symbol": symbol,
+				"metadata": metadata
 			}
 		};
 
 		if (useKeychain()) {
-			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Update Token Prevision', function(response) {
-				if(response.success && response.result) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Update Token Metadata', function (response) {
+				if (response.success && response.result) {
+					SE.CheckTransaction(response.result.id, 3, tx => {
+						if (tx.success)
+							SE.ShowToast(true, 'Token updated successfully!');
+						else
+							SE.ShowToast(false, 'An error occurred updating your token: ' + tx.error);
+
+						SE.HideLoading();
+						SE.HideDialog();
+						SE.LoadTokens(() => SE.ShowHistory(symbol));
+					});
+				}
+				else
+					SE.HideLoading()
+			});
+		} else {
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.LoadTokens(() => SE.ShowHistory(symbol));
+			});
+		}
+	},
+
+	UpdateTokenPrecision: function (symbol, precision) {
+		SE.ShowLoading();
+
+		const username = localStorage.getItem('username');
+
+		if (!username) {
+			window.location.reload();
+			return;
+		}
+
+		var transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "updatePrecision",
+			"contractPayload": {
+				"symbol": symbol,
+				"precision": precision
+			}
+		};
+
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Update Token Prevision', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
 						if (tx.success) {
 							SE.ShowToast(true, 'Token updated successfully!');
@@ -1367,259 +1367,259 @@ SE = {
 				}
 			});
 		} else {
-				SE.SteemConnectJson('active', transaction_data, () => {
-					SE.LoadTokens(() => SE.ShowHistory(symbol));
-				});
+			SE.SteemConnectJson('active', transaction_data, () => {
+				SE.LoadTokens(() => SE.ShowHistory(symbol));
+			});
 		}
 	},
 
-  RegisterToken: function(name, symbol, precision, maxSupply, url) {
-    SE.ShowLoading();
-    var username = localStorage.getItem('username');
+	RegisterToken: function (name, symbol, precision, maxSupply, url) {
+		SE.ShowLoading();
+		var username = localStorage.getItem('username');
 
-    if(!username) {
-      window.location.reload();
-      return;
-    }
+		if (!username) {
+			window.location.reload();
+			return;
+		}
 
-    var registration_data = {
-      "contractName": "tokens",
-      "contractAction": "create",
-      "contractPayload": {
-        "symbol": symbol,
-        "name": name,
-        "precision": precision,
-        "maxSupply": maxSupply
-    	}
+		var registration_data = {
+			"contractName": "tokens",
+			"contractAction": "create",
+			"contractPayload": {
+				"symbol": symbol,
+				"name": name,
+				"precision": precision,
+				"maxSupply": maxSupply
+			}
 		};
-		
-		if(url)
+
+		if (url)
 			registration_data.contractPayload.url = url;
 
-    if(useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(registration_data), 'Steem Engine Token Registration', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success)
-              SE.ShowToast(true, 'Token created successfully!');
-            else
-              SE.ShowToast(false, 'An error occurred creating your token: ' + tx.error);
+						if (tx.success)
+							SE.ShowToast(true, 'Token created successfully!');
+						else
+							SE.ShowToast(false, 'An error occurred creating your token: ' + tx.error);
 
 						SE.HideLoading();
 						SE.HideDialog();
 						SE.LoadTokens(() => SE.ShowHistory(symbol));
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading()
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJson('active', registration_data, () => {
 				SE.LoadTokens(() => SE.ShowHistory(symbol));
 			});
 		}
-  },
+	},
 
-  ShowIssueTokenDialog: function(symbol, balance) {
-    SE.ShowDialog('issue_token', { symbol : symbol, balance : balance });
-  },
+	ShowIssueTokenDialog: function (symbol, balance) {
+		SE.ShowDialog('issue_token', { symbol: symbol, balance: balance });
+	},
 
-  IssueToken: function(symbol, to, quantity) {
-    SE.ShowLoading();
-    var username = localStorage.getItem('username');
+	IssueToken: function (symbol, to, quantity) {
+		SE.ShowLoading();
+		var username = localStorage.getItem('username');
 
-    if(!username) {
-      window.location.reload();
-      return;
-    }
+		if (!username) {
+			window.location.reload();
+			return;
+		}
 
-    var transaction_data = {
-      "contractName": "tokens",
-      "contractAction": "issue",
-      "contractPayload": {
-        "symbol": symbol,
-        "to": to,
-        "quantity": quantity
-      }
-    };
+		var transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "issue",
+			"contractPayload": {
+				"symbol": symbol,
+				"to": to,
+				"quantity": quantity
+			}
+		};
 
-    if(useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Issue: ' + symbol, function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success)
-              SE.ShowToast(true, quantity + ' ' + symbol + ' tokens issued to @' + to);
-            else
-              SE.ShowToast(false, 'An error occurred issuing tokens: ' + tx.error);
+						if (tx.success)
+							SE.ShowToast(true, quantity + ' ' + symbol + ' tokens issued to @' + to);
+						else
+							SE.ShowToast(false, 'An error occurred issuing tokens: ' + tx.error);
 
 						SE.HideLoading();
 						SE.HideDialog();
 						SE.LoadTokens(() => SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol)));
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading();
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadTokens(() => SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol)));
 			});
 		}
-  },
-
-	ShowSendTokenDialog: function(symbol, balance) {
-		SE.ShowDialog('send_token', { symbol : filterXSS(symbol), balance: filterXSS(balance) });
 	},
-	
-	ShowStakeDialog: function(symbol, balance) {
+
+	ShowSendTokenDialog: function (symbol, balance) {
+		SE.ShowDialog('send_token', { symbol: filterXSS(symbol), balance: filterXSS(balance) });
+	},
+
+	ShowStakeDialog: function (symbol, balance) {
 		SE.ShowDialog('stake_token', { symbol: filterXSS(symbol), balance: filterXSS(balance) });
 	},
-	
-	ShowUnstakeDialog: function(symbol, staked) {
+
+	ShowUnstakeDialog: function (symbol, staked) {
 		SE.ShowDialog('unstake_token', { symbol: filterXSS(symbol), balance: filterXSS(staked) });
 	},
 
-	ShowEnableStakeDialog: function(symbol) {
+	ShowEnableStakeDialog: function (symbol) {
 		SE.ShowDialog('stake_token_enable', { symbol: filterXSS(symbol) });
 	},
 
-	ShowDelegateDialog: function(symbol, balance) {
+	ShowDelegateDialog: function (symbol, balance) {
 		SE.ShowDialog('delegate_token', { symbol: symbol, balance: filterXSS(balance) });
 	},
-	
-	ShowUndelegateDialog: function(symbol, staked) {
+
+	ShowUndelegateDialog: function (symbol, staked) {
 		SE.ShowDialog('undelegate_token', { symbol: symbol, balance: filterXSS(staked) });
 	},
 
-	ShowEnableDelegationDialog: function(symbol) {
+	ShowEnableDelegationDialog: function (symbol) {
 		SE.ShowDialog('token_delegation_enable', { symbol: filterXSS(symbol) });
 	},
 
-  SendToken: function(symbol, to, quantity, memo) {
-    SE.ShowLoading();
-    var username = localStorage.getItem('username');
+	SendToken: function (symbol, to, quantity, memo) {
+		SE.ShowLoading();
+		var username = localStorage.getItem('username');
 
-    if(!username) {
-      window.location.reload();
-      return;
-    }
+		if (!username) {
+			window.location.reload();
+			return;
+		}
 
-    var transaction_data = {
-      "contractName": "tokens",
-      "contractAction": "transfer",
-      "contractPayload": {
-        "symbol": symbol,
-        "to": to,
-		"quantity": quantity + '',
-		"memo": memo
-      }
-    };
+		var transaction_data = {
+			"contractName": "tokens",
+			"contractAction": "transfer",
+			"contractPayload": {
+				"symbol": symbol,
+				"to": to,
+				"quantity": quantity + '',
+				"memo": memo
+			}
+		};
 
 		console.log('SENDING: ' + symbol);
 
-    if(useKeychain()) {
-      steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Transfer: ' + symbol, function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(username, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Token Transfer: ' + symbol, function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success)
-              SE.ShowToast(true, quantity + ' ' + symbol + ' Tokens sent to @' + to)
-            else
-              SE.ShowToast(false, 'An error occurred submitting the transfer: ' + tx.error)
+						if (tx.success)
+							SE.ShowToast(true, quantity + ' ' + symbol + ' Tokens sent to @' + to)
+						else
+							SE.ShowToast(false, 'An error occurred submitting the transfer: ' + tx.error)
 
 						SE.HideLoading();
 						SE.HideDialog();
 						SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol));
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading();
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowHistory(symbol));
 			});
 		}
-  },
-
-  ShowBuySSC: function() {
-    SE.ShowDialog('buy_ssc', null);
 	},
 
-	BuySSC: function(amount) {
+	ShowBuySSC: function () {
+		SE.ShowDialog('buy_ssc', null);
+	},
+
+	BuySSC: function (amount) {
 		SE.ShowLoading();
 
-    if(!SE.User) {
-      window.location.reload();
-      return;
-    }
+		if (!SE.User) {
+			window.location.reload();
+			return;
+		}
 
-    var transaction_data = {
+		var transaction_data = {
 			id: Config.CHAIN_ID,
 			json: {
 				"contractName": "sscstore",
 				"contractAction": "buy",
-				"contractPayload": { }
+				"contractPayload": {}
 			}
-    };
+		};
 
-    if(useKeychain()) {
-      steem_keychain.requestTransfer(SE.User.name, 'steemsc', (amount).toFixedNoRounding(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestTransfer(SE.User.name, 'steemsc', (amount).toFixedNoRounding(3), JSON.stringify(transaction_data), 'STEEM', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-						if(tx.success) {
-              SE.ShowToast(true, 'Purchase transaction sent successfully.');
+						if (tx.success) {
+							SE.ShowToast(true, 'Purchase transaction sent successfully.');
 							SE.HideLoading();
 							SE.HideDialog();
 							SE.LoadBalances(SE.User.name, () => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
-            } else
-              SE.ShowToast(false, 'An error occurred purchasing SSC: ' + tx.error);
+						} else
+							SE.ShowToast(false, 'An error occurred purchasing SSC: ' + tx.error);
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading();
-      });
-    } else {
+			});
+		} else {
 			SE.HideLoading();
 			SE.SteemConnectTransfer(SE.User.name, 'steemsc', (amount).toFixedNoRounding(3) + ' STEEM', JSON.stringify(transaction_data), () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowHistory(Config.NATIVE_TOKEN, 'Steem Engine Tokens'));
 			});
 		}
-  },
+	},
 
-	DepositSteem: function(amount) {
+	DepositSteem: function (amount) {
 		SE.ShowLoading();
 
-    if(!SE.User) {
-      window.location.reload();
-      return;
-    }
+		if (!SE.User) {
+			window.location.reload();
+			return;
+		}
 
-    var transaction_data = {
+		var transaction_data = {
 			id: Config.CHAIN_ID,
 			json: {
 				"contractName": "steempegged",
 				"contractAction": "buy",
-				"contractPayload": { }
+				"contractPayload": {}
 			}
-    };
+		};
 
-    if(useKeychain()) {
-      steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, (amount).toFixedNoRounding(3), JSON.stringify(transaction_data), 'STEEM', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestTransfer(SE.User.name, Config.STEEMP_ACCOUNT, (amount).toFixedNoRounding(3), JSON.stringify(transaction_data), 'STEEM', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-						if(tx.success) {
-              SE.ShowToast(true, 'Deposit transaction sent successfully.');
+						if (tx.success) {
+							SE.ShowToast(true, 'Deposit transaction sent successfully.');
 							SE.HideLoading();
 							SE.HideDialog();
 							SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
-            } else
-              SE.ShowToast(false, 'An error occurred depositing STEEM: ' + tx.error);
+						} else
+							SE.ShowToast(false, 'An error occurred depositing STEEM: ' + tx.error);
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading();
-      });
-    } else {
+			});
+		} else {
 			SE.HideLoading();
 			SE.SteemConnectTransfer(SE.User.name, Config.STEEMP_ACCOUNT, (amount).toFixedNoRounding(3) + ' STEEM', JSON.stringify(transaction_data), () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
@@ -1627,48 +1627,48 @@ SE = {
 		}
 	},
 
-	WithdrawSteem: function(amount) {
+	WithdrawSteem: function (amount) {
 		SE.ShowLoading();
 
-    if(!SE.User) {
-      window.location.reload();
-      return;
-    }
+		if (!SE.User) {
+			window.location.reload();
+			return;
+		}
 
-    var transaction_data = {
+		var transaction_data = {
 			"contractName": "steempegged",
 			"contractAction": "withdraw",
-			"contractPayload": { 
+			"contractPayload": {
 				"quantity": (amount).toFixedNoRounding(3)
 
 			}
 		};
 
-    if(useKeychain()) {
-      steem_keychain.requestCustomJson(SE.User.name, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Withdraw STEEM', function(response) {
-        if(response.success && response.result) {
+		if (useKeychain()) {
+			steem_keychain.requestCustomJson(SE.User.name, Config.CHAIN_ID, 'Active', JSON.stringify(transaction_data), 'Withdraw STEEM', function (response) {
+				if (response.success && response.result) {
 					SE.CheckTransaction(response.result.id, 3, tx => {
-            if(tx.success)
-              SE.ShowToast(true, amount.toFixed(3) + ' STEEMP withdrawn to @' + SE.User.name);
-            else
-              SE.ShowToast(false, 'An error occurred submitting the transaction: ' + tx.error)
+						if (tx.success)
+							SE.ShowToast(true, amount.toFixed(3) + ' STEEMP withdrawn to @' + SE.User.name);
+						else
+							SE.ShowToast(false, 'An error occurred submitting the transaction: ' + tx.error)
 
 						SE.HideLoading();
 						SE.HideDialog();
 						SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
 					});
-        }
-        else
+				}
+				else
 					SE.HideLoading();
-      });
-    } else {
+			});
+		} else {
 			SE.SteemConnectJson('active', transaction_data, () => {
 				SE.LoadBalances(SE.User.name, () => SE.ShowMarket());
 			});
 		}
 	},
-	
-  ShowTransactionDialog: function(data) {
+
+	ShowTransactionDialog: function (data) {
 		SE.ShowDialog('transaction', data);
 	},
 
@@ -1683,7 +1683,7 @@ SE = {
 		var username = localStorage.getItem('username');
 		var url = 'https://steemconnect.com/sign/custom-json?';
 
-		if(auth_type == 'active') {
+		if (auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
 			url += '&required_auths=' + encodeURI('["' + username + '"]');
 			url += '&authority=active';
@@ -1739,8 +1739,8 @@ SE = {
 		SE._sc_callback = callback;
 	},
 
-	SteemConnectCallback: function() {
-		if(SE._sc_callback) {
+	SteemConnectCallback: function () {
+		if (SE._sc_callback) {
 			SE.ShowLoading();
 
 			setTimeout(() => {
@@ -1751,9 +1751,9 @@ SE = {
 		}
 	},
 
-	CheckAccount: function(name, callback) {
+	CheckAccount: function (name, callback) {
 		steem.api.getAccounts([name], (e, r) => {
-			if(r && r.length > 0)
+			if (r && r.length > 0)
 				callback(r[0]);
 			else
 				callback(null);
@@ -1762,65 +1762,65 @@ SE = {
 
 	CheckTransaction(trx_id, retries, callback) {
 		ssc.getTransactionInfo(trx_id, (err, result) => {
-			if(result) {
+			if (result) {
 				var error = null;
 
-				if(result.logs) {
+				if (result.logs) {
 					var logs = JSON.parse(result.logs);
 
-					if(logs.errors && logs.errors.length > 0)
+					if (logs.errors && logs.errors.length > 0)
 						error = logs.errors[0];
 				}
 
-				if(callback)
+				if (callback)
 					callback(Object.assign(result, { error: error, success: !error }));
-			} else if(retries > 0)
+			} else if (retries > 0)
 				setTimeout(() => SE.CheckTransaction(trx_id, retries - 1, callback), 5000);
-			else if(callback)
+			else if (callback)
 				callback({ success: false, error: 'Transaction not found.' });
 		});
 	},
 
-	GetToken: function(symbol) { return SE.Tokens.find(t => t.symbol == symbol); },
+	GetToken: function (symbol) { return SE.Tokens.find(t => t.symbol == symbol); },
 
-	GetDepositAddress: function(symbol, callback) {
+	GetDepositAddress: function (symbol, callback) {
 		var pegged_token = Config.PEGGED_TOKENS.find(p => p.symbol == symbol);
 
-		if(!pegged_token)
+		if (!pegged_token)
 			return;
 
 		$.ajax({
-			url: Config.CONVERTER_API + '/convert/', 
+			url: Config.CONVERTER_API + '/convert/',
 			type: 'POST',
 			data: JSON.stringify({ from_coin: symbol, to_coin: pegged_token.pegged_token_symbol, destination: SE.User.name }),
 			contentType: "application/json",
 			dataType: "json",
 			success: result => {
-				if(callback)
+				if (callback)
 					callback(Object.assign(result, pegged_token));
 			}
 		});
 	},
-	
-	GetWithdrawalAddress: function(symbol, address, callback) {
+
+	GetWithdrawalAddress: function (symbol, address, callback) {
 		var pegged_token = Config.PEGGED_TOKENS.find(p => p.symbol == symbol);
 
-		if(!pegged_token)
+		if (!pegged_token)
 			return;
 
 		$.ajax({
-			url: Config.CONVERTER_API + '/convert/', 
+			url: Config.CONVERTER_API + '/convert/',
 			type: 'POST',
 			data: JSON.stringify({ from_coin: pegged_token.pegged_token_symbol, to_coin: symbol, destination: address }),
 			contentType: "application/json",
 			dataType: "json",
-			error:(xhr, status, errorThrown) => {
+			error: (xhr, status, errorThrown) => {
 				if (callback) {
 					callback(xhr, null);
 				}
 			},
 			success: result => {
-				if(callback)
+				if (callback)
 					callback(null, Object.assign(result, pegged_token));
 			}
 		});
