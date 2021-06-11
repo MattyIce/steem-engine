@@ -1834,5 +1834,5 @@ SE = {
 			if (callback)
 				callback(null, fee);
 		});
-	},
+	}
 }

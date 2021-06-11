@@ -12,47 +12,47 @@
 				</button>  
 			</div>
 	
-            <div class="modal-body">
-                <p class="text-medium"><strong>Please note:</strong> Large withdrawals are processed manually to ensure financial safety of collective assets and may take up to 1-3 days to complete</p>
+			<div class="modal-body">
+				<p class="text-medium"><strong>Please note:</strong> Large withdrawals are processed manually to ensure financial safety of collective assets and may take up to 1-3 days to complete</p>
 
-                <p class="text-medium wekuWarning" style="display: none;">You are going to remove WEKUP from <strong>Steem-Engine</strong> and receive WEKU on <strong>Bitshares</strong>.</p>
-                <p class="text-medium wekuWarning" style="display: none;">Please note we own the steem-engine account on <strong>Bitshares</strong>, but not the steem-engine account on <strong>WEKU</strong>. Any and all transfers you complete to the steem-engine account on WEKU are to a known scammer and will not be refunded.</p>
+				<p class="text-medium wekuWarning" style="display: none;">You are going to remove WEKUP from <strong>Steem-Engine</strong> and receive WEKU on <strong>Bitshares</strong>.</p>
+				<p class="text-medium wekuWarning" style="display: none;">Please note we own the steem-engine account on <strong>Bitshares</strong>, but not the steem-engine account on <strong>WEKU</strong>. Any and all transfers you complete to the steem-engine account on WEKU are to a known scammer and will not be refunded.</p>
 
-                <label>TOKEN TO WITHDRAW</label>
-                <div class="input-group mb-4">
-                    <select id="withdrawal_token">
-                        <% Config.PEGGED_TOKENS.forEach(token => { %>
-                        <option value="<%= token.symbol %>"><%= token.name %> (<%= token.symbol %>)</option>
-                        <% }); %>
-                    </select>
-                </div>
+				<label>TOKEN TO WITHDRAW</label>
+				<div class="input-group mb-4">
+					<select id="withdrawal_token">
+						<% Config.PEGGED_TOKENS.forEach(token => { %>
+						<option value="<%= token.symbol %>"><%= token.name %> (<%= token.symbol %>)</option>
+						<% }); %>
+					</select>
+				</div>
+				<div id="withdraw_body">
+					<label class="mb-0">Current Balance</label>
+					<p id="withdraw_balance" class="mb-4">
+						<%= addCommas(SE.GetBalance('STEEMP')) + ' STEEMP' %>
+					</p>
 
-                <label class="mb-0">Current Balance</label>
-                <p id="withdraw_balance" class="mb-4">
-                    <%= addCommas(SE.GetBalance('STEEMP')) + ' STEEMP' %>
-                </p>
+					<label>WITHDRAW AMOUNT</label>
+					<div class="input-group justify-content-center align-items-center">
+						<input type="text" placeholder="0.000" id="withdraw_amount">
+						<div class="input-group-append pts">
+							STEEMP
+						</div>
+						<div class="invalid-tooltip">
+							Please enter an amount greater than 0 and not more than your current balance.
+						</div>
+					</div>
+					<div class="ssc-cost mb-2">You will receive: <span id="receive_amt">0</span> <span class="ts">STEEM</span></div>
 
-                <label>WITHDRAW AMOUNT</label>
-                <div class="input-group justify-content-center align-items-center">
-                    <input type="text" placeholder="0.000" id="withdraw_amount">
-                    <div class="input-group-append pts">
-                        STEEMP
-                    </div>
-                    <div class="invalid-tooltip">
-                        Please enter an amount greater than 0 and not more than your current balance.
-                    </div>
-                </div>
-                <div class="ssc-cost mb-2">You will receive: <span id="receive_amt">0</span> <span class="ts">STEEM</span></div>
-
-                <label>WITHDRAW ADDRESS</label>
-                <div class="input-group justify-content-center align-items-center">
-                    <input type="text" id="withdraw_address" value="<%= SE.User.name %>" disabled="disabled"/>
-                    <div class="invalid-tooltip" id="error_response"></div>
-                </div>
-				<div class="ssc-cost">Please ensure this address is correct.<br/>We cannot refund incorrect withdrawals.</div>
-		
-            </div>
-			
+					<label>WITHDRAW ADDRESS</label>
+					<div class="input-group justify-content-center align-items-center">
+						<input type="text" id="withdraw_address" value="<%= SE.User.name %>" disabled="disabled" />
+						<div class="invalid-tooltip" id="error_response"></div>
+					</div>
+					<div class="ssc-cost">Please ensure this address is correct.<br />We cannot refund incorrect withdrawals.</div>
+				</div>
+				<div id="withdraw_warning" class="alert alert-warning" style="display: none;"></div>
+			</div>
 			<div class="modal-footer" style="padding-bottom: 0;">
 				<button id="btnBuy" type="button" class="btn btn-primary btn-lg w-100" onclick="onWithdrawClick()" style="font-size: 28px;">WITHDRAW <span class="ts">STEEM</span></button>
 			</div>
@@ -113,6 +113,17 @@
 
 		if(!token)
 			return;
+		
+        if (token.withdraw_disabled) {
+            $("#withdraw_body").hide();
+            $("#btnBuy").hide();
+            $("#withdraw_warning").text(token.withdraw_disable_reason);
+            $("#withdraw_warning").show();
+        } else {
+            $("#withdraw_body").show();
+            $("#withdraw_warning").hide();
+            $("#btnBuy").show();
+        }
 
 		$('#withdraw_balance').text(addCommas(SE.GetBalance(token.pegged_token_symbol)) + ' ' + token.pegged_token_symbol);
 		$('.pts').text(token.pegged_token_symbol);
