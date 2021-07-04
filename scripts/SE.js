@@ -3,6 +3,7 @@ SE = {
 	Params: {},
 	Tokens: [],
 	ScotTokens: {},
+	Settings: {},
 
 	Api: function (url, data, callback, always) {
 		if (data == null || data == undefined) data = {};
@@ -1834,5 +1835,19 @@ SE = {
 			if (callback)
 				callback(null, fee);
 		});
-	}
+	},
+	fetchSettings: function () {
+		$.ajax({
+			url: Config.SETTINGS_API + '/settings',
+			type: 'GET',
+			contentType: "application/json",
+			dataType: "json",
+			success: result => {
+				this.Settings = result;
+			},
+			error: (xhr, status, errorThrown) => {
+				console.log(xhr);
+			}
+		});
+	},
 }

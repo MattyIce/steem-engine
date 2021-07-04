@@ -24,7 +24,8 @@
 						<option value="<%= token.symbol %>"><%= token.name %> (<%= token.symbol %>)</option>
 					<% }); %>
 				</select>
-			</div>				
+			</div>		
+			<div id="deposit_warning" class="alert alert-warning" style="display: none; margin-top: 10px;"></div>
 		</div>
 		
 		<div class="modal-footer" style="padding-bottom: 0;">
@@ -40,6 +41,25 @@
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        if (!SE.Settings.eth_bridge || !SE.Settings.bsc_bridge)
+            SE.fetchSettings();
+
+        $("#deposit_token").on("change", function () {
+            var tokenSymbol = $('#deposit_token').val();
+
+            var disabledToken = SE.Settings.disabled_deposits.find(x => x.symbol == tokenSymbol);
+            if (disabledToken) {
+                $("#btnBuy").hide();
+                $("#deposit_warning").text(disabledToken.reason);
+                $("#deposit_warning").show();
+            } else {
+                $("#deposit_warning").hide();
+                $("#btnBuy").show();
+            }
+        })
+	});
+
 	function getDepositInfoClick() {  
 		if($('#deposit_token').val() == 'STEEM') {
 			SE.ShowDialog('deposit_steem');

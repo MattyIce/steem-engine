@@ -66,6 +66,11 @@
 	</div>
 	
 	<script>
+		$(document).ready(function () {
+			if (!SE.Settings.eth_bridge || !SE.Settings.bsc_bridge)
+				SE.fetchSettings();
+		});
+
 	function onWithdrawClick() {
 
 		var token = Config.PEGGED_TOKENS.find(p => p.symbol == $('#withdrawal_token').val());
@@ -113,11 +118,12 @@
 
 		if(!token)
 			return;
-		
-        if (token.withdraw_disabled) {
+
+        var disabledToken = SE.Settings.disabled_withdrawals.find(x => x.symbol == token.pegged_token_symbol);
+        if (disabledToken) {
             $("#withdraw_body").hide();
             $("#btnBuy").hide();
-            $("#withdraw_warning").text(token.withdraw_disable_reason);
+            $("#withdraw_warning").text(disabledToken.reason);
             $("#withdraw_warning").show();
         } else {
             $("#withdraw_body").show();
