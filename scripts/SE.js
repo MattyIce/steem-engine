@@ -1682,7 +1682,7 @@ SE = {
 		SE.ShowDialog('steem_connect')
 
 		var username = localStorage.getItem('username');
-		var url = 'https://steemconnect.com/sign/custom-json?';
+		var url = 'https://steemlogin.com/sign/custom-json?';
 
 		if (auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
@@ -1706,7 +1706,7 @@ SE = {
 		SE.ShowDialog('steem_connect')
 
 		var username = localStorage.getItem('username');
-		var url = 'https://steemconnect.com/sign/custom-json?';
+		var url = 'https://steemlogin.com/sign/custom-json?';
 
 		if (auth_type == 'active') {
 			url += 'required_posting_auths=' + encodeURI('[]');
@@ -1730,7 +1730,7 @@ SE = {
 		SE.HideLoading();
 		SE.ShowDialog('steem_connect')
 
-		var url = 'https://steemconnect.com/sign/transfer?';
+		var url = 'https://steemlogin.com/sign/transfer?';
 		url += '&from=' + encodeURI(from);
 		url += '&to=' + encodeURI(to);
 		url += '&amount=' + encodeURI(amount);
