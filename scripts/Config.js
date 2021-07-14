@@ -11,7 +11,6 @@ Config = {
     STEEMP_ACCOUNT: 'steem-peg',
     DISABLED_TOKENS: ['BTC', 'LTC', 'STEEM', 'SBD', 'BCC', 'XAP', 'XRP', 'GOLOS', 'DISNEY', 'AMAZON', 'VOICE', 'ETH', 'EOS', 'LASSE', 'TIME', 'R', 'SCTR', 'ALLAH', 'DONE', 'BNB', 'ETHER', 'LTCPEG', 'SBC', 'LASSECASH', 'HIVE', 'TIX', 'TIXM', 'STEM', 'STEMM', 'LEO', 'LEOM', 'LEOMM', 'NEO', 'NEOX', 'PORN', 'SPORTS', 'BATTLE', 'SIM', 'CTP', 'CTPM', 'EMFOUR', 'CCC', 'CCCM', 'BEER', 'WEED', 'WEEDM', 'WEEDMM', 'SPACO', 'SPACOM', 'NEOXAG', 'NEOXAGM', 'KANDA', 'SAND', 'INFOWARS', 'SPI', 'PAL', 'PALM', 'PALMM', 'ENGAGE', 'BRO', 'CC', 'BUILDTEAM', 'ECO', 'GAMER', 'EPC', 'SPT', 'JAHM','USDT','APX','APXM','ENJ','DOGE','BTS','TKO'],
     MARKET_HIDE_TOKENS: ['SMTT'],
-    SETTINGS_API: 'https://tribaldex.com/api',
     PEGGED_TOKEN: 'STEEMP',
     PEGGED_TOKENS: [{
             name: 'STEEM',
@@ -126,6 +125,23 @@ Config = {
             name: 'WAX',
             symbol: 'WAX',
             pegged_token_symbol: 'SWAP.WAX'
+        }
+    ],
+    DISABLED_DEPOSITS: [{
+        symbol: 'BTC',
+        reason: 'BTC deposits have been disabled temporally due to technical difficulties.'
+    }],
+    DISABLED_WITHDRAWALS: [{
+        symbol: 'BTCP',
+        reason: 'BTC deposits have been disabled temporally due to technical difficulties.'
+    }],
+    MINIMUM_WITHDRAWALS: [
+        {
+            symbol: 'BTCP',
+            amount: 0.01
+        }, {
+            symbol: 'DOGEP',
+            amount: 10
         }
     ]
 }

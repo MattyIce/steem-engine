@@ -42,13 +42,10 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        if (!SE.Settings.eth_bridge || !SE.Settings.bsc_bridge)
-            SE.fetchSettings();
-
         $("#deposit_token").on("change", function () {
             var tokenSymbol = $('#deposit_token').val();
 
-            var disabledToken = SE.Settings.disabled_deposits.find(x => x.symbol == tokenSymbol);
+            var disabledToken = Config.DISABLED_DEPOSITS.find(x => x.symbol == tokenSymbol);
             if (disabledToken) {
                 $("#btnBuy").hide();
                 $("#deposit_warning").text(disabledToken.reason);

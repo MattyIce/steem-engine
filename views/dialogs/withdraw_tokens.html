@@ -39,10 +39,11 @@
 							STEEMP
 						</div>
 						<div class="invalid-tooltip">
-							Please enter an amount greater than 0 and not more than your current balance.
+							Please enter an amount greater than 0, greater than minimum withdrawal amount and not more than your current balance.
 						</div>
 					</div>
 					<div class="ssc-cost mb-2">You will receive: <span id="receive_amt">0</span> <span class="ts">STEEM</span></div>
+					<div class="ssc-cost mb-2 min_withdrawal_warning" style="display:none;">Min. withdrawal amount: <span id="min_withdraw_amt">0</span> <span class="ts">STEEM</span></div>
 
 					<label>WITHDRAW ADDRESS</label>
 					<div class="input-group justify-content-center align-items-center">
@@ -66,11 +67,6 @@
 	</div>
 	
 	<script>
-		$(document).ready(function () {
-			if (!SE.Settings.eth_bridge || !SE.Settings.bsc_bridge)
-				SE.fetchSettings();
-		});
-
 	function onWithdrawClick() {
 
 		var token = Config.PEGGED_TOKENS.find(p => p.symbol == $('#withdrawal_token').val());
@@ -78,26 +74,30 @@
 		if(!token)
 			return;
 
-		var amount = parseFloat($('#withdraw_amount').val());
-	
-		if(isNaN(amount) || amount <= 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
+        var min_withdraw = Config.MINIMUM_WITHDRAWALS.find(x => x.symbol == token.pegged_token_symbol);
+		var amount = parseFloat($('#withdraw_amount').val());		
+		if (isNaN(amount) || amount <= 0 || amount > SE.GetBalance(token.pegged_token_symbol)) {
 			$('#withdraw_amount').addClass("is-invalid");    
 		} else {
-			if(token.symbol == 'STEEM')
-				SE.WithdrawSteem(amount);
-			else {
-				$('#error_response').text('');
-				SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), (err, result) => {
-					if (err) {
-						$('#withdraw_address').addClass('is-invalid');
-						$('#error_response').text(err.responseJSON.message);
-						return;
-					}
+			if (min_withdraw && amount < min_withdraw.amount) {
+				$('#withdraw_amount').addClass("is-invalid");
+			} else {
+				if (token.symbol == 'STEEM') {
+					SE.WithdrawSteem(amount);
+				} else {
+					$('#error_response').text('');
+					SE.GetWithdrawalAddress(token.symbol, $('#withdraw_address').val(), (err, result) => {
+						if (err) {
+							$('#withdraw_address').addClass('is-invalid');
+							$('#error_response').text(err.responseJSON.message);
+							return;
+						}
 
-					if (result && result.memo) {
-						SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
-					}
-				});
+						if (result && result.memo) {
+							SE.SendToken(token.pegged_token_symbol, result.account, amount, result.memo);
+						}
+					});
+				}
 			}
 		}
 	}
@@ -111,15 +111,23 @@
 		$('#receive_amt').text((amt * 0.99).toFixed($('#withdrawal_token').val() == 'STEEM' ? 3 : 8));
 	});
 
-	$('#withdrawal_token').change(updateToken);
+		$('#withdrawal_token').change(updateToken);
+
+        $(".invalid-tooltip").on("click", function () {
+            $('#withdraw_amount').removeClass("is-invalid");
+        })
+
+        $(".invalid-tooltip-address").on("click", function () {
+            $('#withdraw_address').removeClass("is-invalid");
+        })
 
 	function updateToken() {
 		var token = Config.PEGGED_TOKENS.find(p => p.symbol == $('#withdrawal_token').val());
 
 		if(!token)
-			return;
+			return;        
 
-        var disabledToken = SE.Settings.disabled_withdrawals.find(x => x.symbol == token.pegged_token_symbol);
+        var disabledToken = Config.DISABLED_WITHDRAWALS.find(x => x.symbol == token.pegged_token_symbol);
         if (disabledToken) {
             $("#withdraw_body").hide();
             $("#btnBuy").hide();
@@ -129,6 +137,15 @@
             $("#withdraw_body").show();
             $("#withdraw_warning").hide();
             $("#btnBuy").show();
+		}
+
+        var min_withdraw_record = Config.MINIMUM_WITHDRAWALS.find(x => x.symbol == token.pegged_token_symbol);
+        if (min_withdraw_record && min_withdraw_record.amount > 0) {
+            $(".min_withdrawal_warning").show();
+            $("#min_withdraw_amt").text(min_withdraw_record.amount);
+        }
+        else {
+            $(".min_withdrawal_warning").hide();
         }
 
 		$('#withdraw_balance').text(addCommas(SE.GetBalance(token.pegged_token_symbol)) + ' ' + token.pegged_token_symbol);
